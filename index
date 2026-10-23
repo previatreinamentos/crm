@@ -1,0 +1,2970 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PREVIA TREINAMENTOS - CRM, Funil de Vendas & Comissões</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            previa: {
+              forest: '#0c3629',      // Verde Escuro Floresta Previa (Imagem 3)
+              forestDark: '#08261d',  // Verde Quase Preto para fundos/sidebar
+              forestCard: '#124535',  // Cards escuros
+              orange: '#f05a28',      // Laranja Marca Previa (Imagem 3)
+              orangeHover: '#d94b1c', // Laranja Escurecido Hover
+              orangeLight: '#ffedd5', // Fundo Laranja Sutil
+              mint: '#e8f5f1',        // Fundo Verde Menta Claro
+              mintText: '#0f766e',
+              slate: '#64748b',       // Texto neutro
+              lightBg: '#f8faf9',     // Fundo Geral Claro e Limpo
+              cardBorder: '#e2e8f0',
+              darkBg: '#0b1612',      // Fundo Dark Mode
+              darkCard: '#13231d',    // Cards Dark Mode
+              darkBorder: '#1e382e'   // Bordas Dark Mode
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .dark .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0f211a;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #244b3c;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #f05a28;
+    }
+  </style>
+</head>
+<body class="bg-previa-lightBg dark:bg-previa-darkBg text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-previa-orange selection:text-white transition-colors duration-200">
+
+  <!-- ================= NOTIFICAÇÃO TOAST ================= -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl bg-previa-forest text-white text-xs sm:text-sm font-semibold border border-previa-orange/40">
+    <i data-lucide="info" class="w-5 h-5 text-previa-orange"></i>
+    <span id="toast-msg">Notificação</span>
+  </div>
+
+  <!-- ================= HEADER PRINCIPAL (IDENTIDADE IMAGEM 3) ================= -->
+  <header class="bg-previa-forest text-white border-b border-previa-forestDark sticky top-0 z-40 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+      
+      <!-- Logo Previa Treinamentos -->
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="window.location.href = window.location.pathname">
+        <div class="w-11 h-11 rounded-xl bg-previa-orange flex items-center justify-center text-white shadow-md flex-shrink-0">
+          <i data-lucide="shield-check" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl font-black tracking-wider text-white">PREVIA</span>
+            <span class="text-[10px] font-black px-2 py-0.5 rounded bg-white/10 text-previa-orangeLight border border-white/20 tracking-wider">TREINAMENTOS</span>
+          </div>
+          <p class="text-[11px] text-emerald-200/80 tracking-tight hidden sm:block">Gestão Comercial • 2 Produtos • Divisão Estadual • Comissões</p>
+        </div>
+      </div>
+
+      <!-- Sessão e Controles de Perfil -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        
+        <!-- Botão Alternador Tema Claro / Escuro -->
+        <button onclick="toggleDarkMode()" id="themeToggleBtn" title="Alternar Modo Claro/Escuro" class="p-2 rounded-xl bg-previa-forestDark hover:bg-black/30 border border-white/15 text-emerald-200 hover:text-white transition shadow-sm">
+          <i id="themeToggleIcon" data-lucide="moon" class="w-4 h-4"></i>
+        </button>
+
+        <!-- Badge de Acesso Restrito Trava (Vendedor ou Embaixador) -->
+        <div id="lockedRoleBadge" class="hidden items-center gap-2 px-3.5 py-1.5 rounded-xl border text-xs font-bold shadow-sm">
+          <i id="lockedRoleIcon" data-lucide="lock" class="w-4 h-4"></i>
+          <span id="lockedRoleText">Acesso Restrito</span>
+        </div>
+
+        <!-- Seletor Rápido de Simulação (Apenas visível para Admin) -->
+        <div id="adminSimulatorBox" class="flex items-center gap-2 bg-previa-forestDark border border-white/15 px-3 py-1.5 rounded-xl text-xs font-semibold shadow-inner">
+          <i data-lucide="shield" class="w-4 h-4 text-previa-orange"></i>
+          <span class="text-emerald-200/70 hidden md:inline">Visão:</span>
+          <select id="adminViewSelector" onchange="changeAdminView(this.value)" class="bg-transparent text-white font-bold text-xs focus:outline-none cursor-pointer">
+            <option value="admin" class="bg-previa-forest text-white">👑 Admin Geral (Todos)</option>
+            <!-- Populado dinamicamente com Embaixadores e Vendedores -->
+          </select>
+        </div>
+
+        <!-- Botões de Ação Rápida -->
+        <div class="flex items-center gap-2">
+          <button onclick="openMediaModal()" class="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-sm">
+            <i data-lucide="video" class="w-4 h-4 text-previa-orange"></i>
+            <span class="hidden md:inline">Lançar Mídia</span>
+          </button>
+          <button onclick="openLeadModal()" class="flex items-center gap-1.5 bg-previa-orange hover:bg-previa-orangeHover text-white text-xs font-black px-3.5 py-2 rounded-xl transition shadow-md shadow-previa-orange/30">
+            <i data-lucide="user-plus" class="w-4 h-4 text-white"></i>
+            <span>Nova Venda</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sub-Header: Abas de Navegação -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between border-t border-white/10 text-xs font-semibold overflow-x-auto">
+      <div class="flex gap-4 sm:gap-6">
+        <button onclick="switchTab('pipeline')" id="tab-pipeline" class="py-3 border-b-2 border-previa-orange text-white flex items-center gap-2 transition whitespace-nowrap font-bold">
+          <i data-lucide="kanban" class="w-4 h-4 text-previa-orange"></i>
+          <span>Funil & Vendas</span>
+        </button>
+        <button onclick="switchTab('media')" id="tab-media" class="py-3 border-b-2 border-transparent text-emerald-200/70 hover:text-white flex items-center gap-2 transition whitespace-nowrap">
+          <i data-lucide="video" class="w-4 h-4"></i>
+          <span>Vídeos & Postagens</span>
+        </button>
+        <button onclick="switchTab('team')" id="tab-team" class="py-3 border-b-2 border-transparent text-emerald-200/70 hover:text-white flex items-center gap-2 transition whitespace-nowrap">
+          <i data-lucide="link" class="w-4 h-4"></i>
+          <span>Embaixadores, Vendedores & Links</span>
+        </button>
+        <!-- Aba Mapa & Gráficos Brasil (Apenas Admin) -->
+        <button onclick="switchTab('map')" id="tab-map" class="py-3 border-b-2 border-transparent text-emerald-200/70 hover:text-white flex items-center gap-2 transition whitespace-nowrap">
+          <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+          <span>Mapa & Rankings Brasil</span>
+        </button>
+      </div>
+
+      <!-- Alternador de Visão no Funil: Kanban vs Tabela -->
+      <div id="viewModeToggleGroup" class="py-2 flex items-center gap-1.5">
+        <span class="text-[11px] text-emerald-200/70 hidden sm:inline mr-1">Exibição:</span>
+        <div class="bg-previa-forestDark p-1 rounded-xl border border-white/10 flex items-center shadow-inner">
+          <button id="btnViewKanban" onclick="setViewMode('kanban')" class="px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 bg-previa-orange text-white transition shadow">
+            <i data-lucide="columns-3" class="w-3.5 h-3.5"></i> Kanban
+          </button>
+          <button id="btnViewTable" onclick="setViewMode('table')" class="px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 text-emerald-200/70 hover:text-white transition">
+            <i data-lucide="table" class="w-3.5 h-3.5"></i> Tabela
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= CORPO PRINCIPAL ================= -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+
+    <!-- Card de Boas-vindas e Resumo Financeiro Dinâmico -->
+    <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-5 sm:p-6 shadow-sm relative overflow-hidden transition-colors">
+      <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+        <div>
+          <div class="flex items-center gap-2">
+            <span id="roleTag" class="px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-previa-forest text-white">
+              ADMIN GERAL
+            </span>
+            <h1 id="headerUserTitle" class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+              Painel Geral PREVIA TREINAMENTOS
+            </h1>
+          </div>
+          <p id="headerUserSubtitle" class="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-2xl leading-relaxed">
+            Acompanhe a venda dos produtos <strong>Instrutor</strong> e <strong>Equipe</strong>, comissão direta de 30% e override de 5% dos Embaixadores Estaduais.
+          </p>
+        </div>
+
+        <!-- Indicadores Financeiros de Comissão -->
+        <div id="financialCardsGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full lg:w-auto">
+          <!-- Populado via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== ABA 1: FUNIL & VENDAS (KANBAN OU TABELA) ==================== -->
+    <section id="view-pipeline" class="space-y-5">
+      
+      <!-- Contadores de Etapas do Funil (Atualizado com 5 Etapas) -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">1. Contato Inicial</p>
+            <h3 id="statCount-1" class="text-2xl font-black text-slate-800 dark:text-white mt-0.5">0</h3>
+            <span class="text-[10px] text-blue-600 dark:text-blue-400 font-semibold">Prospectados</span>
+          </div>
+          <div class="w-11 h-11 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 flex items-center justify-center text-blue-600 dark:text-blue-400">
+            <i data-lucide="phone-call" class="w-5 h-5"></i>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">2. Período Teste</p>
+            <h3 id="statCount-2" class="text-2xl font-black text-previa-orange mt-0.5">0</h3>
+            <span class="text-[10px] text-previa-orange font-semibold">Trial / Degustação</span>
+          </div>
+          <div class="w-11 h-11 rounded-xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900/50 flex items-center justify-center text-previa-orange">
+            <i data-lucide="clock" class="w-5 h-5"></i>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">3. Efetivado (Fechou)</p>
+            <h3 id="statCount-3" class="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-0.5">0</h3>
+            <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">Comissão 30%</span>
+          </div>
+          <div class="w-11 h-11 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+            <i data-lucide="badge-check" class="w-5 h-5"></i>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">4. Em Treinamento</p>
+            <h3 id="statCount-4" class="text-2xl font-black text-teal-600 dark:text-teal-400 mt-0.5">0</h3>
+            <span class="text-[10px] text-teal-600 dark:text-teal-400 font-semibold">Em Uso Ativo</span>
+          </div>
+          <div class="w-11 h-11 rounded-xl bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800 flex items-center justify-center text-teal-600 dark:text-teal-400">
+            <i data-lucide="award" class="w-5 h-5"></i>
+          </div>
+        </div>
+
+        <!-- NOVA ETAPA 5: PAUSADO / INATIVO -->
+        <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 shadow-sm flex items-center justify-between col-span-2 sm:col-span-1">
+          <div>
+            <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">5. Pausado / Inativo</p>
+            <h3 id="statCount-5" class="text-2xl font-black text-rose-600 dark:text-rose-400 mt-0.5">0</h3>
+            <span class="text-[10px] text-rose-600 dark:text-rose-400 font-semibold">Parou de Usar</span>
+          </div>
+          <div class="w-11 h-11 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 flex items-center justify-center text-rose-600 dark:text-rose-400">
+            <i data-lucide="user-x" class="w-5 h-5"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de Filtros Hierárquica e Busca -->
+      <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 flex flex-col md:flex-row gap-3 items-center justify-between shadow-sm">
+        <div class="relative w-full md:w-72">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
+          <input type="text" id="leadSearch" placeholder="Buscar cliente, empresa ou instrutores..." oninput="renderApp()"
+            class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl pl-9 pr-3 py-2 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-previa-orange transition">
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto justify-end">
+          
+          <!-- Filtro de Estado (UF) com prioridade hierárquica -->
+          <div class="flex items-center gap-1.5">
+            <label class="text-[10px] font-bold text-slate-400 uppercase hidden sm:inline">Estado:</label>
+            <select id="filterState" onchange="onStateFilterChange(this.value)" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-3 py-2 focus:outline-none focus:border-previa-orange font-bold cursor-pointer">
+              <option value="todos">Todos os Estados</option>
+              <!-- Populado dinamicamente -->
+            </select>
+          </div>
+
+          <!-- Filtro de Vendedor / Embaixador (Cascata dependente do Estado selecionado) -->
+          <div class="flex items-center gap-1.5">
+            <label class="text-[10px] font-bold text-slate-400 uppercase hidden sm:inline">Membro:</label>
+            <select id="filterSeller" onchange="renderApp()" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-3 py-2 focus:outline-none focus:border-previa-orange font-semibold cursor-pointer max-w-[210px] truncate">
+              <option value="todos">Todos os Vendedores/Embaixadores</option>
+              <!-- Populado dinamicamente respeitando o filtro de estado -->
+            </select>
+          </div>
+
+          <!-- Filtro de Produto (Instrutor / Equipe) -->
+          <select id="filterProduct" onchange="renderApp()" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-3 py-2 focus:outline-none focus:border-previa-orange font-semibold cursor-pointer">
+            <option value="todos">Todos os Produtos (2)</option>
+            <option value="Instrutor">Produto: Instrutor</option>
+            <option value="Equipe">Produto: Equipe</option>
+          </select>
+
+          <!-- Botão Exportar CSV -->
+          <button onclick="exportToCSV()" class="bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-700 dark:text-slate-200 px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition font-bold">
+            <i data-lucide="download" class="w-3.5 h-3.5 text-previa-orange"></i>
+            <span>Exportar CSV</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- VISÃO 1: MODO KANBAN (5 Colunas Flexíveis) -->
+      <div id="kanbanContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3.5 items-start">
+        
+        <!-- Coluna 1: Contato Inicial -->
+        <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl flex flex-col shadow-sm">
+          <div class="p-3 border-b border-slate-100 dark:border-previa-darkBorder flex items-center justify-between bg-slate-50/70 dark:bg-previa-darkBg/60 rounded-t-2xl">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+              <h4 class="text-[11px] font-black tracking-wide uppercase text-slate-800 dark:text-white">1. Contato</h4>
+            </div>
+            <span id="colBadge-1" class="text-xs font-black px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200">0</span>
+          </div>
+          <div id="colStage-1" class="p-2.5 space-y-2.5 overflow-y-auto custom-scrollbar min-h-[350px]"></div>
+        </div>
+
+        <!-- Coluna 2: Período de Teste -->
+        <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl flex flex-col shadow-sm">
+          <div class="p-3 border-b border-slate-100 dark:border-previa-darkBorder flex items-center justify-between bg-orange-50/40 dark:bg-orange-950/20 rounded-t-2xl">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-previa-orange"></span>
+              <h4 class="text-[11px] font-black tracking-wide uppercase text-slate-800 dark:text-white">2. Teste</h4>
+            </div>
+            <span id="colBadge-2" class="text-xs font-black px-2 py-0.5 rounded-full bg-orange-100 dark:bg-orange-900/60 text-previa-orange">0</span>
+          </div>
+          <div id="colStage-2" class="p-2.5 space-y-2.5 overflow-y-auto custom-scrollbar min-h-[350px]"></div>
+        </div>
+
+        <!-- Coluna 3: Efetivado -->
+        <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl flex flex-col shadow-sm">
+          <div class="p-3 border-b border-slate-100 dark:border-previa-darkBorder flex items-center justify-between bg-emerald-50/40 dark:bg-emerald-950/20 rounded-t-2xl">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              <h4 class="text-[11px] font-black tracking-wide uppercase text-slate-800 dark:text-white">3. Efetivado</h4>
+            </div>
+            <span id="colBadge-3" class="text-xs font-black px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 font-bold">0</span>
+          </div>
+          <div id="colStage-3" class="p-2.5 space-y-2.5 overflow-y-auto custom-scrollbar min-h-[350px]"></div>
+        </div>
+
+        <!-- Coluna 4: Em Treinamento -->
+        <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl flex flex-col shadow-sm">
+          <div class="p-3 border-b border-slate-100 dark:border-previa-darkBorder flex items-center justify-between bg-teal-50/40 dark:bg-teal-950/20 rounded-t-2xl">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-teal-500"></span>
+              <h4 class="text-[11px] font-black tracking-wide uppercase text-slate-800 dark:text-white">4. Treinamento</h4>
+            </div>
+            <span id="colBadge-4" class="text-xs font-black px-2 py-0.5 rounded-full bg-teal-100 dark:bg-teal-900/60 text-teal-700 dark:text-teal-300 font-bold">0</span>
+          </div>
+          <div id="colStage-4" class="p-2.5 space-y-2.5 overflow-y-auto custom-scrollbar min-h-[350px]"></div>
+        </div>
+
+        <!-- Coluna 5: Pausado / Descontinuado (NOVO) -->
+        <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl flex flex-col shadow-sm">
+          <div class="p-3 border-b border-slate-100 dark:border-previa-darkBorder flex items-center justify-between bg-rose-50/40 dark:bg-rose-950/20 rounded-t-2xl">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+              <h4 class="text-[11px] font-black tracking-wide uppercase text-slate-800 dark:text-white">5. Inativo / Pausado</h4>
+            </div>
+            <span id="colBadge-5" class="text-xs font-black px-2 py-0.5 rounded-full bg-rose-100 dark:bg-rose-900/60 text-rose-700 dark:text-rose-300 font-bold">0</span>
+          </div>
+          <div id="colStage-5" class="p-2.5 space-y-2.5 overflow-y-auto custom-scrollbar min-h-[350px]"></div>
+        </div>
+
+      </div>
+
+      <!-- VISÃO 2: MODO TABELA COMPLETA COM COMISSÕES -->
+      <div id="tableContainer" class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl overflow-hidden shadow-sm hidden">
+        <div class="p-4 border-b border-slate-200 dark:border-previa-darkBorder flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-50/80 dark:bg-previa-darkBg/60">
+          <div class="flex items-center gap-2">
+            <i data-lucide="table" class="w-5 h-5 text-previa-orange"></i>
+            <h3 class="text-sm font-bold text-slate-800 dark:text-white">Relatório Geral de Vendas e Comissões Detalhadas</h3>
+          </div>
+          <span class="text-xs text-slate-500 dark:text-slate-400">Regra: Vendedor ganha <strong class="text-emerald-700 dark:text-emerald-400">30%</strong> • Embaixador ganha <strong class="text-previa-orange">5% estadual</strong></span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-600 dark:text-slate-300">
+            <thead class="bg-slate-100 dark:bg-previa-forestDark/50 text-slate-600 dark:text-slate-300 uppercase text-[10px] tracking-wider border-b border-slate-200 dark:border-previa-darkBorder">
+              <tr>
+                <th class="px-4 py-3.5">Cliente / Empresa</th>
+                <th class="px-3 py-3.5">Estado (UF)</th>
+                <th class="px-4 py-3.5">Produto & Detalhes</th>
+                <th class="px-3 py-3.5">Etapa Funil</th>
+                <th class="px-3 py-3.5">Vendedor</th>
+                <th class="px-3 py-3.5">Embaixador Estadual</th>
+                <th class="px-4 py-3.5 text-right">Valor Venda (R$)</th>
+                <th class="px-4 py-3.5 text-right font-black text-emerald-700 dark:text-emerald-400">Comissão Vendedor (30%)</th>
+                <th class="px-4 py-3.5 text-right font-black text-previa-orange">Comissão Embaixador (5%)</th>
+                <th class="px-3 py-3.5 text-center">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="salesTableBody" class="divide-y divide-slate-200 dark:divide-previa-darkBorder">
+              <!-- Inserido dinamicamente via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="tableEmptyState" class="p-10 text-center text-slate-400 hidden">
+          <i data-lucide="inbox" class="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600 mb-2"></i>
+          <p class="font-bold text-xs">Nenhum cliente cadastrado ou compatível com os filtros atuais.</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================== ABA 2: MÍDIAS & POSTAGENS ==================== -->
+    <section id="view-media" class="space-y-6 hidden">
+      
+      <!-- Métricas Rápidas de Mídia -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase">Total de Vídeos</p>
+            <h3 id="statMediaVideos" class="text-2xl font-black text-previa-orange mt-0.5">0</h3>
+            <span class="text-[10px] text-slate-400 font-semibold">Vídeos produzidos</span>
+          </div>
+          <div class="w-11 h-11 rounded-xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900/50 flex items-center justify-center text-previa-orange">
+            <i data-lucide="video" class="w-5 h-5"></i>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase">Total de Postagens</p>
+            <h3 id="statMediaPosts" class="text-2xl font-black text-slate-800 dark:text-white mt-0.5">0</h3>
+            <span class="text-[10px] text-slate-400 font-semibold">Posts & Imagens</span>
+          </div>
+          <div class="w-11 h-11 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 flex items-center justify-center text-blue-600 dark:text-blue-400">
+            <i data-lucide="file-text" class="w-5 h-5"></i>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase">Visualizações</p>
+            <h3 id="statMediaViews" class="text-2xl font-black text-teal-600 dark:text-teal-400 mt-0.5">0</h3>
+            <span class="text-[10px] text-teal-600 dark:text-teal-400 font-semibold">Alcance acumulado</span>
+          </div>
+          <div class="w-11 h-11 rounded-xl bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800 flex items-center justify-center text-teal-600 dark:text-teal-400">
+            <i data-lucide="eye" class="w-5 h-5"></i>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase">Total de Ações</p>
+            <h3 id="statMediaTotal" class="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-0.5">0</h3>
+            <span id="statMediaTopChannel" class="text-[10px] text-emerald-700 dark:text-emerald-300 font-bold truncate block">Canal: -</span>
+          </div>
+          <div class="w-11 h-11 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+            <i data-lucide="globe" class="w-5 h-5"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtros da Área de Vídeos e Postagens -->
+      <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 flex flex-col sm:flex-row gap-3 items-center justify-between shadow-sm">
+        <div class="flex items-center gap-2">
+          <i data-lucide="filter" class="w-4 h-4 text-previa-orange"></i>
+          <span class="text-xs font-bold text-slate-700 dark:text-slate-200">Filtrar Mídias:</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+          <!-- Filtro por Vendedor/Criador -->
+          <select id="filterMediaSeller" onchange="renderMediaSection()" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-3 py-2 focus:outline-none focus:border-previa-orange font-semibold cursor-pointer">
+            <option value="todos">Todos os Criadores / Vendedores</option>
+            <!-- JS -->
+          </select>
+          <!-- Filtro por Canal de Mídia -->
+          <select id="filterMediaChannel" onchange="renderMediaSection()" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-3 py-2 focus:outline-none focus:border-previa-orange font-semibold cursor-pointer">
+            <option value="todos">Todos os Canais</option>
+            <option value="Instagram">Instagram</option>
+            <option value="TikTok">TikTok</option>
+            <option value="YouTube">YouTube</option>
+            <option value="LinkedIn">LinkedIn</option>
+            <option value="Facebook">Facebook</option>
+            <option value="WhatsApp Status">WhatsApp Status</option>
+          </select>
+          <!-- Filtro por Formato (Vídeo vs Imagem) -->
+          <select id="filterMediaFormat" onchange="renderMediaSection()" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-3 py-2 focus:outline-none focus:border-previa-orange font-semibold cursor-pointer">
+            <option value="todos">Todos os Formatos</option>
+            <option value="video">Apenas Vídeos</option>
+            <option value="post">Apenas Imagens / Posts</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Tabela de Mídias -->
+      <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl overflow-hidden shadow-sm">
+        <div class="p-4 border-b border-slate-200 dark:border-previa-darkBorder flex items-center justify-between bg-slate-50/70 dark:bg-previa-darkBg/60">
+          <div class="flex items-center gap-2">
+            <i data-lucide="video" class="w-5 h-5 text-previa-orange"></i>
+            <h3 class="text-sm font-bold text-slate-800 dark:text-white">Histórico de Produção de Mídia e Conteúdo</h3>
+          </div>
+          <button onclick="openMediaModal()" class="bg-previa-orange hover:bg-previa-orangeHover text-white text-xs font-black px-3.5 py-1.5 rounded-xl flex items-center gap-1.5 transition shadow">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            <span>Nova Mídia</span>
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-600 dark:text-slate-300">
+            <thead class="bg-slate-100 dark:bg-previa-forestDark/50 text-slate-600 dark:text-slate-300 uppercase text-[10px] tracking-wider border-b border-slate-200 dark:border-previa-darkBorder">
+              <tr>
+                <th class="px-4 py-3.5">Data Publicação</th>
+                <th class="px-4 py-3.5">Canal / Rede</th>
+                <th class="px-4 py-3.5">Tipo Formato</th>
+                <th class="px-4 py-3.5">Tema / Produto</th>
+                <th class="px-4 py-3.5">Responsável</th>
+                <th class="px-4 py-3.5 text-center font-bold text-teal-700 dark:text-teal-400">Visualizações</th>
+                <th class="px-4 py-3.5">Link</th>
+                <th class="px-4 py-3.5 text-right">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="mediaTableBody" class="divide-y divide-slate-200 dark:divide-previa-darkBorder">
+              <!-- JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================== ABA 4: MAPA DO BRASIL, RANKINGS & GRÁFICOS (EXCLUSIVA ADMIN) ==================== -->
+    <section id="view-map" class="space-y-6 hidden">
+      <div class="bg-previa-forest text-white border border-previa-forestDark rounded-2xl p-6 shadow-md">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <span class="px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-previa-orange text-white">
+              Painel Estratégico & Gráficos Exclusivos do Administrador
+            </span>
+            <h2 class="text-xl font-black text-white mt-2">Mapa Interativo, Rankings de Desempenho & Visualizações</h2>
+            <p class="text-xs text-emerald-200/80 mt-1 max-w-2xl leading-relaxed">
+              Consolidado de quem mais vende, melhor embaixador estadual e o vendedor com maior alcance em vídeos e mídias.
+            </p>
+          </div>
+          <div id="mapTotalSummary" class="bg-previa-forestDark border border-white/20 px-4 py-3 rounded-xl text-right">
+            <!-- JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- GRÁFICOS E RANKINGS DE DESEMPENHO -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        
+        <!-- Ranking 1: Melhor Vendedor (Faturamento) -->
+        <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 dark:border-previa-darkBorder pb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+                <i data-lucide="award" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-black text-slate-800 dark:text-white uppercase tracking-wide">Melhores Vendedores</h4>
+                <p class="text-[10px] text-slate-400">Por faturamento fechado</p>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">30% direto</span>
+          </div>
+          <div id="rankingTopSellersList" class="space-y-3">
+            <!-- JS -->
+          </div>
+        </div>
+
+        <!-- Ranking 2: Melhor Embaixador (Por Estado & Override) -->
+        <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 dark:border-previa-darkBorder pb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-orange-50 dark:bg-orange-950/40 text-previa-orange flex items-center justify-center font-bold">
+                <i data-lucide="crown" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-black text-slate-800 dark:text-white uppercase tracking-wide">Melhores Embaixadores</h4>
+                <p class="text-[10px] text-slate-400">Por volume e override do Estado</p>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold text-previa-orange">5% estadual</span>
+          </div>
+          <div id="rankingTopAmbassadorsList" class="space-y-3">
+            <!-- JS -->
+          </div>
+        </div>
+
+        <!-- Ranking 3: Vendedor com Mais Visualizações em Mídias -->
+        <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 dark:border-previa-darkBorder pb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold">
+                <i data-lucide="eye" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-black text-slate-800 dark:text-white uppercase tracking-wide">Líderes de Tráfego & Views</h4>
+                <p class="text-[10px] text-slate-400">Visualizações acumuladas em redes</p>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold text-teal-600 dark:text-teal-400">Alcance</span>
+          </div>
+          <div id="rankingTopViewsList" class="space-y-3">
+            <!-- JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Mapa do Brasil e Tabela de Estados -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Mapa SVG do Brasil -->
+        <div class="lg:col-span-7 bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-5 shadow-sm flex flex-col items-center">
+          <div class="w-full flex items-center justify-between pb-3 border-b border-slate-100 dark:border-previa-darkBorder text-xs">
+            <h3 class="font-bold text-slate-800 dark:text-white flex items-center gap-2">
+              <i data-lucide="map-pin" class="w-4 h-4 text-previa-orange"></i>
+              Concentração Nacional de Vendas por Estado
+            </h3>
+            <div class="flex items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400">
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-slate-300 dark:bg-slate-700"></span> Sem vendas</span>
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-blue-500"></span> Ativo</span>
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-previa-orange"></span> Alto</span>
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-emerald-600"></span> Líder</span>
+            </div>
+          </div>
+
+          <!-- SVG do Mapa com Estados Clicáveis -->
+        <div class="w-full py-4 flex justify-center overflow-x-auto">
+          <svg id="brazilMapSvg" viewBox="0 0 620 540" class="w-full max-w-[520px] h-auto drop-shadow-md select-none">
+            <!-- NORTE -->
+            <!-- Acre (AC) -->
+            <path id="svg-AC" d="M18,206 L34,198 L48,202 L64,194 L72,203 L73,218 L64,228 L51,223 L39,228 L27,220 L16,215 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('AC')"><title>Acre (AC)</title></path>
+            <text x="36" y="215" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[8px] font-black">AC</text>
+
+            <!-- Amazonas (AM) -->
+            <path id="svg-AM" d="M48,155 L72,130 L108,122 L144,118 L175,108 L188,118 L195,142 L206,160 L188,185 L182,212 L160,210 L140,218 L115,208 L88,214 L72,203 L64,194 L48,202 L34,198 L40,175 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('AM')"><title>Amazonas (AM)</title></path>
+            <text x="115" y="165" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[11px] font-black">AM</text>
+
+            <!-- Roraima (RR) -->
+            <path id="svg-RR" d="M152,65 L176,46 L198,42 L212,56 L208,82 L198,106 L188,118 L175,108 L160,94 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('RR')"><title>Roraima (RR)</title></path>
+            <text x="178" y="80" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[9px] font-black">RR</text>
+
+            <!-- Rondônia (RO) -->
+            <path id="svg-RO" d="M115,208 L140,218 L160,210 L182,212 L180,234 L170,252 L148,266 L130,256 L124,232 L116,220 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('RO')"><title>Rondônia (RO)</title></path>
+            <text x="142" y="240" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[9px] font-black">RO</text>
+
+            <!-- Amapá (AP) -->
+            <path id="svg-AP" d="M292,54 L318,48 L330,62 L326,90 L310,102 L290,92 L295,72 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('AP')"><title>Amapá (AP)</title></path>
+            <text x="303" y="76" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[9px] font-black">AP</text>
+
+            <!-- Pará (PA) -->
+            <path id="svg-PA" d="M198,106 L208,82 L245,86 L290,92 L310,102 L326,90 L345,104 L340,126 L368,138 L360,165 L346,182 L340,216 L310,218 L286,228 L272,212 L245,214 L220,192 L206,160 L195,142 L188,118 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('PA')"><title>Pará (PA)</title></path>
+            <text x="270" y="152" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[12px] font-black">PA</text>
+
+            <!-- Tocantins (TO) -->
+            <path id="svg-TO" d="M346,182 L368,194 L370,226 L366,265 L360,296 L338,292 L332,260 L340,216 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('TO')"><title>Tocantins (TO)</title></path>
+            <text x="345" y="246" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[10px] font-black">TO</text>
+
+            <!-- NORDESTE -->
+            <!-- Maranhão (MA) -->
+            <path id="svg-MA" d="M368,138 L404,136 L432,154 L426,188 L410,222 L378,220 L370,226 L368,194 L360,165 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('MA')"><title>Maranhão (MA)</title></path>
+            <text x="390" y="180" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[10px] font-black">MA</text>
+
+            <!-- Piauí (PI) -->
+            <path id="svg-PI" d="M432,154 L450,158 L460,188 L462,220 L448,252 L422,256 L410,222 L426,188 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('PI')"><title>Piauí (PI)</title></path>
+            <text x="432" y="212" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[10px] font-black">PI</text>
+
+            <!-- Ceará (CE) -->
+            <path id="svg-CE" d="M450,158 L496,155 L515,174 L498,206 L476,208 L460,188 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('CE')"><title>Ceará (CE)</title></path>
+            <text x="480" y="184" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[10px] font-black">CE</text>
+
+            <!-- Rio Grande do Norte (RN) -->
+            <path id="svg-RN" d="M515,174 L556,176 L552,198 L524,204 L498,206 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('RN')"><title>Rio Grande do Norte (RN)</title></path>
+            <text x="526" y="192" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[8px] font-black">RN</text>
+
+            <!-- Paraíba (PB) -->
+            <path id="svg-PB" d="M498,206 L524,204 L552,198 L555,216 L522,220 L496,218 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('PB')"><title>Paraíba (PB)</title></path>
+            <text x="522" y="214" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[8px] font-black">PB</text>
+
+            <!-- Pernambuco (PE) -->
+            <path id="svg-PE" d="M462,220 L496,218 L522,220 L555,216 L548,236 L512,238 L475,242 L460,230 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('PE')"><title>Pernambuco (PE)</title></path>
+            <text x="498" y="232" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[9px] font-black">PE</text>
+
+            <!-- Alagoas (AL) -->
+            <path id="svg-AL" d="M512,238 L548,236 L542,254 L522,256 L510,248 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('AL')"><title>Alagoas (AL)</title></path>
+            <text x="524" y="248" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[7px] font-black">AL</text>
+
+            <!-- Sergipe (SE) -->
+            <path id="svg-SE" d="M510,252 L532,256 L524,272 L506,268 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('SE')"><title>Sergipe (SE)</title></path>
+            <text x="514" y="264" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[7px] font-black">SE</text>
+
+            <!-- Bahia (BA) -->
+            <path id="svg-BA" d="M422,256 L448,252 L475,242 L512,238 L510,252 L506,268 L524,272 L508,312 L498,348 L480,366 L454,364 L436,334 L408,316 L386,306 L370,265 L410,256 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('BA')"><title>Bahia (BA)</title></path>
+            <text x="454" y="304" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[13px] font-black">BA</text>
+
+            <!-- CENTRO-OESTE -->
+            <!-- Mato Grosso (MT) -->
+            <path id="svg-MT" d="M182,212 L220,192 L245,214 L272,212 L286,228 L310,218 L340,216 L332,260 L338,292 L320,314 L306,346 L284,342 L254,324 L225,320 L216,290 L180,270 L170,252 L180,234 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('MT')"><title>Mato Grosso (MT)</title></path>
+            <text x="250" y="270" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[13px] font-black">MT</text>
+
+            <!-- Goiás (GO) -->
+            <path id="svg-GO" d="M338,292 L360,296 L386,306 L408,316 L396,358 L374,382 L342,374 L324,352 L306,346 L320,314 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('GO')"><title>Goiás (GO)</title></path>
+            <text x="350" y="342" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[11px] font-black">GO</text>
+
+            <!-- Distrito Federal (DF) -->
+            <path id="svg-DF" d="M364,334 L378,334 L378,348 L364,348 Z" class="map-state cursor-pointer transition fill-amber-300 stroke-slate-900 stroke-1 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('DF')"><title>Distrito Federal (DF)</title></path>
+            <text x="367" y="343" class="pointer-events-none fill-slate-900 text-[6px] font-black">DF</text>
+
+            <!-- Mato Grosso do Sul (MS) -->
+            <path id="svg-MS" d="M254,324 L284,342 L306,346 L324,352 L312,382 L302,416 L278,438 L256,432 L246,400 L248,362 L234,340 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('MS')"><title>Mato Grosso do Sul (MS)</title></path>
+            <text x="272" y="386" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[11px] font-black">MS</text>
+
+            <!-- SUDESTE -->
+            <!-- Minas Gerais (MG) -->
+            <path id="svg-MG" d="M396,358 L408,316 L436,334 L454,364 L480,366 L474,394 L460,404 L446,436 L410,432 L392,420 L370,410 L374,382 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('MG')"><title>Minas Gerais (MG)</title></path>
+            <text x="424" y="384" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[12px] font-black">MG</text>
+
+            <!-- Espírito Santo (ES) -->
+            <path id="svg-ES" d="M480,366 L498,378 L488,416 L474,410 L474,394 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('ES')"><title>Espírito Santo (ES)</title></path>
+            <text x="482" y="398" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[8px] font-black">ES</text>
+
+            <!-- Rio de Janeiro (RJ) -->
+            <path id="svg-RJ" d="M446,436 L460,404 L474,410 L488,416 L474,440 L442,442 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('RJ')"><title>Rio de Janeiro (RJ)</title></path>
+            <text x="456" y="432" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[8px] font-black">RJ</text>
+
+            <!-- São Paulo (SP) -->
+            <path id="svg-SP" d="M312,382 L342,374 L374,382 L370,410 L392,420 L410,432 L442,442 L422,462 L388,458 L364,468 L338,456 L312,414 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('SP')"><title>São Paulo (SP)</title></path>
+            <text x="360" y="428" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[12px] font-black">SP</text>
+
+            <!-- SUL -->
+            <!-- Paraná (PR) -->
+            <path id="svg-PR" d="M302,416 L312,414 L338,456 L364,468 L360,490 L322,488 L296,494 L282,476 L278,438 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('PR')"><title>Paraná (PR)</title></path>
+            <text x="318" y="460" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[10px] font-black">PR</text>
+
+            <!-- Santa Catarina (SC) -->
+            <path id="svg-SC" d="M296,494 L322,488 L360,490 L354,518 L320,520 L292,514 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('SC')"><title>Santa Catarina (SC)</title></path>
+            <text x="324" y="508" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[9px] font-black">SC</text>
+
+            <!-- Rio Grande do Sul (RS) -->
+            <path id="svg-RS" d="M292,514 L320,520 L354,518 L342,558 L318,590 L280,594 L260,564 L276,536 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('RS')"><title>Rio Grande do Sul (RS)</title></path>
+            <text x="300" y="556" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[11px] font-black">RS</text>
+          </svg>
+        </div>
+        <span class="text-[11px] text-slate-400 mt-1 text-center">Clique em qualquer estado para detalhar os dados imediatos ao lado.</span>
+        </div>
+
+        <!-- Detalhes do Estado Selecionado & Ranking -->
+        <div class="lg:col-span-5 space-y-4">
+          
+          <!-- Card de Destaque do Estado Clicado -->
+          <div id="stateDetailCard" class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-5 shadow-sm space-y-3">
+            <!-- JS -->
+          </div>
+
+          <!-- Tabela de Classificação por Estado -->
+          <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl overflow-hidden shadow-sm">
+            <div class="p-3.5 border-b border-slate-100 dark:border-previa-darkBorder bg-slate-50 dark:bg-previa-darkBg/60 flex items-center justify-between">
+              <h4 class="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
+                <i data-lucide="trophy" class="w-4 h-4 text-previa-orange"></i>
+                Ranking Geral de Estados
+              </h4>
+              <span class="text-[10px] text-slate-400">Ordenado por faturamento</span>
+            </div>
+            <div class="max-h-64 overflow-y-auto custom-scrollbar">
+              <table class="w-full text-left text-xs text-slate-600 dark:text-slate-300">
+                <thead class="bg-slate-50 dark:bg-previa-forestDark/50 uppercase text-[9px] text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-previa-darkBorder">
+                  <tr>
+                    <th class="px-3 py-2">Pos.</th>
+                    <th class="px-3 py-2">Estado</th>
+                    <th class="px-3 py-2 text-center">Vendas</th>
+                    <th class="px-3 py-2 text-right">Faturamento</th>
+                  </tr>
+                </thead>
+                <tbody id="statesRankingBody" class="divide-y divide-slate-100 dark:divide-previa-darkBorder">
+                  <!-- JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ABA 3: EQUIPE, EMBAIXADORES & LINKS ==================== -->
+    <section id="view-team" class="space-y-6 hidden">
+      
+      <!-- Card Informativo do Administrador -->
+      <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-6 shadow-sm">
+        <div class="max-w-3xl">
+          <span class="px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-orange-100 dark:bg-orange-950/60 text-previa-orange border border-orange-200 dark:border-orange-800">
+            Painel Exclusivo de Governança
+          </span>
+          <h2 class="text-xl font-black text-slate-900 dark:text-white mt-2">Divisão Estadual, Embaixadores e Links Restritos</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+            Cada Estado (UF) possui 1 Embaixador Oficial. Ele recebe <strong>5% de override de todas as vendas do Estado</strong> + <strong>30% de comissão direta</strong> quando atuar diretamente como vendedor. Envie os links abaixo para que cada pessoa acesse seu respectivo painel bloqueado.
+          </p>
+        </div>
+      </div>
+
+      <!-- Sessão 1: Embaixadores por Estado -->
+      <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-previa-darkBorder">
+          <div>
+            <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
+              <i data-lucide="crown" class="w-4 h-4 text-previa-orange"></i>
+              Embaixadores Estaduais (Ganham 5% do Estado + 30% Direto)
+            </h3>
+            <p class="text-[11px] text-slate-400">Links exclusivos por embaixador para envio via WhatsApp</p>
+          </div>
+          <button onclick="openMemberModal('ambassador')" class="bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition">
+            <i data-lucide="plus" class="w-3.5 h-3.5 text-previa-orange"></i>
+            <span>+ Novo Embaixador / Estado</span>
+          </button>
+        </div>
+
+        <div id="ambassadorsList" class="grid grid-cols-1 gap-3">
+          <!-- Populado via JS -->
+        </div>
+      </div>
+
+      <!-- Sessão 2: Vendedores Independentes -->
+      <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-previa-darkBorder">
+          <div>
+            <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
+              <i data-lucide="users" class="w-4 h-4 text-blue-600"></i>
+              Vendedores Comerciais (Ganham 30% das vendas diretas)
+            </h3>
+            <p class="text-[11px] text-slate-400">Links individuais com cadastro detalhado e redes sociais</p>
+          </div>
+          <button onclick="openMemberModal('seller')" class="bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition">
+            <i data-lucide="plus" class="w-3.5 h-3.5 text-previa-orange"></i>
+            <span>+ Cadastrar Vendedor Completo</span>
+          </button>
+        </div>
+
+        <div id="sellersList" class="grid grid-cols-1 gap-3">
+          <!-- Populado via JS -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================= MODAL: CADASTRAR / EDITAR VENDA ================= -->
+  <div id="leadModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-previa-darkCard border border-slate-200 dark:border-previa-darkBorder rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl my-8">
+      
+      <div class="p-4 border-b border-slate-200 dark:border-previa-darkBorder flex items-center justify-between bg-slate-50 dark:bg-previa-darkBg/60">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-orange-100 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800 flex items-center justify-center text-previa-orange">
+            <i data-lucide="user-plus" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 id="leadModalTitle" class="text-sm font-bold text-slate-800 dark:text-white">Cadastrar Venda / Oportunidade</h4>
+            <p class="text-[11px] text-slate-400">Selecione o produto (Instrutor ou Equipe) e o Estado</p>
+          </div>
+        </div>
+        <button onclick="closeModal('leadModal')" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="leadForm" onsubmit="saveLead(event)" class="p-5 space-y-3.5 text-xs">
+        <input type="hidden" id="leadId">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Nome do Cliente / Contato *</label>
+            <input type="text" id="leadName" required placeholder="Ex: Rodrigo Fonseca"
+              class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
+          </div>
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Empresa / Transportadora</label>
+            <input type="text" id="leadCompany" placeholder="Ex: TransBrasil Cargas"
+              class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="sm:col-span-2">
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Telefone / WhatsApp *</label>
+            <input type="text" id="leadPhone" required placeholder="(11) 98765-4321"
+              class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
+          </div>
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Estado (UF) *</label>
+            <select id="leadState" required onchange="handleModalStateChange(this.value)" class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
+              <!-- Populado dinamicamente -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Indicador Automático do Embaixador Estadual -->
+        <div class="bg-orange-50/70 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-900/50 rounded-xl p-3 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="crown" class="w-4 h-4 text-previa-orange"></i>
+            <span class="text-[11px] text-slate-600 dark:text-slate-300">Embaixador Responsável (5% override):</span>
+          </div>
+          <span id="leadAmbassadorPreview" class="text-xs font-bold text-previa-orange">-</span>
+        </div>
+
+        <!-- Seleção de PRODUTO (Apenas 2 produtos) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Produto Previa Treinamentos *</label>
+            <select id="leadProduct" required onchange="handleProductChange(this.value)" class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
+              <option value="Instrutor">Produto: Instrutor</option>
+              <option value="Equipe">Produto: Equipe</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Vendedor Responsável (30%) *</label>
+            <select id="leadSeller" required class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
+              <!-- Populado com vendedores e embaixadores -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Campo Especial Obrigatório quando Produto for 'Equipe' -->
+        <div id="teamInstructorsContainer" class="hidden bg-orange-50/40 dark:bg-orange-950/20 border border-previa-orange/40 p-3 rounded-xl space-y-1.5">
+          <label class="block text-previa-orange font-bold uppercase tracking-wider text-[10px]">
+            <i data-lucide="users" class="w-3.5 h-3.5 inline mr-1 text-previa-orange"></i>
+            Instrutores Vinculados à Equipe *
+          </label>
+          <textarea id="leadTeamInstructors" rows="2" placeholder="Ex: Instrutor João Silva, Instrutor Marcos Braga, Instrutora Carla Mendes..."
+            class="w-full bg-white dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange text-xs"></textarea>
+          <span class="text-[10px] text-slate-400 block">Especifique os nomes dos instrutores que compõem este contrato de equipe.</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Etapa do Funil *</label>
+            <select id="leadStage" required class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
+              <option value="1">1. Contato Inicial (Prospectado)</option>
+              <option value="2">2. Período de Teste (Trial)</option>
+              <option value="3">3. Efetivado (Fechou Venda)</option>
+              <option value="4">4. Em Treinamento (Em Uso Ativo)</option>
+              <option value="5">5. Inativo / Pausado (Parou de Usar)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Valor Total da Venda (R$) *</label>
+            <input type="number" id="leadValue" step="0.01" min="0" required placeholder="Ex: 5000.00"
+              class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-emerald-700 dark:text-emerald-400 font-bold focus:outline-none focus:border-previa-orange text-xs">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Observações do Atendimento</label>
+          <textarea id="leadNotes" rows="2" placeholder="Detalhes da frota, quantidade de alunos, motivos de pausa ou condições..."
+            class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange text-xs"></textarea>
+        </div>
+
+        <div class="pt-3 flex justify-end gap-2 border-t border-slate-200 dark:border-previa-darkBorder">
+          <button type="button" onclick="closeModal('leadModal')" class="px-4 py-2 bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark text-slate-600 dark:text-slate-300 font-bold rounded-xl transition">
+            Cancelar
+          </button>
+          <button type="submit" class="px-5 py-2 bg-previa-orange hover:bg-previa-orangeHover text-white font-black rounded-xl transition shadow-md shadow-previa-orange/30">
+            Salvar Venda
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: CADASTRAR / EDITAR MEMBRO (VENDEDOR OU EMBAIXADOR COMPLETO) ================= -->
+  <div id="memberModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-previa-darkCard border border-slate-200 dark:border-previa-darkBorder rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl my-8">
+      
+      <div class="p-4 border-b border-slate-200 dark:border-previa-darkBorder flex items-center justify-between bg-slate-50 dark:bg-previa-darkBg/60">
+        <div class="flex items-center gap-2.5">
+          <div id="memberModalIconBox" class="w-9 h-9 rounded-xl bg-orange-100 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800 flex items-center justify-center text-previa-orange">
+            <i data-lucide="user-check" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 id="memberModalTitle" class="text-sm font-bold text-slate-800 dark:text-white">Cadastrar Membro da Equipe</h4>
+            <p class="text-[11px] text-slate-400">Dados cadastrais, CPF, canais e redes sociais</p>
+          </div>
+        </div>
+        <button onclick="closeModal('memberModal')" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="memberForm" onsubmit="saveMember(event)" class="p-5 space-y-3 text-xs">
+        <input type="hidden" id="memberId">
+        <input type="hidden" id="memberRoleType" value="seller">
+
+        <div>
+          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Nome Completo *</label>
+          <input type="text" id="memberName" required placeholder="Ex: Roberto Carlos da Silva"
+            class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">CPF *</label>
+            <input type="text" id="memberCpf" required placeholder="000.000.000-00" oninput="maskCpf(this)" maxlength="14"
+              class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
+          </div>
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Estado de Atuação (UF) *</label>
+            <select id="memberUf" required class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
+              <!-- Populado dinamicamente -->
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">E-mail Corporativo *</label>
+            <input type="email" id="memberEmail" required placeholder="nome@previa.com.br"
+              class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
+          </div>
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Telefone / WhatsApp *</label>
+            <input type="text" id="memberPhone" required placeholder="(11) 98765-4321"
+              class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
+          </div>
+        </div>
+
+        <!-- REDES SOCIAIS E CANAIS DE MÍDIA -->
+        <div class="pt-2 border-t border-slate-200 dark:border-previa-darkBorder space-y-2">
+          <span class="block text-slate-700 dark:text-slate-200 font-bold text-[10px] uppercase tracking-wider">Canais & Redes Sociais do Membro:</span>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div class="relative">
+              <span class="absolute left-3 top-2 text-slate-400 font-bold text-[11px]">Instagram:</span>
+              <input type="text" id="memberInstagram" placeholder="@usuario ou link"
+                class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl pl-24 pr-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange">
+            </div>
+            <div class="relative">
+              <span class="absolute left-3 top-2 text-slate-400 font-bold text-[11px]">YouTube:</span>
+              <input type="text" id="memberYoutube" placeholder="@canal ou link"
+                class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl pl-20 pr-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div class="relative">
+              <span class="absolute left-3 top-2 text-slate-400 font-bold text-[11px]">TikTok:</span>
+              <input type="text" id="memberTiktok" placeholder="@perfil"
+                class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl pl-16 pr-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange">
+            </div>
+            <div class="relative">
+              <span class="absolute left-3 top-2 text-slate-400 font-bold text-[11px]">LinkedIn:</span>
+              <input type="text" id="memberLinkedin" placeholder="perfil"
+                class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl pl-20 pr-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange">
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-3 flex justify-end gap-2 border-t border-slate-200 dark:border-previa-darkBorder">
+          <button type="button" onclick="closeModal('memberModal')" class="px-4 py-2 bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark text-slate-600 dark:text-slate-300 font-bold rounded-xl transition">
+            Cancelar
+          </button>
+          <button type="submit" class="px-5 py-2 bg-previa-orange hover:bg-previa-orangeHover text-white font-black rounded-xl transition shadow-md shadow-previa-orange/30">
+            Salvar Membro
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: LANÇAR / EDITAR PRODUÇÃO DE MÍDIA ================= -->
+  <div id="mediaModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-previa-darkCard border border-slate-200 dark:border-previa-darkBorder rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl my-8">
+      
+      <div class="p-4 border-b border-slate-200 dark:border-previa-darkBorder flex items-center justify-between bg-slate-50 dark:bg-previa-darkBg/60">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-orange-100 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800 flex items-center justify-center text-previa-orange">
+            <i data-lucide="video" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 id="mediaModalTitle" class="text-sm font-bold text-slate-800 dark:text-white">Lançar Mídia & Tráfego</h4>
+            <p class="text-[11px] text-slate-400">Contabilize vídeos, postagens e alcance de visualizações</p>
+          </div>
+        </div>
+        <button onclick="closeModal('mediaModal')" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="mediaForm" onsubmit="saveMedia(event)" class="p-5 space-y-3.5 text-xs">
+        <input type="hidden" id="mediaId">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Data da Publicação *</label>
+            <input type="date" id="mediaDate" required class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
+          </div>
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Canal de Mídia *</label>
+            <select id="mediaChannel" required class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
+              <option value="Instagram">Instagram (Reels / Feed)</option>
+              <option value="TikTok">TikTok</option>
+              <option value="YouTube">YouTube / Shorts</option>
+              <option value="LinkedIn">LinkedIn Corporativo</option>
+              <option value="Facebook">Facebook</option>
+              <option value="WhatsApp Status">WhatsApp Status</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Criador / Responsável *</label>
+          <select id="mediaSeller" required class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
+            <!-- JS -->
+          </select>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="bg-slate-50 dark:bg-previa-darkBg p-3 rounded-xl border border-slate-200 dark:border-previa-darkBorder">
+            <label class="block text-slate-700 dark:text-slate-200 font-bold uppercase tracking-wider text-[10px] mb-1">
+              Formato de Conteúdo *
+            </label>
+            <select id="mediaFormatType" required class="w-full bg-white dark:bg-previa-darkCard border border-slate-300 dark:border-previa-darkBorder rounded-lg px-2.5 py-2 text-slate-800 dark:text-slate-100 font-bold text-xs focus:border-previa-orange">
+              <option value="video">🎥 Vídeo (Reels / TikTok / Shorts)</option>
+              <option value="post">🖼️ Imagem / Postagem (Carrossel / Banner)</option>
+            </select>
+            <span class="text-[9px] text-slate-400 mt-1 block">Defina com clareza se é vídeo ou imagem.</span>
+          </div>
+
+          <div class="bg-slate-50 dark:bg-previa-darkBg p-3 rounded-xl border border-slate-200 dark:border-previa-darkBorder">
+            <label class="block text-teal-700 dark:text-teal-400 font-bold uppercase tracking-wider text-[10px] mb-1">
+              Qtd. de Visualizações Alcançadas *
+            </label>
+            <input type="number" id="mediaViewsCount" min="0" value="500" required class="w-full bg-white dark:bg-previa-darkCard border border-slate-300 dark:border-previa-darkBorder rounded-lg px-2.5 py-2 text-slate-800 dark:text-slate-100 font-bold text-sm focus:border-teal-500">
+            <span class="text-[9px] text-slate-400 mt-1 block">Métrica de alcance para ranking de tráfego.</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Tema / Conteúdo Abordado *</label>
+          <input type="text" id="mediaTopic" required placeholder="Ex: Importância do treinamento de direção preventiva para frotas"
+            class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange">
+        </div>
+
+        <div>
+          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Link da Postagem (Opcional)</label>
+          <input type="url" id="mediaUrl" placeholder="https://instagram.com/reel/..."
+            class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange">
+        </div>
+
+        <div class="pt-3 flex justify-end gap-2 border-t border-slate-200 dark:border-previa-darkBorder">
+          <button type="button" onclick="closeModal('mediaModal')" class="px-4 py-2 bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark text-slate-600 dark:text-slate-300 font-bold rounded-xl transition">
+            Cancelar
+          </button>
+          <button type="submit" class="px-5 py-2 bg-previa-orange hover:bg-previa-orangeHover text-white font-black rounded-xl transition shadow-md shadow-previa-orange/30">
+            Salvar Mídia
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="mt-auto border-t border-slate-200 dark:border-previa-darkBorder bg-white dark:bg-previa-darkCard py-4 text-center text-xs text-slate-500 dark:text-slate-400">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+        <span>PREVIA TREINAMENTOS &copy; 2026 • CRM, Funil de Vendas, Divisão Estadual & Mídias</span>
+      </div>
+      <div class="text-[11px] text-slate-400">
+        Ambiente Seguro Corporativo
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= SCRIPT & REGRAS DE NEGÓCIO ================= -->
+  <script>
+    // 1. ESTADOS COM EMBAIXADORES VINCULADOS
+    const DEFAULT_STATES = [
+      { uf: "SP", name: "São Paulo", ambassadorId: "emb_sp" },
+      { uf: "RJ", name: "Rio de Janeiro", ambassadorId: "emb_rj" },
+      { uf: "MG", name: "Minas Gerais", ambassadorId: "emb_mg" },
+      { uf: "PR", name: "Paraná", ambassadorId: "emb_pr" },
+      { uf: "RS", name: "Rio Grande do Sul", ambassadorId: "emb_rs" },
+      { uf: "SC", name: "Santa Catarina", ambassadorId: "emb_sc" },
+      { uf: "BA", name: "Bahia", ambassadorId: "emb_ba" },
+      { uf: "GO", name: "Goiás", ambassadorId: "emb_go" }
+    ];
+
+    // 2. EMBAIXADORES ESTADUAIS (COM DADOS COMPLETOS E REDES)
+    const DEFAULT_AMBASSADORS = [
+      { 
+        id: "emb_sp", 
+        name: "Carlos Eduardo", 
+        cpf: "123.456.789-00",
+        uf: "SP", 
+        email: "carlos.sp@previa.com.br", 
+        phone: "(11) 98111-2233",
+        instagram: "@carloseduardo.previa",
+        youtube: "@previatreinamentos_sp",
+        tiktok: "@carlostreinador",
+        linkedin: "carlos-eduardo-previa"
+      },
+      { 
+        id: "emb_rj", 
+        name: "Marcos Vinicius", 
+        cpf: "234.567.890-11",
+        uf: "RJ", 
+        email: "marcos.rj@previa.com.br", 
+        phone: "(21) 98222-3344",
+        instagram: "@marcosvinicius.rj",
+        youtube: "@marcosprevia",
+        tiktok: "",
+        linkedin: "marcos-rj-previa"
+      },
+      { 
+        id: "emb_mg", 
+        name: "Ana Paula Silva", 
+        cpf: "345.678.901-22",
+        uf: "MG", 
+        email: "ana.mg@previa.com.br", 
+        phone: "(31) 98333-4455",
+        instagram: "@anapaula.mg",
+        youtube: "",
+        tiktok: "@anapaula_transito",
+        linkedin: "anapaulasilva-mg"
+      },
+      { 
+        id: "emb_pr", 
+        name: "Roberto Dias", 
+        cpf: "456.789.012-33",
+        uf: "PR", 
+        email: "roberto.pr@previa.com.br", 
+        phone: "(41) 98444-5566",
+        instagram: "@robertodias.pr",
+        youtube: "@robertoprevia",
+        tiktok: "",
+        linkedin: "roberto-dias-pr"
+      }
+    ];
+
+    // 3. VENDEDORES INDEPENDENTES (COM DADOS COMPLETOS E REDES)
+    const DEFAULT_SELLERS = [
+      { 
+        id: "v1", 
+        name: "Mariana Santos", 
+        cpf: "567.890.123-44",
+        uf: "SP", 
+        email: "mariana.vendas@previa.com.br", 
+        phone: "(11) 97111-0001",
+        instagram: "@mariana_comercial",
+        youtube: "@mari_previavendas",
+        tiktok: "@marianavendas",
+        linkedin: "mariana-santos-vendas"
+      },
+      { 
+        id: "v2", 
+        name: "Lucas Ribeiro", 
+        cpf: "678.901.234-55",
+        uf: "SP", 
+        email: "lucas.vendas@previa.com.br", 
+        phone: "(11) 97222-0002",
+        instagram: "@lucas.consultoria",
+        youtube: "",
+        tiktok: "@lucasconsultor",
+        linkedin: "lucas-ribeiro-comercial"
+      },
+      { 
+        id: "v3", 
+        name: "Juliana Mendes", 
+        cpf: "789.012.345-66",
+        uf: "RJ", 
+        email: "juliana.vendas@previa.com.br", 
+        phone: "(21) 97333-0003",
+        instagram: "@juliana.comercialrj",
+        youtube: "",
+        tiktok: "",
+        linkedin: "juliana-mendes-rj"
+      }
+    ];
+
+    // 4. LEADS INICIAIS
+    const DEFAULT_LEADS = [
+      {
+        id: "lead-1",
+        name: "Marcio Silveira",
+        company: "TransLog Express",
+        phone: "(11) 98888-1111",
+        state: "SP",
+        product: "Instrutor",
+        teamInstructors: "",
+        stage: "3", // Efetivado
+        sellerId: "v1",
+        value: 4000,
+        contactDate: "2026-10-15",
+        stageChangedDate: "2026-10-21 14:30",
+        notes: "Contratação direta de instrutor dedicado para filial de Campinas."
+      },
+      {
+        id: "lead-2",
+        name: "Fernanda Albuquerque",
+        company: "Viação Rápido Rio",
+        phone: "(21) 99999-2222",
+        state: "RJ",
+        product: "Equipe",
+        teamInstructors: "Instrutor Paulo Ramos, Instrutor Diego Neves e Instrutora Camila Lima",
+        stage: "3", // Efetivado
+        sellerId: "emb_rj",
+        value: 12000,
+        contactDate: "2026-10-10",
+        stageChangedDate: "2026-10-19 11:15",
+        notes: "Equipe completa com 3 instrutores para qualificação de 80 motoristas de ônibus."
+      },
+      {
+        id: "lead-3",
+        name: "Renato Silveira",
+        company: "Minas Log Distribuição",
+        phone: "(31) 97777-3333",
+        state: "MG",
+        product: "Equipe",
+        teamInstructors: "Instrutor Henrique Costa e Instrutor Fábio Souza",
+        stage: "2", // Período de Teste
+        sellerId: "v2",
+        value: 8500,
+        contactDate: "2026-10-18",
+        stageChangedDate: "2026-10-20 16:45",
+        notes: "Degustação do treinamento de equipe por 5 dias."
+      },
+      {
+        id: "lead-4",
+        name: "Tatiana Prado",
+        company: "AgroFrotas Paraná",
+        phone: "(41) 98877-4444",
+        state: "PR",
+        product: "Instrutor",
+        teamInstructors: "",
+        stage: "4", // Em Treinamento (Efetivado)
+        sellerId: "emb_pr",
+        value: 5000,
+        contactDate: "2026-10-05",
+        stageChangedDate: "2026-10-22 09:10",
+        notes: "Instrutor em campo realizando reciclagem de operadores de máquinas pesadas."
+      },
+      {
+        id: "lead-5",
+        name: "Gustavo Rocha",
+        company: "Distribuidora Paulistana",
+        phone: "(11) 98123-5555",
+        state: "SP",
+        product: "Instrutor",
+        teamInstructors: "",
+        stage: "1", // Contato Inicial
+        sellerId: "v2",
+        value: 3500,
+        contactDate: "2026-10-23",
+        stageChangedDate: "2026-10-23 10:00",
+        notes: "Primeiro contato via TikTok. Solicitou orçamento para 1 instrutor de direção defensiva."
+      },
+      {
+        id: "lead-6",
+        name: "Carlos Vilar",
+        company: "Frota Campineira Express",
+        phone: "(19) 98111-9999",
+        state: "SP",
+        product: "Instrutor",
+        teamInstructors: "",
+        stage: "5", // Inativo / Pausado
+        sellerId: "v1",
+        value: 3200,
+        contactDate: "2026-09-12",
+        stageChangedDate: "2026-10-20 17:00",
+        notes: "Parou de usar temporariamente devido a reestruturação interna da transportadora."
+      }
+    ];
+
+    // 5. MÍDIAS INICIAIS
+    const DEFAULT_MEDIAS = [
+      {
+        id: "med-1",
+        channel: "TikTok",
+        formatType: "video",
+        viewsCount: 4500,
+        sellerId: "v1",
+        topic: "Dicas de Treinamento com Instrutor de Direção Defensiva",
+        url: "https://tiktok.com",
+        date: "2026-10-21"
+      },
+      {
+        id: "med-2",
+        channel: "Instagram",
+        formatType: "video",
+        viewsCount: 2800,
+        sellerId: "emb_sp",
+        topic: "Como funciona a contratação do pacote Equipe Previa",
+        url: "https://instagram.com",
+        date: "2026-10-22"
+      },
+      {
+        id: "med-3",
+        channel: "LinkedIn",
+        formatType: "post",
+        viewsCount: 1950,
+        sellerId: "emb_rj",
+        topic: "Redução de sinistros em transportadoras com a Equipe de Instrutores Previa",
+        url: "https://linkedin.com",
+        date: "2026-10-23"
+      },
+      {
+        id: "med-4",
+        channel: "Instagram",
+        formatType: "post",
+        viewsCount: 3100,
+        sellerId: "v1",
+        topic: "Carrossel: Os 5 erros mais comuns em manobras de carretas",
+        url: "https://instagram.com",
+        date: "2026-10-23"
+      }
+    ];
+
+    // CARREGAR DADOS DO LOCALSTORAGE
+    let states = JSON.parse(localStorage.getItem('previa_v3_states')) || DEFAULT_STATES;
+    let ambassadors = JSON.parse(localStorage.getItem('previa_v3_ambassadors')) || DEFAULT_AMBASSADORS;
+    let sellers = JSON.parse(localStorage.getItem('previa_v3_sellers')) || DEFAULT_SELLERS;
+    let leads = JSON.parse(localStorage.getItem('previa_v3_leads')) || DEFAULT_LEADS;
+    let medias = JSON.parse(localStorage.getItem('previa_v3_medias')) || DEFAULT_MEDIAS;
+
+    function persist() {
+      localStorage.setItem('previa_v3_states', JSON.stringify(states));
+      localStorage.setItem('previa_v3_ambassadors', JSON.stringify(ambassadors));
+      localStorage.setItem('previa_v3_sellers', JSON.stringify(sellers));
+      localStorage.setItem('previa_v3_leads', JSON.stringify(leads));
+      localStorage.setItem('previa_v3_medias', JSON.stringify(medias));
+    }
+
+    // ESTADO DA APLICAÇÃO
+    let currentRole = "admin";
+    let isRestrictedUrlMode = false;
+    let activeViewMode = "kanban";
+    let currentTab = "pipeline";
+    let selectedMapUF = "SP";
+
+    // GERENCIAMENTO DARK MODE
+    function initTheme() {
+      const savedTheme = localStorage.getItem('previa_theme') || 'light';
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+        updateThemeIcon(true);
+      } else {
+        document.documentElement.classList.remove('dark');
+        updateThemeIcon(false);
+      }
+    }
+
+    function toggleDarkMode() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('previa_theme', isDark ? 'dark' : 'light');
+      updateThemeIcon(isDark);
+      showToast(isDark ? "Modo escuro ativado (descanso para os olhos)" : "Modo claro ativado");
+    }
+
+    function updateThemeIcon(isDark) {
+      const icon = document.getElementById('themeToggleIcon');
+      if (icon) {
+        icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+        lucide.createIcons();
+      }
+    }
+
+    // INICIALIZAÇÃO
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      checkUrlAccessParameters();
+      populateSelectOptions();
+      switchTab(currentTab);
+      renderApp();
+      lucide.createIcons();
+    });
+
+    // LEITURA DOS PARÂMETROS DA URL
+    function checkUrlAccessParameters() {
+      const params = new URLSearchParams(window.location.search);
+      const embParam = params.get('embaixador') || params.get('ambassador');
+      const sellerParam = params.get('vendedor') || params.get('seller');
+
+      const lockedBadge = document.getElementById('lockedRoleBadge');
+      const lockedText = document.getElementById('lockedRoleText');
+      const adminSimulator = document.getElementById('adminSimulatorBox');
+      const tabTeam = document.getElementById('tab-team');
+      const tabMap = document.getElementById('tab-map');
+
+      if (embParam) {
+        const foundEmb = ambassadors.find(a => a.id.toLowerCase() === embParam.toLowerCase());
+        if (foundEmb) {
+          currentRole = foundEmb.id;
+          isRestrictedUrlMode = true;
+          lockedBadge.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-previa-orange/40 bg-orange-50 dark:bg-orange-950/40 text-previa-orange text-xs font-bold";
+          lockedText.innerText = `Embaixador: ${foundEmb.name} (${foundEmb.uf})`;
+          adminSimulator.classList.add('hidden');
+          tabTeam.classList.add('hidden');
+          tabMap.classList.add('hidden');
+        }
+      } else if (sellerParam) {
+        const foundSeller = sellers.find(s => s.id.toLowerCase() === sellerParam.toLowerCase());
+        if (foundSeller) {
+          currentRole = foundSeller.id;
+          isRestrictedUrlMode = true;
+          lockedBadge.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-blue-200 dark:border-blue-900 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 text-xs font-bold";
+          lockedText.innerText = `Vendedor: ${foundSeller.name}`;
+          adminSimulator.classList.add('hidden');
+          tabTeam.classList.add('hidden');
+          tabMap.classList.add('hidden');
+        }
+      } else {
+        currentRole = "admin";
+        isRestrictedUrlMode = false;
+        lockedBadge.classList.add('hidden');
+        adminSimulator.classList.remove('hidden');
+        tabTeam.classList.remove('hidden');
+        tabMap.classList.remove('hidden');
+      }
+    }
+
+    // ALTERNAR VISÃO SIMULADOR ADMIN
+    function changeAdminView(val) {
+      currentRole = val;
+      const tabMap = document.getElementById('tab-map');
+      if (val !== 'admin') {
+        tabMap.classList.add('hidden');
+        if (currentTab === 'map') switchTab('pipeline');
+      } else {
+        tabMap.classList.remove('hidden');
+      }
+      renderApp();
+      showToast(`Visualizando agora como: ${resolvePersonName(val)}`);
+    }
+
+    // ALTERNAR ABAS
+    function switchTab(tab) {
+      if (tab === 'map' && currentRole !== 'admin') {
+        tab = 'pipeline';
+      }
+
+      currentTab = tab;
+      ['pipeline', 'media', 'team', 'map'].forEach(t => {
+        const el = document.getElementById(`view-${t}`);
+        if (el) el.classList.add('hidden');
+        const b = document.getElementById(`tab-${t}`);
+        if (b) b.className = "py-3 border-b-2 border-transparent text-emerald-200/70 hover:text-white flex items-center gap-2 transition whitespace-nowrap";
+      });
+
+      const currentViewEl = document.getElementById(`view-${tab}`);
+      if (currentViewEl) currentViewEl.classList.remove('hidden');
+
+      const activeBtn = document.getElementById(`tab-${tab}`);
+      if (activeBtn) activeBtn.className = "py-3 border-b-2 border-previa-orange text-white flex items-center gap-2 transition whitespace-nowrap font-bold";
+
+      const toggleGroup = document.getElementById('viewModeToggleGroup');
+      if (tab === 'pipeline') {
+        toggleGroup.classList.remove('hidden');
+      } else {
+        toggleGroup.classList.add('hidden');
+      }
+
+      renderApp();
+      lucide.createIcons();
+    }
+
+    // ALTERNAR KANBAN E TABELA
+    function setViewMode(mode) {
+      activeViewMode = mode;
+      const bK = document.getElementById('btnViewKanban');
+      const bT = document.getElementById('btnViewTable');
+
+      if (mode === 'kanban') {
+        bK.className = "px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 bg-previa-orange text-white transition shadow";
+        bT.className = "px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 text-emerald-200/70 hover:text-white transition";
+        document.getElementById('kanbanContainer').classList.remove('hidden');
+        document.getElementById('tableContainer').classList.add('hidden');
+      } else {
+        bT.className = "px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 bg-previa-orange text-white transition shadow";
+        bK.className = "px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 text-emerald-200/70 hover:text-white transition";
+        document.getElementById('kanbanContainer').classList.add('hidden');
+        document.getElementById('tableContainer').classList.remove('hidden');
+      }
+      renderApp();
+      lucide.createIcons();
+    }
+
+    // POPULAR SELECTS DE FILTROS E FORMULÁRIOS
+    function populateSelectOptions() {
+      // 1. Selector Admin
+      const adminSelect = document.getElementById('adminViewSelector');
+      adminSelect.innerHTML = `<option value="admin" class="bg-previa-forest text-white">👑 Admin Geral (Todos)</option>`;
+
+      const optGroupEmb = document.createElement('optgroup');
+      optGroupEmb.label = "Embaixadores Estaduais";
+      ambassadors.forEach(a => {
+        optGroupEmb.innerHTML += `<option value="${a.id}" class="bg-previa-forest text-white">🎖️ ${a.name} (${a.uf})</option>`;
+      });
+      adminSelect.appendChild(optGroupEmb);
+
+      const optGroupSell = document.createElement('optgroup');
+      optGroupSell.label = "Vendedores Comerciais";
+      sellers.forEach(s => {
+        optGroupSell.innerHTML += `<option value="${s.id}" class="bg-previa-forest text-white">👤 ${s.name} (${s.uf || 'BR'})</option>`;
+      });
+      adminSelect.appendChild(optGroupSell);
+      adminSelect.value = currentRole;
+
+      // 2. Selects de Estados (UF)
+      const modalStateSelect = document.getElementById('leadState');
+      const filterStateSelect = document.getElementById('filterState');
+      const memberUfSelect = document.getElementById('memberUf');
+      
+      modalStateSelect.innerHTML = "";
+      filterStateSelect.innerHTML = `<option value="todos">Todos os Estados</option>`;
+      if (memberUfSelect) memberUfSelect.innerHTML = "";
+
+      states.forEach(st => {
+        modalStateSelect.innerHTML += `<option value="${st.uf}">${st.uf} - ${st.name}</option>`;
+        filterStateSelect.innerHTML += `<option value="${st.uf}">${st.uf} - ${st.name}</option>`;
+        if (memberUfSelect) memberUfSelect.innerHTML += `<option value="${st.uf}">${st.uf} - ${st.name}</option>`;
+      });
+
+      // 3. Atualizar lista em cascata de vendedores respeitando estado selecionado
+      updateSellersFilterByState("todos");
+
+      // 4. Selects de Vendedores para Formulários de Leads e Mídia
+      const leadSellerSelect = document.getElementById('leadSeller');
+      const mediaSellerSelect = document.getElementById('mediaSeller');
+      const filterMediaSellerSelect = document.getElementById('filterMediaSeller');
+
+      leadSellerSelect.innerHTML = "";
+      mediaSellerSelect.innerHTML = "";
+      if (filterMediaSellerSelect) filterMediaSellerSelect.innerHTML = `<option value="todos">Todos os Criadores / Vendedores</option>`;
+
+      const allMembers = [
+        ...sellers.map(s => ({ id: s.id, name: `${s.name} (Vendedor)`, type: 'Vendedor' })),
+        ...ambassadors.map(a => ({ id: a.id, name: `${a.name} (Embaixador ${a.uf})`, type: 'Embaixador' }))
+      ];
+
+      allMembers.forEach(p => {
+        leadSellerSelect.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+        mediaSellerSelect.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+        if (filterMediaSellerSelect) {
+          filterMediaSellerSelect.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+        }
+      });
+    }
+
+    // REGRA DE CASCATA: SELECIONOU ESTADO, SÓ APARECEM VENDEDORES E EMBAIXADORES DAQUELE ESTADO
+    function onStateFilterChange(selectedUF) {
+      updateSellersFilterByState(selectedUF);
+      renderApp();
+    }
+
+    function updateSellersFilterByState(uf) {
+      const filterSellerSelect = document.getElementById('filterSeller');
+      const previousValue = filterSellerSelect.value;
+      filterSellerSelect.innerHTML = `<option value="todos">Todos os Vendedores/Embaixadores</option>`;
+
+      let eligibleAmbassadors = ambassadors;
+      let eligibleSellers = sellers;
+
+      if (uf !== "todos") {
+        eligibleAmbassadors = ambassadors.filter(a => a.uf === uf);
+        eligibleSellers = sellers.filter(s => s.uf === uf);
+      }
+
+      if (eligibleAmbassadors.length > 0) {
+        const optGEmb = document.createElement('optgroup');
+        optGEmb.label = `Embaixadores (${uf === 'todos' ? 'Geral' : uf})`;
+        eligibleAmbassadors.forEach(a => {
+          optGEmb.innerHTML += `<option value="${a.id}">🎖️ ${a.name}</option>`;
+        });
+        filterSellerSelect.appendChild(optGEmb);
+      }
+
+      if (eligibleSellers.length > 0) {
+        const optGSell = document.createElement('optgroup');
+        optGSell.label = `Vendedores (${uf === 'todos' ? 'Geral' : uf})`;
+        eligibleSellers.forEach(s => {
+          optGSell.innerHTML += `<option value="${s.id}">👤 ${s.name}</option>`;
+        });
+        filterSellerSelect.appendChild(optGSell);
+      }
+
+      const stillExists = Array.from(filterSellerSelect.options).some(o => o.value === previousValue);
+      if (stillExists) {
+        filterSellerSelect.value = previousValue;
+      } else {
+        filterSellerSelect.value = "todos";
+      }
+    }
+
+    // FILTRAR LEADS CONFORME PERMISSAO E FILTROS DA INTERFACE
+    function getFilteredLeads() {
+      let list = [...leads];
+
+      if (currentRole === "admin") {
+        // Admin vê tudo
+      } else {
+        const isEmb = ambassadors.find(a => a.id === currentRole);
+        if (isEmb) {
+          list = list.filter(l => l.state === isEmb.uf || l.sellerId === isEmb.id);
+        } else {
+          list = list.filter(l => l.sellerId === currentRole);
+        }
+      }
+
+      const search = document.getElementById('leadSearch').value.toLowerCase().trim();
+      const prodFilter = document.getElementById('filterProduct').value;
+      const stateFilter = document.getElementById('filterState').value;
+      const sellerFilter = document.getElementById('filterSeller').value;
+
+      if (search) {
+        list = list.filter(l => 
+          l.name.toLowerCase().includes(search) || 
+          (l.company || "").toLowerCase().includes(search) || 
+          (l.teamInstructors || "").toLowerCase().includes(search) ||
+          l.product.toLowerCase().includes(search)
+        );
+      }
+
+      if (prodFilter !== "todos") {
+        list = list.filter(l => l.product === prodFilter);
+      }
+
+      if (stateFilter !== "todos") {
+        list = list.filter(l => l.state === stateFilter);
+      }
+
+      if (sellerFilter !== "todos") {
+        list = list.filter(l => l.sellerId === sellerFilter);
+      }
+
+      return list;
+    }
+
+    // RENDER GERAL
+    function renderApp() {
+      updateRoleHeaderAndCards();
+      renderKanbanView();
+      renderTableView();
+      renderMediaSection();
+      renderTeamSection();
+      if (currentRole === 'admin') {
+        renderMapSection();
+        renderRankingsSection();
+      }
+      lucide.createIcons();
+    }
+
+    // HEADER & RESUMO FINANCEIRO
+    function updateRoleHeaderAndCards() {
+      const roleTag = document.getElementById('roleTag');
+      const headerTitle = document.getElementById('headerUserTitle');
+      const headerSubtitle = document.getElementById('headerUserSubtitle');
+      const financialGrid = document.getElementById('financialCardsGrid');
+
+      const isEmb = ambassadors.find(a => a.id === currentRole);
+      const isSeller = sellers.find(s => s.id === currentRole);
+
+      const visibleLeads = getFilteredLeads();
+      const closedLeads = visibleLeads.filter(l => l.stage === "3" || l.stage === "4");
+
+      if (currentRole === "admin") {
+        roleTag.className = "px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-previa-forest text-white";
+        roleTag.innerText = "ADMIN GERAL PREVIA";
+        headerTitle.innerText = "Painel Consolidado Previa Treinamentos";
+        headerSubtitle.innerText = "Visão executiva de todos os Estados, produtos (Instrutor / Equipe) e fechamento de comissões.";
+
+        const totalBruto = closedLeads.reduce((acc, l) => acc + Number(l.value || 0), 0);
+        const totalComissaoVendedores = totalBruto * 0.30;
+        const totalOverrideEmbaixadores = totalBruto * 0.05;
+
+        financialGrid.innerHTML = `
+          <div class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder p-3.5 rounded-xl">
+            <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase">Faturamento Efetivado</span>
+            <h4 class="text-lg font-black text-slate-900 dark:text-white mt-0.5">R$ ${totalBruto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h4>
+          </div>
+          <div class="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 p-3.5 rounded-xl">
+            <span class="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 uppercase">Comissões Vendedores (30%)</span>
+            <h4 class="text-lg font-black text-emerald-700 dark:text-emerald-300 mt-0.5">R$ ${totalComissaoVendedores.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h4>
+          </div>
+          <div class="bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900/50 p-3.5 rounded-xl col-span-2 sm:col-span-1">
+            <span class="text-[10px] font-bold text-previa-orange uppercase">Override Embaixadores (5%)</span>
+            <h4 class="text-lg font-black text-previa-orange mt-0.5">R$ ${totalOverrideEmbaixadores.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h4>
+          </div>
+        `;
+      } else if (isEmb) {
+        roleTag.className = "px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-previa-orange text-white";
+        roleTag.innerText = `EMBAIXADOR OFICIAL • ${isEmb.uf}`;
+        headerTitle.innerText = `Painel do Embaixador: ${isEmb.name}`;
+        headerSubtitle.innerText = `Gestão das vendas do estado de ${getStateName(isEmb.uf)} (5% de override) e vendas diretas pessoais (30%).`;
+
+        const minhasVendasFechadas = closedLeads.filter(l => l.sellerId === isEmb.id);
+        const totalMinhasVendas = minhasVendasFechadas.reduce((acc, l) => acc + Number(l.value || 0), 0);
+        const comissaoDireta30 = totalMinhasVendas * 0.30;
+
+        const vendasDoMeuEstado = closedLeads.filter(l => l.state === isEmb.uf);
+        const totalEstado = vendasDoMeuEstado.reduce((acc, l) => acc + Number(l.value || 0), 0);
+        const overrideEstadual5 = totalEstado * 0.05;
+
+        const totalGeralReceber = comissaoDireta30 + overrideEstadual5;
+
+        financialGrid.innerHTML = `
+          <div class="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 p-3.5 rounded-xl">
+            <span class="text-[10px] font-bold text-blue-700 dark:text-blue-300 uppercase">Comissão Direta (30%)</span>
+            <h4 class="text-lg font-black text-slate-900 dark:text-white mt-0.5">R$ ${comissaoDireta30.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h4>
+            <span class="text-[10px] text-slate-500">${minhasVendasFechadas.length} vendas próprias</span>
+          </div>
+          <div class="bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900/50 p-3.5 rounded-xl">
+            <span class="text-[10px] font-bold text-previa-orange uppercase">Override Estadual (5%)</span>
+            <h4 class="text-lg font-black text-previa-orange mt-0.5">R$ ${overrideEstadual5.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h4>
+            <span class="text-[10px] text-slate-500">Sobre R$ ${totalEstado.toLocaleString('pt-BR')} do ${isEmb.uf}</span>
+          </div>
+          <div class="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 p-3.5 rounded-xl col-span-2 sm:col-span-1">
+            <span class="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 uppercase">Total a Receber</span>
+            <h4 class="text-xl font-black text-emerald-700 dark:text-emerald-300 mt-0.5">R$ ${totalGeralReceber.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h4>
+            <span class="text-[10px] text-emerald-800 dark:text-emerald-400">30% direto + 5% estado</span>
+          </div>
+        `;
+      } else if (isSeller) {
+        roleTag.className = "px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-blue-600 text-white";
+        roleTag.innerText = "VENDEDOR COMERCIAL";
+        headerTitle.innerText = `Painel Pessoal: ${isSeller.name}`;
+        headerSubtitle.innerText = `Visualização exclusiva de suas vendas dos produtos Instrutor e Equipe. Sua comissão é de 30% sobre os negócios fechados.`;
+
+        const totalMinhasVendas = closedLeads.reduce((acc, l) => acc + Number(l.value || 0), 0);
+        const comissao30 = totalMinhasVendas * 0.30;
+
+        financialGrid.innerHTML = `
+          <div class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder p-3.5 rounded-xl">
+            <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase">Vendas Efetivadas</span>
+            <h4 class="text-lg font-black text-slate-900 dark:text-white mt-0.5">R$ ${totalMinhasVendas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h4>
+            <span class="text-[10px] text-slate-500">${closedLeads.length} contratos</span>
+          </div>
+          <div class="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 p-3.5 rounded-xl col-span-2">
+            <span class="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 uppercase">Minha Comissão a Receber (30%)</span>
+            <h4 class="text-2xl font-black text-emerald-700 dark:text-emerald-300 mt-0.5">R$ ${comissao30.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h4>
+            <span class="text-[10px] text-emerald-800 dark:text-emerald-400">30% líquido creditado sobre etapas 3 e 4</span>
+          </div>
+        `;
+      }
+    }
+
+    // 1. RENDERIZAR KANBAN (SUPORTA ETAPA 1 A 5)
+    function renderKanbanView() {
+      const list = getFilteredLeads();
+      const stages = { '1': [], '2': [], '3': [], '4': [], '5': [] };
+      list.forEach(l => {
+        if (stages[l.stage]) stages[l.stage].push(l);
+      });
+
+      for (let s = 1; s <= 5; s++) {
+        const countEl = document.getElementById(`statCount-${s}`);
+        const badgeEl = document.getElementById(`colBadge-${s}`);
+        if (countEl) countEl.innerText = stages[s].length;
+        if (badgeEl) badgeEl.innerText = stages[s].length;
+
+        const col = document.getElementById(`colStage-${s}`);
+        if (!col) continue;
+        col.innerHTML = "";
+
+        if (stages[s].length === 0) {
+          col.innerHTML = `
+            <div class="h-28 border border-dashed border-slate-200 dark:border-previa-darkBorder rounded-xl flex flex-col items-center justify-center text-slate-400 text-[11px] text-center p-3">
+              <i data-lucide="ghost" class="w-4 h-4 mb-1 text-slate-300 dark:text-slate-600"></i>
+              Nenhum registro
+            </div>`;
+          continue;
+        }
+
+        stages[s].forEach(lead => {
+          const sellerName = resolvePersonName(lead.sellerId);
+          const ambassadorName = getAmbassadorNameByState(lead.state);
+          const valor = Number(lead.value || 0);
+          const comissao30 = valor * 0.30;
+          const isPaused = lead.stage === '5';
+
+          const card = document.createElement('div');
+          card.className = `bg-white dark:bg-previa-darkCard border ${isPaused ? 'border-rose-200 dark:border-rose-900/60 opacity-90' : 'border-slate-200 dark:border-previa-darkBorder'} hover:border-previa-orange/60 rounded-xl p-3 shadow-sm space-y-2 transition`;
+
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-1.5">
+              <div>
+                <h5 class="font-bold text-slate-900 dark:text-white text-xs">${escapeHtml(lead.name)}</h5>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-0.5">
+                  <i data-lucide="building-2" class="w-3 h-3 text-previa-orange"></i>
+                  ${escapeHtml(lead.company || 'Pessoa Física')}
+                </p>
+              </div>
+              <span class="text-[10px] font-black px-1.5 py-0.5 rounded bg-slate-100 dark:bg-previa-darkBg text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-previa-darkBorder">
+                ${lead.state}
+              </span>
+            </div>
+
+            <!-- Produto Badge -->
+            <div class="bg-slate-50 dark:bg-previa-darkBg p-2 rounded-lg border border-slate-100 dark:border-previa-darkBorder text-[10px] space-y-1">
+              <div class="flex items-center justify-between">
+                <span class="text-slate-500 dark:text-slate-400 font-medium">Produto:</span>
+                <span class="font-bold ${lead.product === 'Equipe' ? 'text-teal-700 dark:text-teal-400' : 'text-previa-orange'}">
+                  ${lead.product === 'Equipe' ? '👥 Equipe' : '👤 Instrutor'}
+                </span>
+              </div>
+
+              ${lead.product === 'Equipe' && lead.teamInstructors ? `
+                <div class="pt-1 border-t border-slate-200/60 dark:border-previa-darkBorder text-[9px] text-teal-800 dark:text-teal-300">
+                  <strong>Instrutores:</strong>
+                  <p class="italic line-clamp-2">${escapeHtml(lead.teamInstructors)}</p>
+                </div>
+              ` : ''}
+
+              <div class="flex items-center justify-between pt-1 border-t border-slate-200/60 dark:border-previa-darkBorder">
+                <span class="text-slate-500 dark:text-slate-400">Vendedor:</span>
+                <span class="font-bold text-slate-700 dark:text-slate-200 truncate max-w-[110px]">${sellerName}</span>
+              </div>
+
+              <div class="flex items-center justify-between">
+                <span class="text-slate-500 dark:text-slate-400">Embaixador:</span>
+                <span class="text-previa-orange font-bold truncate max-w-[110px]">${ambassadorName}</span>
+              </div>
+            </div>
+
+            <!-- Valores e Comissão -->
+            <div class="flex items-center justify-between text-xs pt-0.5">
+              <span class="text-slate-500 dark:text-slate-400 text-[10px]">Valor:</span>
+              <span class="font-black text-slate-900 dark:text-white">R$ ${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+            </div>
+
+            ${(lead.stage === '3' || lead.stage === '4') ? `
+              <div class="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-2 py-1 rounded text-[10px] flex items-center justify-between font-bold text-emerald-700 dark:text-emerald-300">
+                <span>Comissão (30%):</span>
+                <span>R$ ${comissao30.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              </div>
+            ` : ''}
+
+            ${isPaused ? `
+              <div class="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 px-2 py-0.5 rounded text-[9px] font-bold text-rose-700 dark:text-rose-400 text-center">
+                Instrutor / Equipe Parou de Usar
+              </div>
+            ` : ''}
+
+            <!-- Botões de Troca Rápida de Etapa (1 a 5) -->
+            <div class="pt-2 border-t border-slate-100 dark:border-previa-darkBorder space-y-1.5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1">
+                  ${['1', '2', '3', '4', '5'].map(st => `
+                    <button onclick="moveLeadStage('${lead.id}', '${st}')" 
+                      title="${getStageLabel(st)}"
+                      class="w-5 h-5 rounded text-[9px] font-black flex items-center justify-center transition ${
+                        lead.stage === st 
+                        ? (st === '5' ? 'bg-rose-600 text-white shadow' : 'bg-previa-orange text-white shadow')
+                        : 'bg-slate-100 dark:bg-previa-darkBg text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-previa-forestDark'
+                      }">
+                      ${st}
+                    </button>
+                  `).join('')}
+                </div>
+
+                <div class="flex items-center gap-1">
+                  <button onclick="editLead('${lead.id}')" title="Editar" class="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200">
+                    <i data-lucide="edit" class="w-3.5 h-3.5"></i>
+                  </button>
+                  <button onclick="deleteLead('${lead.id}')" title="Excluir" class="p-1 text-red-400 hover:text-red-600">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- DATAS ABAIXO DA ETAPA -->
+              <div class="bg-slate-50 dark:bg-previa-darkBg p-1.5 rounded-lg border border-slate-200/80 dark:border-previa-darkBorder text-[9px] space-y-0.5 text-slate-500 dark:text-slate-400">
+                <div class="flex items-center justify-between">
+                  <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3 text-blue-500"></i> Contato:</span>
+                  <strong class="text-slate-800 dark:text-slate-200">${formatDateBr(lead.contactDate || 'Hoje')}</strong>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3 text-previa-orange"></i> Atualizado:</span>
+                  <strong class="text-previa-orange">${lead.stageChangedDate || '-'}</strong>
+                </div>
+              </div>
+            </div>
+          `;
+          col.appendChild(card);
+        });
+      }
+    }
+
+    function getStageLabel(st) {
+      switch(st) {
+        case '1': return 'Etapa 1: Contato Inicial';
+        case '2': return 'Etapa 2: Período de Teste';
+        case '3': return 'Etapa 3: Efetivado';
+        case '4': return 'Etapa 4: Em Treinamento (Ativo)';
+        case '5': return 'Etapa 5: Inativo / Pausado';
+        default: return `Etapa ${st}`;
+      }
+    }
+
+    // 2. RENDERIZAR TABELA (SUPORTA ETAPA 1 A 5)
+    function renderTableView() {
+      const list = getFilteredLeads();
+      const tbody = document.getElementById('salesTableBody');
+      const empty = document.getElementById('tableEmptyState');
+
+      tbody.innerHTML = "";
+
+      if (list.length === 0) {
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      list.forEach(lead => {
+        const valor = Number(lead.value || 0);
+        const isClosed = (lead.stage === "3" || lead.stage === "4");
+        const comissaoVendedor30 = isClosed ? (valor * 0.30) : 0;
+        const comissaoEmbaixador5 = isClosed ? (valor * 0.05) : 0;
+
+        const sellerName = resolvePersonName(lead.sellerId);
+        const ambassadorName = getAmbassadorNameByState(lead.state);
+
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 dark:hover:bg-previa-darkBg/50 transition";
+        tr.innerHTML = `
+          <td class="px-4 py-3.5">
+            <div class="font-bold text-slate-900 dark:text-white">${escapeHtml(lead.name)}</div>
+            <div class="text-[11px] text-slate-500 dark:text-slate-400">${escapeHtml(lead.company || 'Pessoa Física')} • ${lead.phone}</div>
+          </td>
+          <td class="px-3 py-3.5">
+            <span class="px-2 py-0.5 rounded font-black text-xs bg-slate-100 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-slate-700 dark:text-slate-200">
+              ${lead.state}
+            </span>
+          </td>
+          <td class="px-4 py-3.5">
+            <div class="font-bold ${lead.product === 'Equipe' ? 'text-teal-700 dark:text-teal-400' : 'text-previa-orange'}">
+              ${lead.product === 'Equipe' ? '👥 Equipe' : '👤 Instrutor'}
+            </div>
+            ${lead.product === 'Equipe' && lead.teamInstructors ? `
+              <div class="text-[10px] text-slate-400 italic max-w-xs line-clamp-1" title="${escapeHtml(lead.teamInstructors)}">
+                Instrutores: ${escapeHtml(lead.teamInstructors)}
+              </div>
+            ` : ''}
+          </td>
+          <td class="px-3 py-3.5">
+            <select onchange="moveLeadStage('${lead.id}', this.value)" class="bg-white dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-lg text-[11px] font-bold px-2 py-1 text-slate-800 dark:text-slate-100 focus:outline-none mb-1">
+              <option value="1" ${lead.stage === '1' ? 'selected' : ''}>1. Contato</option>
+              <option value="2" ${lead.stage === '2' ? 'selected' : ''}>2. Teste</option>
+              <option value="3" ${lead.stage === '3' ? 'selected' : ''}>3. Efetivado</option>
+              <option value="4" ${lead.stage === '4' ? 'selected' : ''}>4. Em Treinamento</option>
+              <option value="5" ${lead.stage === '5' ? 'selected' : ''}>5. Inativo / Pausado</option>
+            </select>
+            <div class="text-[10px] text-slate-400 space-y-0.5 whitespace-nowrap">
+              <div>Contato: <span class="text-slate-700 dark:text-slate-300 font-semibold">${formatDateBr(lead.contactDate || 'Hoje')}</span></div>
+              <div>Atualizado: <span class="text-previa-orange font-semibold">${lead.stageChangedDate || '-'}</span></div>
+            </div>
+          </td>
+          <td class="px-3 py-3.5 font-medium text-slate-700 dark:text-slate-200">
+            ${sellerName}
+          </td>
+          <td class="px-3 py-3.5 text-previa-orange font-semibold">
+            ${ambassadorName}
+          </td>
+          <td class="px-4 py-3.5 text-right font-black text-slate-900 dark:text-white">
+            R$ ${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+          </td>
+          <td class="px-4 py-3.5 text-right font-black text-emerald-700 dark:text-emerald-400">
+            ${isClosed ? `R$ ${comissaoVendedor30.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : '<span class="text-slate-400 font-normal">Aguardando</span>'}
+          </td>
+          <td class="px-4 py-3.5 text-right font-black text-previa-orange">
+            ${isClosed ? `R$ ${comissaoEmbaixador5.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : '<span class="text-slate-400 font-normal">Aguardando</span>'}
+          </td>
+          <td class="px-3 py-3.5 text-center">
+            <div class="inline-flex items-center gap-1">
+              <button onclick="editLead('${lead.id}')" title="Editar" class="p-1.5 hover:bg-slate-100 dark:hover:bg-previa-darkBg rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200">
+                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+              </button>
+              <button onclick="deleteLead('${lead.id}')" title="Excluir" class="p-1.5 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-lg text-red-500">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // 3. RENDERIZAR MÍDIAS COM FILTROS ESPECÍFICOS
+    function renderMediaSection() {
+      let list = [...medias];
+      if (currentRole !== "admin") {
+        list = list.filter(m => m.sellerId === currentRole);
+      }
+
+      const filterSeller = document.getElementById('filterMediaSeller')?.value || "todos";
+      const filterChannel = document.getElementById('filterMediaChannel')?.value || "todos";
+      const filterFormat = document.getElementById('filterMediaFormat')?.value || "todos";
+
+      if (filterSeller !== "todos") {
+        list = list.filter(m => m.sellerId === filterSeller);
+      }
+      if (filterChannel !== "todos") {
+        list = list.filter(m => m.channel === filterChannel);
+      }
+      if (filterFormat !== "todos") {
+        list = list.filter(m => m.formatType === filterFormat);
+      }
+
+      let totalV = 0, totalP = 0, totalViews = 0;
+      const channels = {};
+      list.forEach(m => {
+        if (m.formatType === "video") totalV += 1;
+        else totalP += 1;
+        totalViews += Number(m.viewsCount || 0);
+        channels[m.channel] = (channels[m.channel] || 0) + 1;
+      });
+
+      const elVideos = document.getElementById('statMediaVideos');
+      const elPosts = document.getElementById('statMediaPosts');
+      const elTotal = document.getElementById('statMediaTotal');
+      const elViews = document.getElementById('statMediaViews');
+      const elTopChannel = document.getElementById('statMediaTopChannel');
+
+      if (elVideos) elVideos.innerText = totalV;
+      if (elPosts) elPosts.innerText = totalP;
+      if (elTotal) elTotal.innerText = totalV + totalP;
+      if (elViews) elViews.innerText = totalViews.toLocaleString('pt-BR');
+
+      let topC = "-", max = 0;
+      for (const [c, val] of Object.entries(channels)) {
+        if (val > max) { max = val; topC = `${c} (${val})`; }
+      }
+      if (elTopChannel) elTopChannel.innerText = `Canal: ${topC}`;
+
+      const tbody = document.getElementById('mediaTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = "";
+
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-slate-400">Nenhum registro de mídia disponível com os filtros atuais.</td></tr>`;
+        return;
+      }
+
+      list.forEach(item => {
+        const creatorName = resolvePersonName(item.sellerId);
+        const isVideo = item.formatType === "video";
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 dark:hover:bg-previa-darkBg/50 transition";
+        tr.innerHTML = `
+          <td class="px-4 py-3 whitespace-nowrap text-slate-800 dark:text-slate-100 font-medium">${formatDateBr(item.date) || '-'}</td>
+          <td class="px-4 py-3 font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-previa-orange"></span>
+            ${item.channel}
+          </td>
+          <td class="px-4 py-3">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isVideo ? 'bg-orange-100 dark:bg-orange-950/60 text-previa-orange' : 'bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300'}">
+              ${isVideo ? '🎥 Vídeo' : '🖼️ Post / Imagem'}
+            </span>
+          </td>
+          <td class="px-4 py-3 text-slate-700 dark:text-slate-200">${escapeHtml(item.topic)}</td>
+          <td class="px-4 py-3 text-slate-500 dark:text-slate-400">${creatorName}</td>
+          <td class="px-4 py-3 text-center font-black text-teal-700 dark:text-teal-400">${(Number(item.viewsCount) || 0).toLocaleString('pt-BR')}</td>
+          <td class="px-4 py-3">
+            ${item.url ? `<a href="${item.url}" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 text-[11px]"><i data-lucide="external-link" class="w-3 h-3"></i> Abrir link</a>` : '-'}
+          </td>
+          <td class="px-4 py-3 text-right">
+            <div class="inline-flex items-center gap-1">
+              <button onclick="editMedia('${item.id}')" title="Atualizar dados de visualizações ou link" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1">
+                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+              </button>
+              <button onclick="deleteMedia('${item.id}')" title="Excluir" class="text-red-400 hover:text-red-600 p-1">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // 4. RENDERIZAR MAPA INTERATIVO DO BRASIL (EXCLUSIVO ADMIN)
+    function renderMapSection() {
+      const statsByUF = {};
+      states.forEach(st => {
+        statsByUF[st.uf] = { total: 0, count: 0, leads: [] };
+      });
+
+      leads.forEach(l => {
+        if (!statsByUF[l.state]) statsByUF[l.state] = { total: 0, count: 0, leads: [] };
+        statsByUF[l.state].leads.push(l);
+        if (l.stage === "3" || l.stage === "4") {
+          statsByUF[l.state].total += Number(l.value || 0);
+          statsByUF[l.state].count += 1;
+        }
+      });
+
+      const sortedStates = Object.keys(statsByUF).map(uf => ({
+        uf,
+        name: getStateName(uf),
+        total: statsByUF[uf].total,
+        count: statsByUF[uf].count,
+        ambassador: getAmbassadorNameByState(uf)
+      })).sort((a, b) => b.total - a.total);
+
+      const maxSales = Math.max(...sortedStates.map(s => s.total), 1);
+      sortedStates.forEach(item => {
+        const path = document.getElementById(`svg-${item.uf}`);
+        if (path) {
+          if (item.total === 0) {
+            path.style.fill = document.documentElement.classList.contains('dark') ? "#1e382e" : "#e2e8f0";
+          } else if (item.total === maxSales) {
+            path.style.fill = "#059669";
+          } else if (item.total > maxSales * 0.4) {
+            path.style.fill = "#f05a28";
+          } else {
+            path.style.fill = "#3b82f6";
+          }
+        }
+      });
+
+      const rankingBody = document.getElementById('statesRankingBody');
+      if (rankingBody) {
+        rankingBody.innerHTML = sortedStates.map((st, idx) => `
+          <tr class="hover:bg-slate-50 dark:hover:bg-previa-darkBg/60 transition cursor-pointer ${selectedMapUF === st.uf ? 'bg-orange-50 dark:bg-orange-950/40 font-bold' : ''}" onclick="selectMapState('${st.uf}')">
+            <td class="px-3 py-2 text-previa-orange font-black">#${idx + 1}</td>
+            <td class="px-3 py-2 text-slate-800 dark:text-slate-100">
+              ${st.uf} - ${st.name}
+              <div class="text-[9px] text-slate-400">${st.ambassador}</div>
+            </td>
+            <td class="px-3 py-2 text-center font-bold text-slate-800 dark:text-slate-100">${st.count}</td>
+            <td class="px-3 py-2 text-right font-black text-emerald-700 dark:text-emerald-400">R$ ${st.total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+          </tr>
+        `).join('');
+      }
+
+      renderStateDetailCard(selectedMapUF, statsByUF[selectedMapUF]);
+
+      const totalNacional = sortedStates.reduce((acc, c) => acc + c.total, 0);
+      const mapSummary = document.getElementById('mapTotalSummary');
+      if (mapSummary) {
+        mapSummary.innerHTML = `
+          <span class="text-[10px] text-emerald-200/80 uppercase font-bold block">Faturamento Nacional Fechado</span>
+          <h3 class="text-xl font-black text-emerald-300">R$ ${totalNacional.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h3>
+          <span class="text-[10px] text-white font-medium">${sortedStates.filter(s => s.count > 0).length} estados com vendas ativas</span>
+        `;
+      }
+    }
+
+    // 5. RENDERIZAR RANKINGS E GRÁFICOS DE DESEMPENHO
+    function renderRankingsSection() {
+      // 1. Ranking Melhores Vendedores
+      const sellerPerformance = {};
+      sellers.forEach(s => sellerPerformance[s.id] = { id: s.id, name: s.name, total: 0, count: 0 });
+      ambassadors.forEach(a => sellerPerformance[a.id] = { id: a.id, name: a.name, total: 0, count: 0 });
+
+      leads.filter(l => l.stage === "3" || l.stage === "4").forEach(l => {
+        if (!sellerPerformance[l.sellerId]) {
+          sellerPerformance[l.sellerId] = { id: l.sellerId, name: resolvePersonName(l.sellerId), total: 0, count: 0 };
+        }
+        sellerPerformance[l.sellerId].total += Number(l.value || 0);
+        sellerPerformance[l.sellerId].count += 1;
+      });
+
+      const topSellers = Object.values(sellerPerformance).sort((a, b) => b.total - a.total).slice(0, 5);
+      const maxSellerTotal = Math.max(...topSellers.map(s => s.total), 1);
+
+      const topSellersEl = document.getElementById('rankingTopSellersList');
+      if (topSellersEl) {
+        topSellersEl.innerHTML = topSellers.map((s, idx) => {
+          const pct = Math.round((s.total / maxSellerTotal) * 100);
+          return `
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+                  <span class="text-[10px] font-black w-4 text-previa-orange">#${idx + 1}</span>
+                  ${s.name}
+                </span>
+                <span class="font-black text-emerald-700 dark:text-emerald-400">R$ ${s.total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div class="w-full bg-slate-100 dark:bg-previa-darkBg rounded-full h-2 overflow-hidden">
+                <div class="bg-emerald-500 h-2 rounded-full" style="width: ${pct}%"></div>
+              </div>
+              <div class="flex justify-between text-[10px] text-slate-400">
+                <span>${s.count} vendas fechadas</span>
+                <span>Comissão 30%: R$ ${(s.total * 0.3).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 2. Ranking Melhores Embaixadores por Override
+      const ambPerformance = {};
+      ambassadors.forEach(a => ambPerformance[a.uf] = { amb: a, totalEstado: 0, override: 0, count: 0 });
+
+      leads.filter(l => l.stage === "3" || l.stage === "4").forEach(l => {
+        if (ambPerformance[l.state]) {
+          ambPerformance[l.state].totalEstado += Number(l.value || 0);
+          ambPerformance[l.state].override += (Number(l.value || 0) * 0.05);
+          ambPerformance[l.state].count += 1;
+        }
+      });
+
+      const topAmbassadors = Object.values(ambPerformance).sort((a, b) => b.totalEstado - a.totalEstado);
+      const maxAmbTotal = Math.max(...topAmbassadors.map(a => a.totalEstado), 1);
+
+      const topAmbassadorsEl = document.getElementById('rankingTopAmbassadorsList');
+      if (topAmbassadorsEl) {
+        topAmbassadorsEl.innerHTML = topAmbassadors.map((item, idx) => {
+          const pct = Math.round((item.totalEstado / maxAmbTotal) * 100);
+          return `
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+                  <span class="text-[10px] font-black w-4 text-previa-orange">#${idx + 1}</span>
+                  ${item.amb.name} (${item.amb.uf})
+                </span>
+                <span class="font-black text-previa-orange">R$ ${item.override.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div class="w-full bg-slate-100 dark:bg-previa-darkBg rounded-full h-2 overflow-hidden">
+                <div class="bg-previa-orange h-2 rounded-full" style="width: ${pct}%"></div>
+              </div>
+              <div class="flex justify-between text-[10px] text-slate-400">
+                <span>Estado: ${item.amb.uf} (${item.count} vendas)</span>
+                <span>Base: R$ ${item.totalEstado.toLocaleString('pt-BR')}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 3. Ranking de Visualizações em Redes e Mídias
+      const viewsPerformance = {};
+      medias.forEach(m => {
+        if (!viewsPerformance[m.sellerId]) {
+          viewsPerformance[m.sellerId] = { id: m.sellerId, name: resolvePersonName(m.sellerId), views: 0, posts: 0, videos: 0 };
+        }
+        viewsPerformance[m.sellerId].views += Number(m.viewsCount || 0);
+        if (m.formatType === 'video') viewsPerformance[m.sellerId].videos += 1;
+        else viewsPerformance[m.sellerId].posts += 1;
+      });
+
+      const topViews = Object.values(viewsPerformance).sort((a, b) => b.views - a.views).slice(0, 5);
+      const maxViews = Math.max(...topViews.map(v => v.views), 1);
+
+      const topViewsEl = document.getElementById('rankingTopViewsList');
+      if (topViewsEl) {
+        topViewsEl.innerHTML = topViews.map((v, idx) => {
+          const pct = Math.round((v.views / maxViews) * 100);
+          return `
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+                  <span class="text-[10px] font-black w-4 text-teal-600 dark:text-teal-400">#${idx + 1}</span>
+                  ${v.name}
+                </span>
+                <span class="font-black text-teal-700 dark:text-teal-400">${v.views.toLocaleString('pt-BR')} views</span>
+              </div>
+              <div class="w-full bg-slate-100 dark:bg-previa-darkBg rounded-full h-2 overflow-hidden">
+                <div class="bg-teal-500 h-2 rounded-full" style="width: ${pct}%"></div>
+              </div>
+              <div class="flex justify-between text-[10px] text-slate-400">
+                <span>${v.videos} vídeos • ${v.posts} posts</span>
+                <span>Engajamento Alto</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function selectMapState(uf) {
+      selectedMapUF = uf;
+      renderApp();
+    }
+
+    function renderStateDetailCard(uf, data) {
+      const card = document.getElementById('stateDetailCard');
+      if (!card) return;
+      const stName = getStateName(uf);
+      const ambName = getAmbassadorNameByState(uf);
+      const total = data ? data.total : 0;
+      const count = data ? data.count : 0;
+      const overrideEstadual = total * 0.05;
+
+      card.innerHTML = `
+        <div class="flex items-center justify-between border-b border-slate-100 dark:border-previa-darkBorder pb-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-950/60 text-previa-orange flex items-center justify-center font-black text-sm shadow-sm border border-orange-200 dark:border-orange-800">
+              ${uf}
+            </div>
+            <div>
+              <h4 class="text-sm font-black text-slate-800 dark:text-white">${stName} (${uf})</h4>
+              <p class="text-[11px] text-previa-orange font-semibold flex items-center gap-1">
+                <i data-lucide="crown" class="w-3.5 h-3.5"></i>
+                Embaixador: ${ambName}
+              </p>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-black text-xs border border-emerald-200 dark:border-emerald-800">
+            ${count} vendas
+          </span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="bg-slate-50 dark:bg-previa-darkBg p-3 rounded-xl border border-slate-200 dark:border-previa-darkBorder">
+            <span class="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold block">Faturamento do Estado</span>
+            <strong class="text-base font-black text-slate-800 dark:text-white">R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>
+          </div>
+          <div class="bg-orange-50 dark:bg-orange-950/40 p-3 rounded-xl border border-orange-200 dark:border-orange-900/50">
+            <span class="text-[10px] text-previa-orange uppercase font-bold block">Override Embaixador (5%)</span>
+            <strong class="text-base font-black text-previa-orange">R$ ${overrideEstadual.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>
+          </div>
+        </div>
+
+        <div class="pt-1">
+          <button onclick="filterByStateAndGo('${uf}')" class="w-full bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark border border-slate-200 dark:border-previa-darkBorder text-slate-700 dark:text-slate-200 text-xs font-bold py-2 rounded-xl transition flex items-center justify-center gap-1.5">
+            <i data-lucide="filter" class="w-3.5 h-3.5 text-previa-orange"></i>
+            Filtrar Clientes deste Estado no Funil
+          </button>
+        </div>
+      `;
+    }
+
+    function filterByStateAndGo(uf) {
+      document.getElementById('filterState').value = uf;
+      onStateFilterChange(uf);
+      switchTab('pipeline');
+    }
+
+    // RENDER EQUIPE, EMBAIXADORES, REDES SOCIAIS E EXCLUSÃO
+    function renderTeamSection() {
+      const ambList = document.getElementById('ambassadorsList');
+      const sellList = document.getElementById('sellersList');
+      if (!ambList || !sellList) return;
+
+      ambList.innerHTML = "";
+      sellList.innerHTML = "";
+
+      const baseUrl = window.location.origin + window.location.pathname;
+
+      ambassadors.forEach(amb => {
+        const link = `${baseUrl}?embaixador=${amb.id}`;
+        const card = document.createElement('div');
+        card.className = "bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3";
+        card.innerHTML = `
+          <div class="flex items-start sm:items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800 flex items-center justify-center font-black text-previa-orange text-sm flex-shrink-0">
+              ${amb.uf}
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h4 class="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
+                  ${amb.name}
+                  <span class="text-[10px] px-1.5 py-0.2 rounded bg-orange-100 dark:bg-orange-950 text-previa-orange font-black">${amb.uf}</span>
+                </h4>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono font-semibold">
+                  CPF: ${amb.cpf || 'Não inf.'}
+                </span>
+              </div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400">${amb.email} • ${amb.phone || 'Sem fone'}</p>
+              
+              <!-- Links Sociais do Embaixador -->
+              <div class="flex items-center gap-2 mt-1 text-[10px] flex-wrap">
+                ${amb.instagram ? `<span class="text-rose-600 dark:text-rose-400 font-semibold flex items-center gap-0.5"><i data-lucide="instagram" class="w-3 h-3"></i> ${escapeHtml(amb.instagram)}</span>` : ''}
+                ${amb.youtube ? `<span class="text-red-600 dark:text-red-400 font-semibold flex items-center gap-0.5"><i data-lucide="youtube" class="w-3 h-3"></i> ${escapeHtml(amb.youtube)}</span>` : ''}
+                ${amb.tiktok ? `<span class="text-teal-600 dark:text-teal-400 font-semibold flex items-center gap-0.5"><i data-lucide="video" class="w-3 h-3"></i> ${escapeHtml(amb.tiktok)}</span>` : ''}
+                ${amb.linkedin ? `<span class="text-blue-600 dark:text-blue-400 font-semibold flex items-center gap-0.5"><i data-lucide="linkedin" class="w-3 h-3"></i> ${escapeHtml(amb.linkedin)}</span>` : ''}
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+            <input type="text" readonly value="${link}" class="bg-white dark:bg-previa-darkCard border border-slate-200 dark:border-previa-darkBorder rounded-lg px-2.5 py-1 text-[11px] text-slate-600 dark:text-slate-300 w-44 sm:w-56 focus:outline-none select-all">
+            <button onclick="copyLink('${link}')" class="bg-previa-orange hover:bg-previa-orangeHover text-white px-3 py-1.5 rounded-lg text-xs font-black flex items-center gap-1 shadow transition">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copiar
+            </button>
+            <button onclick="editMember('${amb.id}', 'ambassador')" title="Editar Embaixador" class="p-1.5 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded-lg text-slate-700 dark:text-slate-200 transition">
+              <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+            </button>
+            <button onclick="deleteMember('${amb.id}', 'ambassador')" title="Excluir Embaixador" class="p-1.5 bg-rose-100 dark:bg-rose-950/60 hover:bg-rose-200 dark:hover:bg-rose-900 rounded-lg text-rose-600 transition">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        `;
+        ambList.appendChild(card);
+      });
+
+      sellers.forEach(sel => {
+        const link = `${baseUrl}?vendedor=${sel.id}`;
+        const card = document.createElement('div');
+        card.className = "bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3";
+        card.innerHTML = `
+          <div class="flex items-start sm:items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center font-black text-blue-700 dark:text-blue-300 text-sm flex-shrink-0">
+              <i data-lucide="user" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h4 class="text-xs font-bold text-slate-800 dark:text-white">${sel.name} <span class="text-[10px] text-slate-400 font-normal">(${sel.uf || 'BR'})</span></h4>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono font-semibold">
+                  CPF: ${sel.cpf || 'Não inf.'}
+                </span>
+              </div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400">${sel.email} • ${sel.phone || 'Sem fone'}</p>
+              
+              <!-- Links Sociais do Vendedor -->
+              <div class="flex items-center gap-2 mt-1 text-[10px] flex-wrap">
+                ${sel.instagram ? `<span class="text-rose-600 dark:text-rose-400 font-semibold flex items-center gap-0.5"><i data-lucide="instagram" class="w-3 h-3"></i> ${escapeHtml(sel.instagram)}</span>` : ''}
+                ${sel.youtube ? `<span class="text-red-600 dark:text-red-400 font-semibold flex items-center gap-0.5"><i data-lucide="youtube" class="w-3 h-3"></i> ${escapeHtml(sel.youtube)}</span>` : ''}
+                ${sel.tiktok ? `<span class="text-teal-600 dark:text-teal-400 font-semibold flex items-center gap-0.5"><i data-lucide="video" class="w-3 h-3"></i> ${escapeHtml(sel.tiktok)}</span>` : ''}
+                ${sel.linkedin ? `<span class="text-blue-600 dark:text-blue-400 font-semibold flex items-center gap-0.5"><i data-lucide="linkedin" class="w-3 h-3"></i> ${escapeHtml(sel.linkedin)}</span>` : ''}
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+            <input type="text" readonly value="${link}" class="bg-white dark:bg-previa-darkCard border border-slate-200 dark:border-previa-darkBorder rounded-lg px-2.5 py-1 text-[11px] text-slate-600 dark:text-slate-300 w-44 sm:w-56 focus:outline-none select-all">
+            <button onclick="copyLink('${link}')" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 shadow transition">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copiar
+            </button>
+            <button onclick="editMember('${sel.id}', 'seller')" title="Editar Vendedor" class="p-1.5 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded-lg text-slate-700 dark:text-slate-200 transition">
+              <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+            </button>
+            <button onclick="deleteMember('${sel.id}', 'seller')" title="Excluir Vendedor" class="p-1.5 bg-rose-100 dark:bg-rose-950/60 hover:bg-rose-200 dark:hover:bg-rose-900 rounded-lg text-rose-600 transition">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        `;
+        sellList.appendChild(card);
+      });
+    }
+
+    // MODAL DE CADASTRO/EDIÇÃO DE MEMBRO (VENDEDOR OU EMBAIXADOR)
+    function openMemberModal(roleType = 'seller') {
+      document.getElementById('memberForm').reset();
+      document.getElementById('memberId').value = "";
+      document.getElementById('memberRoleType').value = roleType;
+      
+      const title = document.getElementById('memberModalTitle');
+      const iconBox = document.getElementById('memberModalIconBox');
+      
+      if (roleType === 'ambassador') {
+        title.innerText = "Cadastrar Embaixador Estadual";
+        iconBox.className = "w-9 h-9 rounded-xl bg-orange-100 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800 flex items-center justify-center text-previa-orange";
+      } else {
+        title.innerText = "Cadastrar Vendedor Comercial";
+        iconBox.className = "w-9 h-9 rounded-xl bg-blue-100 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center text-blue-600";
+      }
+
+      document.getElementById('memberModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function editMember(id, roleType) {
+      let member = null;
+      if (roleType === 'ambassador') {
+        member = ambassadors.find(a => a.id === id);
+      } else {
+        member = sellers.find(s => s.id === id);
+      }
+      if (!member) return;
+
+      document.getElementById('memberId').value = member.id;
+      document.getElementById('memberRoleType').value = roleType;
+      document.getElementById('memberName').value = member.name.replace(/\s*\(Embaixador.*?\)/i, '');
+      document.getElementById('memberCpf').value = member.cpf || '';
+      document.getElementById('memberUf').value = member.uf || 'SP';
+      document.getElementById('memberEmail').value = member.email || '';
+      document.getElementById('memberPhone').value = member.phone || '';
+      document.getElementById('memberInstagram').value = member.instagram || '';
+      document.getElementById('memberYoutube').value = member.youtube || '';
+      document.getElementById('memberTiktok').value = member.tiktok || '';
+      document.getElementById('memberLinkedin').value = member.linkedin || '';
+
+      document.getElementById('memberModalTitle').innerText = roleType === 'ambassador' ? "Editar Embaixador" : "Editar Vendedor";
+      document.getElementById('memberModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function saveMember(e) {
+      e.preventDefault();
+      const id = document.getElementById('memberId').value;
+      const roleType = document.getElementById('memberRoleType').value;
+      const name = document.getElementById('memberName').value.trim();
+      const cpf = document.getElementById('memberCpf').value.trim();
+      const uf = document.getElementById('memberUf').value;
+      const email = document.getElementById('memberEmail').value.trim();
+      const phone = document.getElementById('memberPhone').value.trim();
+      const instagram = document.getElementById('memberInstagram').value.trim();
+      const youtube = document.getElementById('memberYoutube').value.trim();
+      const tiktok = document.getElementById('memberTiktok').value.trim();
+      const linkedin = document.getElementById('memberLinkedin').value.trim();
+
+      const memberData = {
+        name: roleType === 'ambassador' ? `${name} (Embaixador ${uf})` : name,
+        cpf,
+        uf,
+        email,
+        phone,
+        instagram,
+        youtube,
+        tiktok,
+        linkedin
+      };
+
+      if (roleType === 'ambassador') {
+        if (id) {
+          const idx = ambassadors.findIndex(a => a.id === id);
+          if (idx !== -1) ambassadors[idx] = { ...ambassadors[idx], ...memberData };
+          showToast("Embaixador atualizado com sucesso!");
+        } else {
+          const newId = `emb_${uf.toLowerCase()}_${Date.now()}`;
+          ambassadors.push({ id: newId, ...memberData });
+          
+          const stIdx = states.findIndex(s => s.uf === uf);
+          if (stIdx !== -1) {
+            states[stIdx].ambassadorId = newId;
+          }
+          showToast(`Embaixador de ${uf} cadastrado!`);
+        }
+      } else {
+        if (id) {
+          const idx = sellers.findIndex(s => s.id === id);
+          if (idx !== -1) sellers[idx] = { ...sellers[idx], ...memberData };
+          showToast("Vendedor atualizado com sucesso!");
+        } else {
+          const newId = `v_${Date.now()}`;
+          sellers.push({ id: newId, ...memberData });
+          showToast(`Vendedor ${name} cadastrado com sucesso!`);
+        }
+      }
+
+      persist();
+      populateSelectOptions();
+      closeModal('memberModal');
+      renderApp();
+    }
+
+    // EXCLUIR VENDEDOR OU EMBAIXADOR
+    function deleteMember(id, roleType) {
+      const name = resolvePersonName(id);
+      if (confirm(`Deseja realmente excluir ${name}? Essa ação não poderá ser desfeita.`)) {
+        if (roleType === 'ambassador') {
+          ambassadors = ambassadors.filter(a => a.id !== id);
+          states.forEach(st => {
+            if (st.ambassadorId === id) st.ambassadorId = null;
+          });
+          showToast(`Embaixador ${name} foi excluído.`);
+        } else {
+          sellers = sellers.filter(s => s.id !== id);
+          showToast(`Vendedor ${name} foi excluído.`);
+        }
+
+        persist();
+        populateSelectOptions();
+        renderApp();
+      }
+    }
+
+    // MÁSCARA AUTOMÁTICA DE CPF
+    function maskCpf(input) {
+      let v = input.value.replace(/\D/g, "");
+      if (v.length > 11) v = v.slice(0, 11);
+      v = v.replace(/(\d{3})(\d)/, "$1.$2");
+      v = v.replace(/(\d{3})(\d)/, "$1.$2");
+      v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+      input.value = v;
+    }
+
+    // 6. FORMULÁRIO DE LEADS E TRANSIÇÕES
+    function handleProductChange(prod) {
+      const teamBox = document.getElementById('teamInstructorsContainer');
+      const instructorsInput = document.getElementById('leadTeamInstructors');
+      if (prod === 'Equipe') {
+        teamBox.classList.remove('hidden');
+        instructorsInput.required = true;
+      } else {
+        teamBox.classList.add('hidden');
+        instructorsInput.required = false;
+        instructorsInput.value = "";
+      }
+    }
+
+    function handleModalStateChange(uf) {
+      const preview = document.getElementById('leadAmbassadorPreview');
+      preview.innerText = getAmbassadorNameByState(uf);
+    }
+
+    function openLeadModal() {
+      document.getElementById('leadForm').reset();
+      document.getElementById('leadId').value = "";
+      document.getElementById('leadModalTitle').innerText = "Cadastrar Venda / Oportunidade";
+      handleProductChange('Instrutor');
+
+      if (currentRole !== "admin") {
+        document.getElementById('leadSeller').value = currentRole;
+        document.getElementById('leadSeller').disabled = true;
+      } else {
+        document.getElementById('leadSeller').disabled = false;
+      }
+
+      const st = document.getElementById('leadState').value;
+      handleModalStateChange(st);
+
+      document.getElementById('leadModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function editLead(id) {
+      const lead = leads.find(l => l.id === id);
+      if (!lead) return;
+
+      document.getElementById('leadId').value = lead.id;
+      document.getElementById('leadName').value = lead.name;
+      document.getElementById('leadCompany').value = lead.company || '';
+      document.getElementById('leadPhone').value = lead.phone;
+      document.getElementById('leadState').value = lead.state;
+      document.getElementById('leadProduct').value = lead.product;
+      document.getElementById('leadStage').value = lead.stage;
+      document.getElementById('leadSeller').value = lead.sellerId;
+      document.getElementById('leadValue').value = lead.value;
+      document.getElementById('leadNotes').value = lead.notes || '';
+
+      handleProductChange(lead.product);
+      if (lead.product === 'Equipe') {
+        document.getElementById('leadTeamInstructors').value = lead.teamInstructors || '';
+      }
+
+      handleModalStateChange(lead.state);
+
+      if (currentRole !== "admin") {
+        document.getElementById('leadSeller').value = currentRole;
+        document.getElementById('leadSeller').disabled = true;
+      } else {
+        document.getElementById('leadSeller').disabled = false;
+      }
+
+      document.getElementById('leadModalTitle').innerText = "Editar Venda Previa";
+      document.getElementById('leadModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function saveLead(e) {
+      e.preventDefault();
+      const id = document.getElementById('leadId').value;
+      const product = document.getElementById('leadProduct').value;
+      const teamInstructors = product === 'Equipe' ? document.getElementById('leadTeamInstructors').value.trim() : '';
+
+      const nowStr = getNowDateTimeFormatted();
+      const nowDateOnly = new Date().toISOString().split('T')[0];
+
+      const data = {
+        name: document.getElementById('leadName').value.trim(),
+        company: document.getElementById('leadCompany').value.trim(),
+        phone: document.getElementById('leadPhone').value.trim(),
+        state: document.getElementById('leadState').value,
+        product: product,
+        teamInstructors: teamInstructors,
+        stage: document.getElementById('leadStage').value,
+        sellerId: currentRole !== 'admin' ? currentRole : document.getElementById('leadSeller').value,
+        value: parseFloat(document.getElementById('leadValue').value) || 0,
+        notes: document.getElementById('leadNotes').value.trim()
+      };
+
+      if (id) {
+        const idx = leads.findIndex(l => l.id === id);
+        if (idx !== -1) {
+          if (leads[idx].stage !== data.stage) {
+            data.stageChangedDate = nowStr;
+          }
+          leads[idx] = { ...leads[idx], ...data };
+        }
+        showToast("Venda atualizada com sucesso!");
+      } else {
+        leads.unshift({ 
+          id: "lead-" + Date.now(), 
+          contactDate: nowDateOnly,
+          stageChangedDate: nowStr,
+          ...data 
+        });
+        showToast("Nova venda registrada com sucesso!");
+      }
+
+      persist();
+      closeModal('leadModal');
+      renderApp();
+    }
+
+    function moveLeadStage(id, newStage) {
+      const lead = leads.find(l => l.id === id);
+      if (lead) {
+        lead.stage = newStage;
+        lead.stageChangedDate = getNowDateTimeFormatted();
+        persist();
+        renderApp();
+        showToast(`Cliente movido para: ${getStageLabel(newStage)}`);
+      }
+    }
+
+    function deleteLead(id) {
+      if (confirm("Deseja realmente remover esta venda?")) {
+        leads = leads.filter(l => l.id !== id);
+        persist();
+        renderApp();
+        showToast("Venda removida.");
+      }
+    }
+
+    // 7. FORMULÁRIO DE MÍDIA COM FORMATO (VÍDEO OU IMAGEM)
+    function openMediaModal() {
+      document.getElementById('mediaForm').reset();
+      document.getElementById('mediaId').value = "";
+      document.getElementById('mediaDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('mediaModalTitle').innerText = "Lançar Mídia & Tráfego";
+
+      if (currentRole !== "admin") {
+        document.getElementById('mediaSeller').value = currentRole;
+        document.getElementById('mediaSeller').disabled = true;
+      } else {
+        document.getElementById('mediaSeller').disabled = false;
+      }
+      document.getElementById('mediaModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function editMedia(id) {
+      const med = medias.find(m => m.id === id);
+      if (!med) return;
+
+      document.getElementById('mediaId').value = med.id;
+      document.getElementById('mediaDate').value = med.date || new Date().toISOString().split('T')[0];
+      document.getElementById('mediaChannel').value = med.channel;
+      document.getElementById('mediaSeller').value = med.sellerId;
+      document.getElementById('mediaFormatType').value = med.formatType || 'video';
+      document.getElementById('mediaViewsCount').value = med.viewsCount || 0;
+      document.getElementById('mediaTopic').value = med.topic;
+      document.getElementById('mediaUrl').value = med.url || "";
+
+      if (currentRole !== "admin") {
+        document.getElementById('mediaSeller').disabled = true;
+      } else {
+        document.getElementById('mediaSeller').disabled = false;
+      }
+
+      document.getElementById('mediaModalTitle').innerText = "Atualizar Mídia & Visualizações";
+      document.getElementById('mediaModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function saveMedia(e) {
+      e.preventDefault();
+      const id = document.getElementById('mediaId').value;
+      const payload = {
+        channel: document.getElementById('mediaChannel').value,
+        sellerId: currentRole !== "admin" ? currentRole : document.getElementById('mediaSeller').value,
+        formatType: document.getElementById('mediaFormatType').value,
+        viewsCount: parseInt(document.getElementById('mediaViewsCount').value) || 0,
+        topic: document.getElementById('mediaTopic').value.trim(),
+        url: document.getElementById('mediaUrl').value.trim(),
+        date: document.getElementById('mediaDate').value
+      };
+
+      if (id) {
+        const idx = medias.findIndex(m => m.id === id);
+        if (idx !== -1) medias[idx] = { ...medias[idx], ...payload };
+        showToast("Mídia atualizada com sucesso!");
+      } else {
+        medias.unshift({ id: "med-" + Date.now(), ...payload });
+        showToast("Mídia registrada com sucesso!");
+      }
+
+      persist();
+      closeModal('mediaModal');
+      renderApp();
+    }
+
+    function deleteMedia(id) {
+      if (confirm("Excluir este registro de mídia?")) {
+        medias = medias.filter(m => m.id !== id);
+        persist();
+        renderApp();
+        showToast("Mídia removida.");
+      }
+    }
+
+    // UTILITÁRIOS
+    function getNowDateTimeFormatted() {
+      const d = new Date();
+      const pad = (n) => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+
+    function formatDateBr(str) {
+      if (!str) return '-';
+      const parts = str.split(' ')[0].split('-');
+      if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+      return str;
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function copyLink(url) {
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast("Link copiado! Pode enviar no WhatsApp do vendedor/embaixador.");
+      } catch (err) {
+        prompt("Copie o link abaixo:", url);
+      }
+      document.body.removeChild(ta);
+    }
+
+    function exportToCSV() {
+      const list = getFilteredLeads();
+      let csv = "ID,Cliente,Empresa,Telefone,Estado_UF,Produto,Instrutores_Equipe,Etapa,Data_Contato_Inicial,Data_Mudanca_Status,Vendedor,Embaixador_Estado,Valor_Venda,Comissao_Vendedor_30,Override_Embaixador_05,Observacoes\n";
+
+      list.forEach(l => {
+        const valor = Number(l.value || 0);
+        const isClosed = (l.stage === "3" || l.stage === "4");
+        const com30 = isClosed ? (valor * 0.30) : 0;
+        const com05 = isClosed ? (valor * 0.05) : 0;
+        const sName = resolvePersonName(l.sellerId);
+        const ambName = getAmbassadorNameByState(l.state);
+
+        csv += `"${l.id}","${l.name}","${l.company || ''}","${l.phone}","${l.state}","${l.product}","${(l.teamInstructors || '').replace(/"/g, '""')}","${getStageLabel(l.stage)}","${l.contactDate || ''}","${l.stageChangedDate || ''}","${sName}","${ambName}","${valor}","${com30}","${com05}","${(l.notes || '').replace(/"/g, '""')}"\n`;
+      });
+
+      const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `Previa_Treinamentos_Vendas_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast("Download do CSV concluído!");
+    }
+
+    // RESOLVEDORES
+    function resolvePersonName(id) {
+      if (id === "admin") return "Administrador Geral";
+      const seller = sellers.find(s => s.id === id);
+      if (seller) return seller.name;
+      const amb = ambassadors.find(a => a.id === id);
+      if (amb) return amb.name;
+      return id;
+    }
+
+    function getAmbassadorNameByState(uf) {
+      const stateObj = states.find(s => s.uf === uf);
+      if (!stateObj) return "Sem Embaixador";
+      const amb = ambassadors.find(a => a.id === stateObj.ambassadorId);
+      return amb ? amb.name : "Não Atribuído";
+    }
+
+    function getStateName(uf) {
+      const st = states.find(s => s.uf === uf);
+      return st ? st.name : uf;
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-msg').innerText = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 3000);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+  </script>
+</body>
+</html>
