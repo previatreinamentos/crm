@@ -15,10 +15,10 @@
         extend: {
           colors: {
             previa: {
-              forest: '#0c3629',      // Verde Escuro Floresta Previa (Imagem 3)
+              forest: '#0c3629',      // Verde Escuro Floresta Previa
               forestDark: '#08261d',  // Verde Quase Preto para fundos/sidebar
               forestCard: '#124535',  // Cards escuros
-              orange: '#f05a28',      // Laranja Marca Previa (Imagem 3)
+              orange: '#f05a28',      // Laranja Marca Previa
               orangeHover: '#d94b1c', // Laranja Escurecido Hover
               orangeLight: '#ffedd5', // Fundo Laranja Sutil
               mint: '#e8f5f1',        // Fundo Verde Menta Claro
@@ -67,7 +67,7 @@
     <span id="toast-msg">Notificação</span>
   </div>
 
-  <!-- ================= HEADER PRINCIPAL (IDENTIDADE IMAGEM 3) ================= -->
+  <!-- ================= HEADER PRINCIPAL ================= -->
   <header class="bg-previa-forest text-white border-b border-previa-forestDark sticky top-0 z-40 shadow-lg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
       
@@ -105,7 +105,6 @@
           <span class="text-emerald-200/70 hidden md:inline">Visão:</span>
           <select id="adminViewSelector" onchange="changeAdminView(this.value)" class="bg-transparent text-white font-bold text-xs focus:outline-none cursor-pointer">
             <option value="admin" class="bg-previa-forest text-white">👑 Admin Geral (Todos)</option>
-            <!-- Populado dinamicamente com Embaixadores e Vendedores -->
           </select>
         </div>
 
@@ -138,7 +137,6 @@
           <i data-lucide="link" class="w-4 h-4"></i>
           <span>Embaixadores, Vendedores & Links</span>
         </button>
-        <!-- Aba Mapa & Gráficos Brasil (Apenas Admin) -->
         <button onclick="switchTab('map')" id="tab-map" class="py-3 border-b-2 border-transparent text-emerald-200/70 hover:text-white flex items-center gap-2 transition whitespace-nowrap">
           <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
           <span>Mapa & Rankings Brasil</span>
@@ -181,17 +179,17 @@
         </div>
 
         <!-- Indicadores Financeiros de Comissão -->
-      <div id="financialCardsGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full lg:w-auto">
-        <!-- Populado via JS -->
+        <div id="financialCardsGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full lg:w-auto">
+          <!-- Populado via JS -->
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ==================== ABA 1: FUNIL & VENDAS (KANBAN OU TABELA) ==================== -->
-  <section id="view-pipeline" class="space-y-5">
-    
-    <!-- Contadores de Etapas do Funil (Atualizado com 5 Etapas) -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+    <!-- ==================== ABA 1: FUNIL & VENDAS (KANBAN OU TABELA) ==================== -->
+    <section id="view-pipeline" class="space-y-5">
+      
+      <!-- Contadores de Etapas do Funil (5 Etapas) -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 shadow-sm flex items-center justify-between">
           <div>
             <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">1. Contato Inicial</p>
@@ -236,176 +234,61 @@
           </div>
         </div>
 
-        <!-- NOVA ETAPA 5: PAUSADO / INATIVO -->
+        <!-- ETAPA 5: PAUSADO / INATIVO -->
         <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 shadow-sm flex items-center justify-between col-span-2 sm:col-span-1">
-        <div>
-          <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">5. Pausado / Inativo</p>
-          <h3 id="statCount-5" class="text-2xl font-black text-rose-600 dark:text-rose-400 mt-0.5">0</h3>
-          <span class="text-[10px] text-rose-600 dark:text-rose-400 font-semibold">Parou de Usar</span>
-        </div>
-        <div class="w-11 h-11 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 flex items-center justify-center text-rose-600 dark:text-rose-400">
-          <i data-lucide="user-x" class="w-5 h-5"></i>
-        </div>
-      </div>
-    </div>
-
-    <!-- Barra de Filtros Unificada com Popover de Calendário Duplo -->
-    <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 flex flex-col md:flex-row gap-3 items-center justify-between shadow-sm relative">
-      <div class="relative w-full md:w-64">
-        <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
-        <input type="text" id="leadSearch" placeholder="Buscar cliente, empresa ou instrutores..." oninput="renderApp()"
-          class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl pl-9 pr-3 py-2 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-previa-orange transition">
-      </div>
-
-      <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
-        
-        <!-- ================= BOTÃO DISPARADOR DO CALENDÁRIO DUPLO (ESTILO IMAGEM) ================= -->
-        <div class="relative">
-          <button id="btnDatePickerToggle" onclick="toggleDatePopover(event)" type="button" class="bg-slate-50 dark:bg-previa-darkBg hover:bg-slate-100 dark:hover:bg-previa-forestDark border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-3 py-2 font-bold flex items-center gap-2 transition shadow-sm">
-            <i data-lucide="calendar" class="w-4 h-4 text-previa-orange"></i>
-            <span id="datePickerBtnLabel">Carregando...</span>
-            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
-          </button>
-
-          <!-- ================= POPOVER DE CALENDÁRIO DUPLO (DATA INÍCIO / DATA TÉRMINO) ================= -->
-          <div id="datePickerPopover" class="hidden absolute right-0 sm:right-auto sm:left-0 md:right-0 md:left-auto top-12 z-50 w-[95vw] max-w-[580px] bg-white dark:bg-previa-darkCard rounded-2xl shadow-2xl border border-slate-200 dark:border-previa-darkBorder overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            
-            <!-- Topo Laranja Previa com Dropdown de Período Automático (Conforme a imagem) -->
-            <div class="bg-previa-orange text-white p-3.5 flex items-center justify-between">
-              <span class="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
-                <i data-lucide="calendar-range" class="w-4 h-4"></i>
-                Selecione o Período
-              </span>
-
-              <!-- Dropdown Período Automático -->
-              <div class="relative">
-                <select id="popoverPresetSelect" onchange="onPopoverPresetChange(this.value)" class="bg-previa-orangeHover hover:bg-black/20 text-white font-bold text-xs rounded-xl px-3 py-1.5 border border-white/40 focus:outline-none cursor-pointer appearance-none pr-8">
-                  <option value="auto">Período automático</option>
-                  <option value="current_month" selected>Mês atual</option>
-                  <option value="last_month">Mês anterior</option>
-                  <option value="last_30_days">Últimos 30 dias</option>
-                  <option value="current_year">Ano atual</option>
-                  <option value="all">Todo o período</option>
-                  <option value="custom">Personalizado</option>
-                </select>
-                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-white absolute right-2.5 top-2.5 pointer-events-none"></i>
-              </div>
-            </div>
-
-            <!-- Corpo: 2 Calendários Lado a Lado (Data Início / Data Término) -->
-            <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 dark:divide-previa-darkBorder text-slate-800 dark:text-slate-100">
-              
-              <!-- Lado Esquerdo: Data de Início -->
-              <div class="space-y-2">
-                <div class="text-center">
-                  <span class="text-xs font-bold text-slate-600 dark:text-slate-300">Data de início</span>
-                  <div class="flex items-center justify-between mt-1 px-1">
-                    <span id="startCalHeader" class="text-xs font-black uppercase text-slate-800 dark:text-white">OUT. DE 2026</span>
-                    <div class="flex items-center gap-1">
-                      <button type="button" onclick="changeMonth('start', -1)" class="p-1 hover:bg-slate-100 dark:hover:bg-previa-forestDark rounded-lg transition text-slate-500">
-                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
-                      </button>
-                      <button type="button" onclick="changeMonth('start', 1)" class="p-1 hover:bg-slate-100 dark:hover:bg-previa-forestDark rounded-lg transition text-slate-500">
-                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Dias da Semana -->
-                <div class="grid grid-cols-7 text-center text-[10px] font-bold text-slate-400 py-1 border-b border-slate-100 dark:border-previa-darkBorder">
-                  <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
-                </div>
-
-                <!-- Grid de Dias (Lado Início) -->
-                <div id="startDaysGrid" class="grid grid-cols-7 gap-1 text-center text-xs py-1">
-                  <!-- JS -->
-                </div>
-              </div>
-
-              <!-- Lado Direito: Data de Término -->
-              <div class="space-y-2 sm:pl-4 pt-3 sm:pt-0">
-                <div class="text-center">
-                  <span class="text-xs font-bold text-slate-600 dark:text-slate-300">Data de término</span>
-                  <div class="flex items-center justify-between mt-1 px-1">
-                    <span id="endCalHeader" class="text-xs font-black uppercase text-slate-800 dark:text-white">OUT. DE 2026</span>
-                    <div class="flex items-center gap-1">
-                      <button type="button" onclick="changeMonth('end', -1)" class="p-1 hover:bg-slate-100 dark:hover:bg-previa-forestDark rounded-lg transition text-slate-500">
-                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
-                      </button>
-                      <button type="button" onclick="changeMonth('end', 1)" class="p-1 hover:bg-slate-100 dark:hover:bg-previa-forestDark rounded-lg transition text-slate-500">
-                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Dias da Semana -->
-                <div class="grid grid-cols-7 text-center text-[10px] font-bold text-slate-400 py-1 border-b border-slate-100 dark:border-previa-darkBorder">
-                  <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
-                </div>
-
-                <!-- Grid de Dias (Lado Término) -->
-                <div id="endDaysGrid" class="grid grid-cols-7 gap-1 text-center text-xs py-1">
-                  <!-- JS -->
-                </div>
-              </div>
-
-            </div>
-
-            <!-- Rodapé do Popover com Botão "Aplicar" Laranja Previa -->
-            <div class="p-3 bg-slate-50 dark:bg-previa-darkBg border-t border-slate-100 dark:border-previa-darkBorder flex items-center justify-between">
-              <span id="popoverSelectedSummary" class="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate max-w-[320px]">
-                01/10/2026 até 31/10/2026
-              </span>
-              <div class="flex items-center gap-2">
-                <button type="button" onclick="closeDatePopover()" class="px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-previa-forestDark rounded-xl transition">
-                  Cancelar
-                </button>
-                <button type="button" onclick="applyDateRange()" class="px-5 py-1.5 bg-previa-orange hover:bg-previa-orangeHover text-white text-xs font-black rounded-xl transition shadow-md shadow-previa-orange/30">
-                  Aplicar
-                </button>
-              </div>
-            </div>
-
+          <div>
+            <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">5. Pausado / Inativo</p>
+            <h3 id="statCount-5" class="text-2xl font-black text-rose-600 dark:text-rose-400 mt-0.5">0</h3>
+            <span class="text-[10px] text-rose-600 dark:text-rose-400 font-semibold">Parou de Usar</span>
+          </div>
+          <div class="w-11 h-11 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 flex items-center justify-center text-rose-600 dark:text-rose-400">
+            <i data-lucide="user-x" class="w-5 h-5"></i>
           </div>
         </div>
-
-        <!-- Filtro de Estado (UF) -->
-        <div class="flex items-center gap-1.5">
-          <label class="text-[10px] font-bold text-slate-400 uppercase hidden sm:inline">Estado:</label>
-          <select id="filterState" onchange="onStateFilterChange(this.value)" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-2.5 py-2 focus:outline-none focus:border-previa-orange font-bold cursor-pointer">
-            <option value="todos">Todos os Estados</option>
-            <!-- Populado dinamicamente -->
-          </select>
-        </div>
-
-        <!-- Filtro de Vendedor / Embaixador -->
-        <div class="flex items-center gap-1.5">
-          <label class="text-[10px] font-bold text-slate-400 uppercase hidden sm:inline">Membro:</label>
-          <select id="filterSeller" onchange="renderApp()" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-2.5 py-2 focus:outline-none focus:border-previa-orange font-semibold cursor-pointer max-w-[190px] truncate">
-            <option value="todos">Todos os Vendedores/Embaixadores</option>
-            <!-- Populado dinamicamente -->
-          </select>
-        </div>
-
-        <!-- Filtro de Produto -->
-        <select id="filterProduct" onchange="renderApp()" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-2.5 py-2 focus:outline-none focus:border-previa-orange font-semibold cursor-pointer">
-          <option value="todos">Todos os Produtos (2)</option>
-          <option value="Instrutor">Produto: Instrutor</option>
-          <option value="Equipe">Produto: Equipe</option>
-        </select>
-
-        <!-- Botão Exportar CSV -->
-        <button onclick="exportToCSV()" class="bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-700 dark:text-slate-200 px-3 py-2 rounded-xl flex items-center gap-1.5 transition font-bold">
-          <i data-lucide="download" class="w-3.5 h-3.5 text-previa-orange"></i>
-          <span>Exportar CSV</span>
-        </button>
       </div>
-    </div>
 
-    <!-- VISÃO 1: MODO KANBAN (5 Colunas Flexíveis) -->
-    <div id="kanbanContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3.5 items-start">
+      <!-- Barra de Filtros Tradicional -->
+      <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 flex flex-col md:flex-row gap-3 items-center justify-between shadow-sm">
+        <div class="relative w-full md:w-72">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
+          <input type="text" id="leadSearch" placeholder="Buscar cliente, empresa ou instrutores..." oninput="renderApp()"
+            class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl pl-9 pr-3 py-2 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-previa-orange transition">
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
+          <!-- Filtro de Estado (UF) -->
+          <div class="flex items-center gap-1.5">
+            <label class="text-[10px] font-bold text-slate-400 uppercase hidden sm:inline">Estado:</label>
+            <select id="filterState" onchange="onStateFilterChange(this.value)" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-2.5 py-2 focus:outline-none focus:border-previa-orange font-bold cursor-pointer">
+              <option value="todos">Todos os Estados</option>
+            </select>
+          </div>
+
+          <!-- Filtro de Vendedor / Embaixador -->
+          <div class="flex items-center gap-1.5">
+            <label class="text-[10px] font-bold text-slate-400 uppercase hidden sm:inline">Membro:</label>
+            <select id="filterSeller" onchange="renderApp()" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-2.5 py-2 focus:outline-none focus:border-previa-orange font-semibold cursor-pointer max-w-[190px] truncate">
+              <option value="todos">Todos os Vendedores/Embaixadores</option>
+            </select>
+          </div>
+
+          <!-- Filtro de Produto -->
+          <select id="filterProduct" onchange="renderApp()" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-2.5 py-2 focus:outline-none focus:border-previa-orange font-semibold cursor-pointer">
+            <option value="todos">Todos os Produtos (2)</option>
+            <option value="Instrutor">Produto: Instrutor</option>
+            <option value="Equipe">Produto: Equipe</option>
+          </select>
+
+          <!-- Botão Exportar CSV -->
+          <button onclick="exportToCSV()" class="bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-700 dark:text-slate-200 px-3 py-2 rounded-xl flex items-center gap-1.5 transition font-bold">
+            <i data-lucide="download" class="w-3.5 h-3.5 text-previa-orange"></i>
+            <span>Exportar CSV</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- VISÃO 1: MODO KANBAN (5 Colunas) -->
+      <div id="kanbanContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3.5 items-start">
         
         <!-- Coluna 1: Contato Inicial -->
         <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl flex flex-col shadow-sm">
@@ -455,7 +338,7 @@
           <div id="colStage-4" class="p-2.5 space-y-2.5 overflow-y-auto custom-scrollbar min-h-[350px]"></div>
         </div>
 
-        <!-- Coluna 5: Pausado / Descontinuado (NOVO) -->
+        <!-- Coluna 5: Pausado / Descontinuado -->
         <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl flex flex-col shadow-sm">
           <div class="p-3 border-b border-slate-100 dark:border-previa-darkBorder flex items-center justify-between bg-rose-50/40 dark:bg-rose-950/20 rounded-t-2xl">
             <div class="flex items-center gap-1.5">
@@ -566,12 +449,9 @@
           <span class="text-xs font-bold text-slate-700 dark:text-slate-200">Filtrar Mídias:</span>
         </div>
         <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
-          <!-- Filtro por Vendedor/Criador -->
           <select id="filterMediaSeller" onchange="renderMediaSection()" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-3 py-2 focus:outline-none focus:border-previa-orange font-semibold cursor-pointer">
             <option value="todos">Todos os Criadores / Vendedores</option>
-            <!-- JS -->
           </select>
-          <!-- Filtro por Canal de Mídia -->
           <select id="filterMediaChannel" onchange="renderMediaSection()" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-3 py-2 focus:outline-none focus:border-previa-orange font-semibold cursor-pointer">
             <option value="todos">Todos os Canais</option>
             <option value="Instagram">Instagram</option>
@@ -581,7 +461,6 @@
             <option value="Facebook">Facebook</option>
             <option value="WhatsApp Status">WhatsApp Status</option>
           </select>
-          <!-- Filtro por Formato (Vídeo vs Imagem) -->
           <select id="filterMediaFormat" onchange="renderMediaSection()" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-3 py-2 focus:outline-none focus:border-previa-orange font-semibold cursor-pointer">
             <option value="todos">Todos os Formatos</option>
             <option value="video">Apenas Vídeos</option>
@@ -610,7 +489,7 @@
                 <th class="px-4 py-3.5">Data Publicação</th>
                 <th class="px-4 py-3.5">Canal / Rede</th>
                 <th class="px-4 py-3.5">Tipo Formato</th>
-                <th class="px-4 py-3.5">Tema / Produto</th>
+                <th class="px-4 py-3.5">Tema / Conteúdo</th>
                 <th class="px-4 py-3.5">Responsável</th>
                 <th class="px-4 py-3.5 text-center font-bold text-teal-700 dark:text-teal-400">Visualizações</th>
                 <th class="px-4 py-3.5">Link</th>
@@ -724,135 +603,104 @@
             </div>
           </div>
 
-          <!-- SVG do Mapa com Estados Clicáveis -->
-        <div class="w-full py-4 flex justify-center overflow-x-auto">
-          <svg id="brazilMapSvg" viewBox="0 0 620 540" class="w-full max-w-[520px] h-auto drop-shadow-md select-none">
-            <!-- NORTE -->
-            <!-- Acre (AC) -->
-            <path id="svg-AC" d="M18,206 L34,198 L48,202 L64,194 L72,203 L73,218 L64,228 L51,223 L39,228 L27,220 L16,215 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('AC')"><title>Acre (AC)</title></path>
-            <text x="36" y="215" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[8px] font-black">AC</text>
+          <div class="w-full py-4 flex justify-center overflow-x-auto">
+            <svg id="brazilMapSvg" viewBox="0 0 620 540" class="w-full max-w-[520px] h-auto drop-shadow-md select-none">
+              <!-- NORTE -->
+              <path id="svg-AC" d="M18,206 L34,198 L48,202 L64,194 L72,203 L73,218 L64,228 L51,223 L39,228 L27,220 L16,215 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('AC')"><title>Acre (AC)</title></path>
+              <text x="36" y="215" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[8px] font-black">AC</text>
 
-            <!-- Amazonas (AM) -->
-            <path id="svg-AM" d="M48,155 L72,130 L108,122 L144,118 L175,108 L188,118 L195,142 L206,160 L188,185 L182,212 L160,210 L140,218 L115,208 L88,214 L72,203 L64,194 L48,202 L34,198 L40,175 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('AM')"><title>Amazonas (AM)</title></path>
-            <text x="115" y="165" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[11px] font-black">AM</text>
+              <path id="svg-AM" d="M48,155 L72,130 L108,122 L144,118 L175,108 L188,118 L195,142 L206,160 L188,185 L182,212 L160,210 L140,218 L115,208 L88,214 L72,203 L64,194 L48,202 L34,198 L40,175 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('AM')"><title>Amazonas (AM)</title></path>
+              <text x="115" y="165" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[11px] font-black">AM</text>
 
-            <!-- Roraima (RR) -->
-            <path id="svg-RR" d="M152,65 L176,46 L198,42 L212,56 L208,82 L198,106 L188,118 L175,108 L160,94 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('RR')"><title>Roraima (RR)</title></path>
-            <text x="178" y="80" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[9px] font-black">RR</text>
+              <path id="svg-RR" d="M152,65 L176,46 L198,42 L212,56 L208,82 L198,106 L188,118 L175,108 L160,94 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('RR')"><title>Roraima (RR)</title></path>
+              <text x="178" y="80" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[9px] font-black">RR</text>
 
-            <!-- Rondônia (RO) -->
-            <path id="svg-RO" d="M115,208 L140,218 L160,210 L182,212 L180,234 L170,252 L148,266 L130,256 L124,232 L116,220 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('RO')"><title>Rondônia (RO)</title></path>
-            <text x="142" y="240" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[9px] font-black">RO</text>
+              <path id="svg-RO" d="M115,208 L140,218 L160,210 L182,212 L180,234 L170,252 L148,266 L130,256 L124,232 L116,220 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('RO')"><title>Rondônia (RO)</title></path>
+              <text x="142" y="240" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[9px] font-black">RO</text>
 
-            <!-- Amapá (AP) -->
-            <path id="svg-AP" d="M292,54 L318,48 L330,62 L326,90 L310,102 L290,92 L295,72 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('AP')"><title>Amapá (AP)</title></path>
-            <text x="303" y="76" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[9px] font-black">AP</text>
+              <path id="svg-AP" d="M292,54 L318,48 L330,62 L326,90 L310,102 L290,92 L295,72 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('AP')"><title>Amapá (AP)</title></path>
+              <text x="303" y="76" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[9px] font-black">AP</text>
 
-            <!-- Pará (PA) -->
-            <path id="svg-PA" d="M198,106 L208,82 L245,86 L290,92 L310,102 L326,90 L345,104 L340,126 L368,138 L360,165 L346,182 L340,216 L310,218 L286,228 L272,212 L245,214 L220,192 L206,160 L195,142 L188,118 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('PA')"><title>Pará (PA)</title></path>
-            <text x="270" y="152" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[12px] font-black">PA</text>
+              <path id="svg-PA" d="M198,106 L208,82 L245,86 L290,92 L310,102 L326,90 L345,104 L340,126 L368,138 L360,165 L346,182 L340,216 L310,218 L286,228 L272,212 L245,214 L220,192 L206,160 L195,142 L188,118 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('PA')"><title>Pará (PA)</title></path>
+              <text x="270" y="152" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[12px] font-black">PA</text>
 
-            <!-- Tocantins (TO) -->
-            <path id="svg-TO" d="M346,182 L368,194 L370,226 L366,265 L360,296 L338,292 L332,260 L340,216 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('TO')"><title>Tocantins (TO)</title></path>
-            <text x="345" y="246" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[10px] font-black">TO</text>
+              <path id="svg-TO" d="M346,182 L368,194 L370,226 L366,265 L360,296 L338,292 L332,260 L340,216 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('TO')"><title>Tocantins (TO)</title></path>
+              <text x="345" y="246" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[10px] font-black">TO</text>
 
-            <!-- NORDESTE -->
-            <!-- Maranhão (MA) -->
-            <path id="svg-MA" d="M368,138 L404,136 L432,154 L426,188 L410,222 L378,220 L370,226 L368,194 L360,165 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('MA')"><title>Maranhão (MA)</title></path>
-            <text x="390" y="180" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[10px] font-black">MA</text>
+              <!-- NORDESTE -->
+              <path id="svg-MA" d="M368,138 L404,136 L432,154 L426,188 L410,222 L378,220 L370,226 L368,194 L360,165 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('MA')"><title>Maranhão (MA)</title></path>
+              <text x="390" y="180" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[10px] font-black">MA</text>
 
-            <!-- Piauí (PI) -->
-            <path id="svg-PI" d="M432,154 L450,158 L460,188 L462,220 L448,252 L422,256 L410,222 L426,188 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('PI')"><title>Piauí (PI)</title></path>
-            <text x="432" y="212" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[10px] font-black">PI</text>
+              <path id="svg-PI" d="M432,154 L450,158 L460,188 L462,220 L448,252 L422,256 L410,222 L426,188 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('PI')"><title>Piauí (PI)</title></path>
+              <text x="432" y="212" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[10px] font-black">PI</text>
 
-            <!-- Ceará (CE) -->
-            <path id="svg-CE" d="M450,158 L496,155 L515,174 L498,206 L476,208 L460,188 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('CE')"><title>Ceará (CE)</title></path>
-            <text x="480" y="184" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[10px] font-black">CE</text>
+              <path id="svg-CE" d="M450,158 L496,155 L515,174 L498,206 L476,208 L460,188 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('CE')"><title>Ceará (CE)</title></path>
+              <text x="480" y="184" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[10px] font-black">CE</text>
 
-            <!-- Rio Grande do Norte (RN) -->
-            <path id="svg-RN" d="M515,174 L556,176 L552,198 L524,204 L498,206 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('RN')"><title>Rio Grande do Norte (RN)</title></path>
-            <text x="526" y="192" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[8px] font-black">RN</text>
+              <path id="svg-RN" d="M515,174 L556,176 L552,198 L524,204 L498,206 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('RN')"><title>Rio Grande do Norte (RN)</title></path>
+              <text x="526" y="192" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[8px] font-black">RN</text>
 
-            <!-- Paraíba (PB) -->
-            <path id="svg-PB" d="M498,206 L524,204 L552,198 L555,216 L522,220 L496,218 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('PB')"><title>Paraíba (PB)</title></path>
-            <text x="522" y="214" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[8px] font-black">PB</text>
+              <path id="svg-PB" d="M498,206 L524,204 L552,198 L555,216 L522,220 L496,218 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('PB')"><title>Paraíba (PB)</title></path>
+              <text x="522" y="214" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[8px] font-black">PB</text>
 
-            <!-- Pernambuco (PE) -->
-            <path id="svg-PE" d="M462,220 L496,218 L522,220 L555,216 L548,236 L512,238 L475,242 L460,230 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('PE')"><title>Pernambuco (PE)</title></path>
-            <text x="498" y="232" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[9px] font-black">PE</text>
+              <path id="svg-PE" d="M462,220 L496,218 L522,220 L555,216 L548,236 L512,238 L475,242 L460,230 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('PE')"><title>Pernambuco (PE)</title></path>
+              <text x="498" y="232" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[9px] font-black">PE</text>
 
-            <!-- Alagoas (AL) -->
-            <path id="svg-AL" d="M512,238 L548,236 L542,254 L522,256 L510,248 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('AL')"><title>Alagoas (AL)</title></path>
-            <text x="524" y="248" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[7px] font-black">AL</text>
+              <path id="svg-AL" d="M512,238 L548,236 L542,254 L522,256 L510,248 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('AL')"><title>Alagoas (AL)</title></path>
+              <text x="524" y="248" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[7px] font-black">AL</text>
 
-            <!-- Sergipe (SE) -->
-            <path id="svg-SE" d="M510,252 L532,256 L524,272 L506,268 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('SE')"><title>Sergipe (SE)</title></path>
-            <text x="514" y="264" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[7px] font-black">SE</text>
+              <path id="svg-SE" d="M510,252 L532,256 L524,272 L506,268 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('SE')"><title>Sergipe (SE)</title></path>
+              <text x="514" y="264" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[7px] font-black">SE</text>
 
-            <!-- Bahia (BA) -->
-            <path id="svg-BA" d="M422,256 L448,252 L475,242 L512,238 L510,252 L506,268 L524,272 L508,312 L498,348 L480,366 L454,364 L436,334 L408,316 L386,306 L370,265 L410,256 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('BA')"><title>Bahia (BA)</title></path>
-            <text x="454" y="304" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[13px] font-black">BA</text>
+              <path id="svg-BA" d="M422,256 L448,252 L475,242 L512,238 L510,252 L506,268 L524,272 L508,312 L498,348 L480,366 L454,364 L436,334 L408,316 L386,306 L370,265 L410,256 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('BA')"><title>Bahia (BA)</title></path>
+              <text x="454" y="304" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[13px] font-black">BA</text>
 
-            <!-- CENTRO-OESTE -->
-            <!-- Mato Grosso (MT) -->
-            <path id="svg-MT" d="M182,212 L220,192 L245,214 L272,212 L286,228 L310,218 L340,216 L332,260 L338,292 L320,314 L306,346 L284,342 L254,324 L225,320 L216,290 L180,270 L170,252 L180,234 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('MT')"><title>Mato Grosso (MT)</title></path>
-            <text x="250" y="270" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[13px] font-black">MT</text>
+              <!-- CENTRO-OESTE -->
+              <path id="svg-MT" d="M182,212 L220,192 L245,214 L272,212 L286,228 L310,218 L340,216 L332,260 L338,292 L320,314 L306,346 L284,342 L254,324 L225,320 L216,290 L180,270 L170,252 L180,234 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('MT')"><title>Mato Grosso (MT)</title></path>
+              <text x="250" y="270" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[13px] font-black">MT</text>
 
-            <!-- Goiás (GO) -->
-            <path id="svg-GO" d="M338,292 L360,296 L386,306 L408,316 L396,358 L374,382 L342,374 L324,352 L306,346 L320,314 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('GO')"><title>Goiás (GO)</title></path>
-            <text x="350" y="342" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[11px] font-black">GO</text>
+              <path id="svg-GO" d="M338,292 L360,296 L386,306 L408,316 L396,358 L374,382 L342,374 L324,352 L306,346 L320,314 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('GO')"><title>Goiás (GO)</title></path>
+              <text x="350" y="342" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[11px] font-black">GO</text>
 
-            <!-- Distrito Federal (DF) -->
-            <path id="svg-DF" d="M364,334 L378,334 L378,348 L364,348 Z" class="map-state cursor-pointer transition fill-amber-300 stroke-slate-900 stroke-1 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('DF')"><title>Distrito Federal (DF)</title></path>
-            <text x="367" y="343" class="pointer-events-none fill-slate-900 text-[6px] font-black">DF</text>
+              <path id="svg-DF" d="M364,334 L378,334 L378,348 L364,348 Z" class="map-state cursor-pointer transition fill-amber-300 stroke-slate-900 stroke-1 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('DF')"><title>Distrito Federal (DF)</title></path>
+              <text x="367" y="343" class="pointer-events-none fill-slate-900 text-[6px] font-black">DF</text>
 
-            <!-- Mato Grosso do Sul (MS) -->
-            <path id="svg-MS" d="M254,324 L284,342 L306,346 L324,352 L312,382 L302,416 L278,438 L256,432 L246,400 L248,362 L234,340 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('MS')"><title>Mato Grosso do Sul (MS)</title></path>
-            <text x="272" y="386" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[11px] font-black">MS</text>
+              <path id="svg-MS" d="M254,324 L284,342 L306,346 L324,352 L312,382 L302,416 L278,438 L256,432 L246,400 L248,362 L234,340 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('MS')"><title>Mato Grosso do Sul (MS)</title></path>
+              <text x="272" y="386" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[11px] font-black">MS</text>
 
-            <!-- SUDESTE -->
-            <!-- Minas Gerais (MG) -->
-            <path id="svg-MG" d="M396,358 L408,316 L436,334 L454,364 L480,366 L474,394 L460,404 L446,436 L410,432 L392,420 L370,410 L374,382 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('MG')"><title>Minas Gerais (MG)</title></path>
-            <text x="424" y="384" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[12px] font-black">MG</text>
+              <!-- SUDESTE -->
+              <path id="svg-MG" d="M396,358 L408,316 L436,334 L454,364 L480,366 L474,394 L460,404 L446,436 L410,432 L392,420 L370,410 L374,382 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('MG')"><title>Minas Gerais (MG)</title></path>
+              <text x="424" y="384" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[12px] font-black">MG</text>
 
-            <!-- Espírito Santo (ES) -->
-            <path id="svg-ES" d="M480,366 L498,378 L488,416 L474,410 L474,394 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('ES')"><title>Espírito Santo (ES)</title></path>
-            <text x="482" y="398" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[8px] font-black">ES</text>
+              <path id="svg-ES" d="M480,366 L498,378 L488,416 L474,410 L474,394 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('ES')"><title>Espírito Santo (ES)</title></path>
+              <text x="482" y="398" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[8px] font-black">ES</text>
 
-            <!-- Rio de Janeiro (RJ) -->
-            <path id="svg-RJ" d="M446,436 L460,404 L474,410 L488,416 L474,440 L442,442 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('RJ')"><title>Rio de Janeiro (RJ)</title></path>
-            <text x="456" y="432" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[8px] font-black">RJ</text>
+              <path id="svg-RJ" d="M446,436 L460,404 L474,410 L488,416 L474,440 L442,442 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('RJ')"><title>Rio de Janeiro (RJ)</title></path>
+              <text x="456" y="432" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[8px] font-black">RJ</text>
 
-            <!-- São Paulo (SP) -->
-            <path id="svg-SP" d="M312,382 L342,374 L374,382 L370,410 L392,420 L410,432 L442,442 L422,462 L388,458 L364,468 L338,456 L312,414 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('SP')"><title>São Paulo (SP)</title></path>
-            <text x="360" y="428" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[12px] font-black">SP</text>
+              <path id="svg-SP" d="M312,382 L342,374 L374,382 L370,410 L392,420 L410,432 L442,442 L422,462 L388,458 L364,468 L338,456 L312,414 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('SP')"><title>São Paulo (SP)</title></path>
+              <text x="360" y="428" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[12px] font-black">SP</text>
 
-            <!-- SUL -->
-            <!-- Paraná (PR) -->
-            <path id="svg-PR" d="M302,416 L312,414 L338,456 L364,468 L360,490 L322,488 L296,494 L282,476 L278,438 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('PR')"><title>Paraná (PR)</title></path>
-            <text x="318" y="460" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[10px] font-black">PR</text>
+              <!-- SUL -->
+              <path id="svg-PR" d="M302,416 L312,414 L338,456 L364,468 L360,490 L322,488 L296,494 L282,476 L278,438 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('PR')"><title>Paraná (PR)</title></path>
+              <text x="318" y="460" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[10px] font-black">PR</text>
 
-            <!-- Santa Catarina (SC) -->
-            <path id="svg-SC" d="M296,494 L322,488 L360,490 L354,518 L320,520 L292,514 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('SC')"><title>Santa Catarina (SC)</title></path>
-            <text x="324" y="508" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[9px] font-black">SC</text>
+              <path id="svg-SC" d="M296,494 L322,488 L360,490 L354,518 L320,520 L292,514 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('SC')"><title>Santa Catarina (SC)</title></path>
+              <text x="324" y="508" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[9px] font-black">SC</text>
 
-            <!-- Rio Grande do Sul (RS) -->
-            <path id="svg-RS" d="M292,514 L320,520 L354,518 L342,558 L318,590 L280,594 L260,564 L276,536 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('RS')"><title>Rio Grande do Sul (RS)</title></path>
-            <text x="300" y="556" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[11px] font-black">RS</text>
-          </svg>
-        </div>
-        <span class="text-[11px] text-slate-400 mt-1 text-center">Clique em qualquer estado para detalhar os dados imediatos ao lado.</span>
+              <path id="svg-RS" d="M292,514 L320,520 L354,518 L342,558 L318,590 L280,594 L260,564 L276,536 Z" class="map-state cursor-pointer transition fill-slate-200 stroke-white dark:stroke-slate-800 hover:stroke-previa-orange hover:stroke-2" onclick="selectMapState('RS')"><title>Rio Grande do Sul (RS)</title></path>
+              <text x="300" y="556" class="pointer-events-none fill-slate-700 dark:fill-slate-900 text-[11px] font-black">RS</text>
+            </svg>
+          </div>
+          <span class="text-[11px] text-slate-400 mt-1 text-center">Clique em qualquer estado para detalhar os dados imediatos ao lado.</span>
         </div>
 
         <!-- Detalhes do Estado Selecionado & Ranking -->
         <div class="lg:col-span-5 space-y-4">
-          
-          <!-- Card de Destaque do Estado Clicado -->
           <div id="stateDetailCard" class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-5 shadow-sm space-y-3">
             <!-- JS -->
           </div>
 
-          <!-- Tabela de Classificação por Estado -->
           <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl overflow-hidden shadow-sm">
             <div class="p-3.5 border-b border-slate-100 dark:border-previa-darkBorder bg-slate-50 dark:bg-previa-darkBg/60 flex items-center justify-between">
               <h4 class="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
@@ -877,15 +725,12 @@
               </table>
             </div>
           </div>
-
         </div>
       </div>
     </section>
 
     <!-- ==================== ABA 3: EQUIPE, EMBAIXADORES & LINKS ==================== -->
     <section id="view-team" class="space-y-6 hidden">
-      
-      <!-- Card Informativo do Administrador -->
       <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-6 shadow-sm">
         <div class="max-w-3xl">
           <span class="px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-orange-100 dark:bg-orange-950/60 text-previa-orange border border-orange-200 dark:border-orange-800">
@@ -909,40 +754,39 @@
             <p class="text-[11px] text-slate-400">Links exclusivos por embaixador para envio via WhatsApp</p>
           </div>
           <button onclick="openMemberModal('ambassador')" class="bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition">
-          <i data-lucide="plus" class="w-3.5 h-3.5 text-previa-orange"></i>
-          <span>+ Novo Embaixador / Estado</span>
-        </button>
-      </div>
-
-      <div id="ambassadorsList" class="grid grid-cols-1 gap-3">
-        <!-- Populado via JS -->
-      </div>
-    </div>
-
-    <!-- Sessão 2: Vendedores Independentes -->
-    <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-5 shadow-sm space-y-4">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-previa-darkBorder">
-        <div>
-          <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-            <i data-lucide="users" class="w-4 h-4 text-blue-600"></i>
-            Vendedores Comerciais (Ganham 30% das vendas diretas)
-          </h3>
-          <p class="text-[11px] text-slate-400">Links individuais com cadastro detalhado e redes sociais</p>
+            <i data-lucide="plus" class="w-3.5 h-3.5 text-previa-orange"></i>
+            <span>+ Novo Embaixador / Estado</span>
+          </button>
         </div>
-        <button onclick="openMemberModal('seller')" class="bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition">
-          <i data-lucide="plus" class="w-3.5 h-3.5 text-previa-orange"></i>
-          <span>+ Cadastrar Vendedor Completo</span>
-        </button>
+
+        <div id="ambassadorsList" class="grid grid-cols-1 gap-3">
+          <!-- Populado via JS -->
+        </div>
       </div>
 
-      <div id="sellersList" class="grid grid-cols-1 gap-3">
-        <!-- Populado via JS -->
+      <!-- Sessão 2: Vendedores Independentes -->
+      <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-previa-darkBorder">
+          <div>
+            <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
+              <i data-lucide="users" class="w-4 h-4 text-blue-600"></i>
+              Vendedores Comerciais (Ganham 30% das vendas diretas)
+            </h3>
+            <p class="text-[11px] text-slate-400">Links individuais com cadastro detalhado e redes sociais</p>
+          </div>
+          <button onclick="openMemberModal('seller')" class="bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition">
+            <i data-lucide="plus" class="w-3.5 h-3.5 text-previa-orange"></i>
+            <span>+ Cadastrar Vendedor Completo</span>
+          </button>
+        </div>
+
+        <div id="sellersList" class="grid grid-cols-1 gap-3">
+          <!-- Populado via JS -->
+        </div>
       </div>
-    </div>
+    </section>
 
-  </section>
-
-</main>
+  </main>
 
   <!-- ================= MODAL: CADASTRAR / EDITAR VENDA ================= -->
   <div id="leadModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
@@ -988,7 +832,6 @@
           <div>
             <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Estado (UF) *</label>
             <select id="leadState" required onchange="handleModalStateChange(this.value)" class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
-              <!-- Populado dinamicamente -->
             </select>
           </div>
         </div>
@@ -1002,7 +845,7 @@
           <span id="leadAmbassadorPreview" class="text-xs font-bold text-previa-orange">-</span>
         </div>
 
-        <!-- Seleção de PRODUTO (Apenas 2 produtos) -->
+        <!-- Seleção de PRODUTO (2 produtos) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Produto Previa Treinamentos *</label>
@@ -1014,12 +857,11 @@
           <div>
             <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Vendedor Responsável (30%) *</label>
             <select id="leadSeller" required class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
-              <!-- Populado com vendedores e embaixadores -->
             </select>
           </div>
         </div>
 
-        <!-- Campo Especial Obrigatório quando Produto for 'Equipe' -->
+        <!-- Campo Obrigatório para Produto 'Equipe' -->
         <div id="teamInstructorsContainer" class="hidden bg-orange-50/40 dark:bg-orange-950/20 border border-previa-orange/40 p-3 rounded-xl space-y-1.5">
           <label class="block text-previa-orange font-bold uppercase tracking-wider text-[10px]">
             <i data-lucide="users" class="w-3.5 h-3.5 inline mr-1 text-previa-orange"></i>
@@ -1066,7 +908,7 @@
     </div>
   </div>
 
-  <!-- ================= MODAL: CADASTRAR / EDITAR MEMBRO (VENDEDOR OU EMBAIXADOR COMPLETO) ================= -->
+  <!-- ================= MODAL: CADASTRAR / EDITAR MEMBRO (VENDEDOR OU EMBAIXADOR) ================= -->
   <div id="memberModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
     <div class="bg-white dark:bg-previa-darkCard border border-slate-200 dark:border-previa-darkBorder rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl my-8">
       
@@ -1077,7 +919,7 @@
           </div>
           <div>
             <h4 id="memberModalTitle" class="text-sm font-bold text-slate-800 dark:text-white">Cadastrar Membro da Equipe</h4>
-            <p class="text-[11px] text-slate-400">Dados cadastrais, CPF, canais e redes sociais</p>
+            <p class="text-[11px] text-slate-400">Dados cadastrais, CPF/CNPJ, canais e redes sociais</p>
           </div>
         </div>
         <button onclick="closeModal('memberModal')" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1">
@@ -1086,51 +928,50 @@
       </div>
 
       <form id="memberForm" onsubmit="saveMember(event)" class="p-5 space-y-3 text-xs">
-      <input type="hidden" id="memberId">
-      <input type="hidden" id="memberRoleType" value="seller">
+        <input type="hidden" id="memberId">
+        <input type="hidden" id="memberRoleType" value="seller">
 
-      <div>
-        <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Nome Completo / Razão Social *</label>
-        <input type="text" id="memberName" required placeholder="Ex: Roberto Carlos da Silva ou Silva Treinamentos LTDA"
-          class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <div class="flex items-center justify-between mb-1">
-            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px]">Tipo de Documento *</label>
-            <div class="flex items-center gap-2">
-              <label class="inline-flex items-center gap-1 text-[10px] cursor-pointer font-bold text-slate-700 dark:text-slate-200">
-                <input type="radio" name="memberDocType" value="CPF" checked onchange="toggleDocType('CPF')" class="accent-previa-orange"> CPF
-              </label>
-              <label class="inline-flex items-center gap-1 text-[10px] cursor-pointer font-bold text-slate-700 dark:text-slate-200">
-                <input type="radio" name="memberDocType" value="CNPJ" onchange="toggleDocType('CNPJ')" class="accent-previa-orange"> CNPJ
-              </label>
+          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Nome Completo / Razão Social *</label>
+          <input type="text" id="memberName" required placeholder="Ex: Roberto Carlos da Silva ou Silva Treinamentos LTDA"
+            class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px]">Tipo de Documento *</label>
+              <div class="flex items-center gap-2">
+                <label class="inline-flex items-center gap-1 text-[10px] cursor-pointer font-bold text-slate-700 dark:text-slate-200">
+                  <input type="radio" name="memberDocType" value="CPF" checked onchange="toggleDocType('CPF')" class="accent-previa-orange"> CPF
+                </label>
+                <label class="inline-flex items-center gap-1 text-[10px] cursor-pointer font-bold text-slate-700 dark:text-slate-200">
+                  <input type="radio" name="memberDocType" value="CNPJ" onchange="toggleDocType('CNPJ')" class="accent-previa-orange"> CNPJ
+                </label>
+              </div>
             </div>
+            <input type="text" id="memberDoc" required placeholder="000.000.000-00" oninput="maskDoc(this)" maxlength="18"
+              class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium font-mono">
           </div>
-          <input type="text" id="memberDoc" required placeholder="000.000.000-00" oninput="maskDoc(this)" maxlength="18"
-            class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium font-mono">
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Estado de Atuação (UF) *</label>
+            <select id="memberUf" required class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
+            </select>
+          </div>
         </div>
-        <div>
-          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Estado de Atuação (UF) *</label>
-          <select id="memberUf" required class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
-            <!-- Populado dinamicamente -->
-          </select>
-        </div>
-      </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>
-          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">E-mail Corporativo *</label>
-          <input type="email" id="memberEmail" required placeholder="nome@previa.com.br"
-            class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">E-mail Corporativo *</label>
+            <input type="email" id="memberEmail" required placeholder="nome@previa.com.br"
+              class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
+          </div>
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Telefone / WhatsApp *</label>
+            <input type="text" id="memberPhone" required placeholder="(11) 98765-4321"
+              class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
+          </div>
         </div>
-        <div>
-          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Telefone / WhatsApp *</label>
-          <input type="text" id="memberPhone" required placeholder="(11) 98765-4321"
-            class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
-        </div>
-      </div>
 
         <!-- REDES SOCIAIS E CANAIS DE MÍDIA -->
         <div class="pt-2 border-t border-slate-200 dark:border-previa-darkBorder space-y-2">
@@ -1163,7 +1004,7 @@
           </div>
         </div>
 
-        <!-- PERMISSÕES ESPECIAIS (DEFINIDAS PELO ADMINISTRADOR - NATIVO DESATIVADO) -->
+        <!-- PERMISSÕES ESPECIAIS (ADMIN) -->
         <div class="pt-3 border-t border-slate-200 dark:border-previa-darkBorder bg-slate-50 dark:bg-previa-darkBg/60 p-3 rounded-xl space-y-2">
           <div class="flex items-center gap-1.5">
             <i data-lucide="shield-alert" class="w-4 h-4 text-previa-orange"></i>
@@ -1190,6 +1031,92 @@
               </div>
             </label>
           </div>
+        </div>
+
+        <div class="pt-3 flex justify-end gap-2 border-t border-slate-200 dark:border-previa-darkBorder">
+          <button type="button" onclick="closeModal('memberModal')" class="px-4 py-2 bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark text-slate-600 dark:text-slate-300 font-bold rounded-xl transition">
+            Cancelar
+          </button>
+          <button type="submit" class="px-5 py-2 bg-previa-orange hover:bg-previa-orangeHover text-white font-black rounded-xl transition shadow-md shadow-previa-orange/30">
+            Salvar Membro
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: CADASTRAR / EDITAR MÍDIA ================= -->
+  <div id="mediaModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-previa-darkCard border border-slate-200 dark:border-previa-darkBorder rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl my-8">
+      
+      <div class="p-4 border-b border-slate-200 dark:border-previa-darkBorder flex items-center justify-between bg-slate-50 dark:bg-previa-darkBg/60">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-orange-100 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800 flex items-center justify-center text-previa-orange">
+            <i data-lucide="video" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 id="mediaModalTitle" class="text-sm font-bold text-slate-800 dark:text-white">Lançar Mídia & Tráfego</h4>
+            <p class="text-[11px] text-slate-400">Contabilize vídeos, postagens e visualizações alcançadas</p>
+          </div>
+        </div>
+        <button onclick="closeModal('mediaModal')" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="mediaForm" onsubmit="saveMedia(event)" class="p-5 space-y-3.5 text-xs">
+        <input type="hidden" id="mediaId">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Data da Publicação *</label>
+            <input type="date" id="mediaDate" required
+              class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
+          </div>
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Canal de Mídia *</label>
+            <select id="mediaChannel" required class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
+              <option value="Instagram">Instagram (Reels / Feed)</option>
+              <option value="TikTok">TikTok</option>
+              <option value="YouTube">YouTube / Shorts</option>
+              <option value="LinkedIn">LinkedIn Corporativo</option>
+              <option value="Facebook">Facebook</option>
+              <option value="WhatsApp Status">WhatsApp Status / Lista</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Criador / Responsável *</label>
+            <select id="mediaSeller" required class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Tipo de Formato *</label>
+            <select id="mediaFormatType" required class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
+              <option value="video">🎥 Vídeo (Reels / TikTok / Shorts)</option>
+              <option value="post">🖼️ Imagem / Postagem (Carrossel / Banner)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Visualizações Alcançadas (Views)</label>
+          <input type="number" id="mediaViewsCount" min="0" placeholder="Ex: 2500"
+            class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-teal-700 dark:text-teal-400 font-bold focus:outline-none focus:border-previa-orange font-mono">
+        </div>
+
+        <div>
+          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Tema / Conteúdo Abordado *</label>
+          <input type="text" id="mediaTopic" required placeholder="Ex: 5 Dicas de Direção Defensiva em Pistas Molhadas"
+            class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange">
+        </div>
+
+        <div>
+          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Link da Postagem (Opcional)</label>
+          <input type="url" id="mediaUrl" placeholder="https://instagram.com/reel/..."
+            class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange">
         </div>
 
         <div class="pt-3 flex justify-end gap-2 border-t border-slate-200 dark:border-previa-darkBorder">
@@ -1231,7 +1158,7 @@
       { uf: "GO", name: "Goiás", ambassadorId: "emb_go" }
     ];
 
-    // 2. EMBAIXADORES ESTADUAIS (COM DADOS COMPLETOS E REDES)
+    // 2. EMBAIXADORES ESTADUAIS
     const DEFAULT_AMBASSADORS = [
       { 
         id: "emb_sp", 
@@ -1299,7 +1226,7 @@
       }
     ];
 
-    // 3. VENDEDORES INDEPENDENTES (COM DADOS COMPLETOS E REDES)
+    // 3. VENDEDORES INDEPENDENTES
     const DEFAULT_SELLERS = [
       { 
         id: "v1", 
@@ -1511,291 +1438,6 @@
     let currentTab = "pipeline";
     let selectedMapUF = "SP";
 
-    // ================= NOVO ESTADO DO FILTRO DE CALENDÁRIO DUPLO (ESTILO IMAGEM) =================
-    const MONTH_NAMES_SHORT = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
-    
-    // Estado do filtro ativo
-    const dateFilterState = {
-      preset: "current_month",
-      startDate: null,
-      endDate: null
-    };
-
-    // Estado dos calendários visuais dentro do popover (ano e mês visualizados)
-    let pickerCalState = {
-      startYear: 2026,
-      startMonth: 9, // 0-indexed: 9 = Outubro
-      endYear: 2026,
-      endMonth: 9,
-      tempStart: null,
-      tempEnd: null
-    };
-
-    function initDateFilter() {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = now.getMonth();
-      
-      const start = new Date(year, month, 1);
-      const end = new Date(year, month + 1, 0);
-
-      dateFilterState.preset = "current_month";
-      dateFilterState.startDate = formatDateToYMD(start);
-      dateFilterState.endDate = formatDateToYMD(end);
-
-      pickerCalState.startYear = year;
-      pickerCalState.startMonth = month;
-      pickerCalState.endYear = year;
-      pickerCalState.endMonth = month;
-      pickerCalState.tempStart = dateFilterState.startDate;
-      pickerCalState.tempEnd = dateFilterState.endDate;
-
-      updateDatePickerButtonLabel();
-      renderDualCalendars();
-    }
-
-    function toggleDatePopover(e) {
-      if (e) e.stopPropagation();
-      const popover = document.getElementById('datePickerPopover');
-      if (!popover) return;
-      const isHidden = popover.classList.contains('hidden');
-      if (isHidden) {
-        // Sincroniza estado temporário ao abrir
-        pickerCalState.tempStart = dateFilterState.startDate;
-        pickerCalState.tempEnd = dateFilterState.endDate;
-        const s = dateFilterState.startDate ? new Date(dateFilterState.startDate + 'T00:00:00') : new Date();
-        const end = dateFilterState.endDate ? new Date(dateFilterState.endDate + 'T00:00:00') : new Date();
-        pickerCalState.startYear = s.getFullYear();
-        pickerCalState.startMonth = s.getMonth();
-        pickerCalState.endYear = end.getFullYear();
-        pickerCalState.endMonth = end.getMonth();
-
-        const presetSel = document.getElementById('popoverPresetSelect');
-        if (presetSel) presetSel.value = dateFilterState.preset || 'auto';
-
-        renderDualCalendars();
-        popover.classList.remove('hidden');
-        lucide.createIcons();
-      } else {
-        popover.classList.add('hidden');
-      }
-    }
-
-    function closeDatePopover() {
-      const popover = document.getElementById('datePickerPopover');
-      if (popover) popover.classList.add('hidden');
-    }
-
-    // Fechar popover ao clicar fora
-    document.addEventListener('click', (event) => {
-      const popover = document.getElementById('datePickerPopover');
-      const btn = document.getElementById('btnDatePickerToggle');
-      if (popover && !popover.classList.contains('hidden')) {
-        if (!popover.contains(event.target) && !btn.contains(event.target)) {
-          popover.classList.add('hidden');
-        }
-      }
-    });
-
-    function changeMonth(side, delta) {
-      if (side === 'start') {
-        pickerCalState.startMonth += delta;
-        if (pickerCalState.startMonth < 0) {
-          pickerCalState.startMonth = 11;
-          pickerCalState.startYear -= 1;
-        } else if (pickerCalState.startMonth > 11) {
-          pickerCalState.startMonth = 0;
-          pickerCalState.startYear += 1;
-        }
-      } else {
-        pickerCalState.endMonth += delta;
-        if (pickerCalState.endMonth < 0) {
-          pickerCalState.endMonth = 11;
-          pickerCalState.endYear -= 1;
-        } else if (pickerCalState.endMonth > 11) {
-          pickerCalState.endMonth = 0;
-          pickerCalState.endYear += 1;
-        }
-      }
-      renderDualCalendars();
-    }
-
-    function onPopoverPresetChange(preset) {
-      const now = new Date();
-      const currentYear = now.getFullYear();
-      const currentMonth = now.getMonth();
-
-      let s = null;
-      let e = null;
-
-      if (preset === 'current_month' || preset === 'auto') {
-        s = new Date(currentYear, currentMonth, 1);
-        e = new Date(currentYear, currentMonth + 1, 0);
-      } else if (preset === 'last_month') {
-        s = new Date(currentYear, currentMonth - 1, 1);
-        e = new Date(currentYear, currentMonth, 0);
-      } else if (preset === 'last_30_days') {
-        s = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
-        e = now;
-      } else if (preset === 'current_year') {
-        s = new Date(currentYear, 0, 1);
-        e = new Date(currentYear, 11, 31);
-      } else if (preset === 'all') {
-        s = null;
-        e = null;
-      }
-
-      if (s && e) {
-        pickerCalState.tempStart = formatDateToYMD(s);
-        pickerCalState.tempEnd = formatDateToYMD(e);
-        pickerCalState.startYear = s.getFullYear();
-        pickerCalState.startMonth = s.getMonth();
-        pickerCalState.endYear = e.getFullYear();
-        pickerCalState.endMonth = e.getMonth();
-      } else if (preset === 'all') {
-        pickerCalState.tempStart = null;
-        pickerCalState.tempEnd = null;
-      }
-
-      renderDualCalendars();
-    }
-
-    function selectCalendarDate(side, dateYMD) {
-      const presetSel = document.getElementById('popoverPresetSelect');
-      if (presetSel) presetSel.value = 'custom';
-
-      if (side === 'start') {
-        pickerCalState.tempStart = dateYMD;
-        // Se a data de início for maior que o término, ajusta o término
-        if (pickerCalState.tempEnd && pickerCalState.tempStart > pickerCalState.tempEnd) {
-          pickerCalState.tempEnd = pickerCalState.tempStart;
-        }
-      } else {
-        pickerCalState.tempEnd = dateYMD;
-        // Se a data de término for menor que o início, ajusta o início
-        if (pickerCalState.tempStart && pickerCalState.tempEnd < pickerCalState.tempStart) {
-          pickerCalState.tempStart = pickerCalState.tempEnd;
-        }
-      }
-
-      renderDualCalendars();
-    }
-
-    function renderDualCalendars() {
-      // 1. Cabeçalhos dos meses (ex: "OUT. DE 2026")
-      const startH = document.getElementById('startCalHeader');
-      const endH = document.getElementById('endCalHeader');
-      if (startH) startH.innerText = `${MONTH_NAMES_SHORT[pickerCalState.startMonth]}. DE ${pickerCalState.startYear}`;
-      if (endH) endH.innerText = `${MONTH_NAMES_SHORT[pickerCalState.endMonth]}. DE ${pickerCalState.endYear}`;
-
-      // 2. Grids de dias
-      renderCalendarDays('start', pickerCalState.startYear, pickerCalState.startMonth, 'startDaysGrid');
-      renderCalendarDays('end', pickerCalState.endYear, pickerCalState.endMonth, 'endDaysGrid');
-
-      // 3. Resumo textual abaixo
-      const summary = document.getElementById('popoverSelectedSummary');
-      if (summary) {
-        if (!pickerCalState.tempStart && !pickerCalState.tempEnd) {
-          summary.innerText = "Exibindo todos os registros sem restrição de data.";
-        } else {
-          summary.innerText = `Período: ${formatDateBr(pickerCalState.tempStart)} até ${formatDateBr(pickerCalState.tempEnd)}`;
-        }
-      }
-      lucide.createIcons();
-    }
-
-    function renderCalendarDays(side, year, month, gridId) {
-      const container = document.getElementById(gridId);
-      if (!container) return;
-      container.innerHTML = "";
-
-      const firstDayOfWeek = new Date(year, month, 1).getDay(); // 0 = Domingo
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-      // Células vazias antes do dia 1
-      for (let i = 0; i < firstDayOfWeek; i++) {
-        const blank = document.createElement('div');
-        blank.className = "h-8 w-8";
-        container.appendChild(blank);
-      }
-
-      const todayYMD = formatDateToYMD(new Date());
-
-      for (let day = 1; day <= daysInMonth; day++) {
-        const d = new Date(year, month, day);
-        const ymd = formatDateToYMD(d);
-
-        const btn = document.createElement('button');
-        btn.type = "button";
-        btn.innerText = day;
-        btn.onclick = () => selectCalendarDate(side, ymd);
-
-        const isStart = pickerCalState.tempStart === ymd;
-        const isEnd = pickerCalState.tempEnd === ymd;
-        const isInRange = pickerCalState.tempStart && pickerCalState.tempEnd && (ymd > pickerCalState.tempStart && ymd < pickerCalState.tempEnd);
-        const isToday = ymd === todayYMD;
-
-        let cls = "h-8 w-8 mx-auto rounded-full text-xs font-semibold flex items-center justify-center transition ";
-
-        if (isStart || isEnd) {
-          cls += "bg-previa-orange text-white font-black shadow-md shadow-previa-orange/40 ";
-        } else if (isInRange) {
-          cls += "bg-orange-100 dark:bg-orange-950/50 text-previa-orange font-bold ";
-        } else if (isToday) {
-          cls += "border-2 border-slate-700 dark:border-slate-300 font-bold hover:bg-slate-100 dark:hover:bg-previa-forestDark ";
-        } else {
-          cls += "hover:bg-slate-100 dark:hover:bg-previa-forestDark text-slate-700 dark:text-slate-200 ";
-        }
-
-        btn.className = cls;
-        container.appendChild(btn);
-      }
-    }
-
-    function applyDateRange() {
-      dateFilterState.startDate = pickerCalState.tempStart;
-      dateFilterState.endDate = pickerCalState.tempEnd;
-      dateFilterState.preset = document.getElementById('popoverPresetSelect')?.value || 'custom';
-
-      updateDatePickerButtonLabel();
-      closeDatePopover();
-      renderApp();
-      showToast(`Filtro de data aplicado: ${formatDateBr(dateFilterState.startDate)} - ${formatDateBr(dateFilterState.endDate)}`);
-    }
-
-    function updateDatePickerButtonLabel() {
-      const label = document.getElementById('datePickerBtnLabel');
-      if (!label) return;
-
-      if (!dateFilterState.startDate && !dateFilterState.endDate) {
-        label.innerText = "Todos os Períodos";
-        return;
-      }
-
-      if (dateFilterState.preset === 'current_month') {
-        const now = new Date();
-        label.innerText = `Mês Atual (${MONTH_NAMES_SHORT[now.getMonth()]}/${now.getFullYear()})`;
-      } else {
-        label.innerText = `${formatDateBr(dateFilterState.startDate)} - ${formatDateBr(dateFilterState.endDate)}`;
-      }
-    }
-
-    function isDateInFilterRange(dateStr) {
-      if (!dateFilterState.startDate && !dateFilterState.endDate) return true;
-      if (!dateStr) return true;
-      const target = dateStr.split(' ')[0];
-      if (dateFilterState.startDate && target < dateFilterState.startDate) return false;
-      if (dateFilterState.endDate && target > dateFilterState.endDate) return false;
-      return true;
-    }
-
-    function formatDateToYMD(d) {
-      const year = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
-    }
-
     // GERENCIAMENTO DARK MODE
     function initTheme() {
       const savedTheme = localStorage.getItem('previa_theme') || 'light';
@@ -1812,7 +1454,7 @@
       const isDark = document.documentElement.classList.toggle('dark');
       localStorage.setItem('previa_theme', isDark ? 'dark' : 'light');
       updateThemeIcon(isDark);
-      showToast(isDark ? "Modo escuro ativado (descanso para os olhos)" : "Modo claro ativado");
+      showToast(isDark ? "Modo escuro ativado" : "Modo claro ativado");
     }
 
     function updateThemeIcon(isDark) {
@@ -1826,7 +1468,6 @@
     // INICIALIZAÇÃO
     window.addEventListener('DOMContentLoaded', () => {
       initTheme();
-      initDateFilter();
       checkUrlAccessParameters();
       populateSelectOptions();
       switchTab(currentTab);
@@ -1899,7 +1540,6 @@
         if (tabTeam) tabTeam.style.display = "";
         if (tabMap) tabMap.style.display = "";
       } else {
-        // Se for Vendedor ou Embaixador, oculta totalmente para não saberem que existem
         if (tabTeam) tabTeam.style.display = "none";
         if (tabMap) tabMap.style.display = "none";
       }
@@ -2001,7 +1641,6 @@
       states.forEach(st => {
         if (modalStateSelect) modalStateSelect.innerHTML += `<option value="${st.uf}">${st.uf} - ${st.name}</option>`;
         
-        // Se for Embaixador, ele só pode ver/filtrar o próprio estado
         if (!currentEmb || currentEmb.uf === st.uf) {
           if (filterStateSelect) filterStateSelect.innerHTML += `<option value="${st.uf}">${st.uf} - ${st.name}</option>`;
         }
@@ -2011,21 +1650,21 @@
       if (currentEmb) {
         if (filterStateSelect) {
           filterStateSelect.value = currentEmb.uf;
-          filterStateSelect.disabled = true; // Trava no estado do embaixador
+          filterStateSelect.disabled = true;
         }
       } else if (currentSeller) {
         if (filterStateSelect) {
           filterStateSelect.value = currentSeller.uf || "todos";
-          filterStateSelect.disabled = true; // Vendedor foca na carteira dele
+          filterStateSelect.disabled = true;
         }
       } else {
         if (filterStateSelect) filterStateSelect.disabled = false;
       }
 
-      // 3. Atualizar lista em cascata de vendedores respeitando permissão e estado
+      // 3. Atualizar filtro em cascata
       updateSellersFilterByState(currentEmb ? currentEmb.uf : (filterStateSelect?.value || "todos"));
 
-      // 4. Selects de Vendedores para Formulários de Leads e Mídia
+      // 4. Selects de Formulários
       const leadSellerSelect = document.getElementById('leadSeller');
       const mediaSellerSelect = document.getElementById('mediaSeller');
       const filterMediaSellerSelect = document.getElementById('filterMediaSeller');
@@ -2043,7 +1682,6 @@
         if (leadSellerSelect) leadSellerSelect.innerHTML += `<option value="${p.id}">${p.name}</option>`;
         if (mediaSellerSelect) mediaSellerSelect.innerHTML += `<option value="${p.id}">${p.name}</option>`;
         
-        // No filtro de mídia: Embaixador e Vendedor só veem a si próprios
         if (filterMediaSellerSelect) {
           if (currentRole === 'admin' || currentRole === p.id) {
             filterMediaSellerSelect.innerHTML += `<option value="${p.id}">${p.name}</option>`;
@@ -2059,7 +1697,7 @@
       }
     }
 
-    // REGRA DE CASCATA E ISOLAMENTO DE ACESSO:
+    // REGRA DE CASCATA E ISOLAMENTO DE ACESSO
     function onStateFilterChange(selectedUF) {
       updateSellersFilterByState(selectedUF);
       renderApp();
@@ -2075,7 +1713,7 @@
       const currentEmb = ambassadors.find(a => a.id === currentRole);
       const currentSeller = sellers.find(s => s.id === currentRole);
 
-      // CASO 1: Vendedor Comercial acessando -> Só existe ele mesmo no filtro
+      // CASO 1: Vendedor Comercial
       if (currentSeller) {
         filterSellerSelect.innerHTML = `<option value="${currentSeller.id}">👤 ${currentSeller.name} (Eu)</option>`;
         filterSellerSelect.value = currentSeller.id;
@@ -2083,7 +1721,7 @@
         return;
       }
 
-      // CASO 2: Embaixador Estadual acessando -> Só vê ele mesmo e os vendedores do seu Estado
+      // CASO 2: Embaixador Estadual
       if (currentEmb) {
         filterSellerSelect.disabled = false;
         filterSellerSelect.innerHTML = `<option value="todos">Todos do Estado (${currentEmb.uf})</option>`;
@@ -2101,7 +1739,7 @@
         return;
       }
 
-      // CASO 3: Administrador Geral -> Vê tudo com suporte a cascata de estado
+      // CASO 3: Admin Geral
       filterSellerSelect.disabled = false;
       filterSellerSelect.innerHTML = `<option value="todos">Todos os Vendedores/Embaixadores</option>`;
 
@@ -2139,7 +1777,7 @@
       }
     }
 
-    // FILTRAR LEADS CONFORME PERMISSAO, FILTROS DA INTERFACE E NOVO FILTRO DE DATA
+    // FILTRAR LEADS CONFORME PERMISSÕES E FILTROS
     function getFilteredLeads() {
       let list = [...leads];
 
@@ -2148,19 +1786,11 @@
       } else {
         const isEmb = ambassadors.find(a => a.id === currentRole);
         if (isEmb) {
-          // Embaixador vê as vendas do seu Estado E as que ele vendeu pessoalmente
           list = list.filter(l => l.state === isEmb.uf || l.sellerId === isEmb.id);
         } else {
-          // Vendedor vê estritamente o que ele mesmo cadastrou/vendeu
           list = list.filter(l => l.sellerId === currentRole);
         }
       }
-
-      // Filtro de Período/Data do Calendário Duplo
-      list = list.filter(l => {
-        const leadDate = l.contactDate || (l.stageChangedDate ? l.stageChangedDate.slice(0, 10) : null);
-        return isDateInFilterRange(leadDate);
-      });
 
       const search = document.getElementById('leadSearch')?.value.toLowerCase().trim() || "";
       const prodFilter = document.getElementById('filterProduct')?.value || "todos";
@@ -2298,7 +1928,7 @@
       }
     }
 
-    // VERIFICADOR DE PERMISSÕES DO USUÁRIO ATUAL
+    // VERIFICADOR DE PERMISSÕES
     function getCurrentUserPermissions() {
       if (currentRole === "admin") {
         return { canEdit: true, canDelete: true };
@@ -2320,7 +1950,7 @@
       return { canEdit: false, canDelete: false };
     }
 
-    // 1. RENDERIZAR KANBAN (SUPORTA ETAPA 1 A 5)
+    // 1. RENDERIZAR KANBAN
     function renderKanbanView() {
       const list = getFilteredLeads();
       const perms = getCurrentUserPermissions();
@@ -2372,7 +2002,6 @@
               </span>
             </div>
 
-            <!-- Produto Badge -->
             <div class="bg-slate-50 dark:bg-previa-darkBg p-2 rounded-lg border border-slate-100 dark:border-previa-darkBorder text-[10px] space-y-1">
               <div class="flex items-center justify-between">
                 <span class="text-slate-500 dark:text-slate-400 font-medium">Produto:</span>
@@ -2399,7 +2028,6 @@
               </div>
             </div>
 
-            <!-- Valores e Comissão -->
             <div class="flex items-center justify-between text-xs pt-0.5">
               <span class="text-slate-500 dark:text-slate-400 text-[10px]">Valor:</span>
               <span class="font-black text-slate-900 dark:text-white">R$ ${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
@@ -2418,7 +2046,6 @@
               </div>
             ` : ''}
 
-            <!-- Botões de Troca Rápida de Etapa (1 a 5) -->
             <div class="pt-2 border-t border-slate-100 dark:border-previa-darkBorder space-y-1.5">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-1">
@@ -2435,7 +2062,6 @@
                   `).join('')}
                 </div>
 
-                <!-- AÇÕES CONDICIONADAS À PERMISSÃO DO ADMINISTRADOR -->
                 <div class="flex items-center gap-1">
                   ${perms.canEdit ? `
                     <button onclick="editLead('${lead.id}')" title="Editar Venda" class="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition">
@@ -2450,7 +2076,6 @@
                 </div>
               </div>
 
-              <!-- DATAS ABAIXO DA ETAPA -->
               <div class="bg-slate-50 dark:bg-previa-darkBg p-1.5 rounded-lg border border-slate-200/80 dark:border-previa-darkBorder text-[9px] space-y-0.5 text-slate-500 dark:text-slate-400">
                 <div class="flex items-center justify-between">
                   <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3 text-blue-500"></i> Contato:</span>
@@ -2479,7 +2104,7 @@
       }
     }
 
-    // 2. RENDERIZAR TABELA (SUPORTA ETAPA 1 A 5 E PERMISSÕES DE AÇÕES)
+    // 2. RENDERIZAR TABELA
     function renderTableView() {
       const list = getFilteredLeads();
       const perms = getCurrentUserPermissions();
@@ -2573,15 +2198,15 @@
           </td>
         `;
         tbody.appendChild(tr);
-    // 3. RENDERIZAR MÍDIAS COM FILTROS ESPECÍFICOS E DATA
+      });
+    }
+
+    // 3. RENDERIZAR MÍDIAS
     function renderMediaSection() {
       let list = [...medias];
       if (currentRole !== "admin") {
         list = list.filter(m => m.sellerId === currentRole);
       }
-
-      // Aplica o filtro de data ativo do calendário duplo
-      list = list.filter(m => isDateInFilterRange(m.date));
 
       const filterSeller = document.getElementById('filterMediaSeller')?.value || "todos";
       const filterChannel = document.getElementById('filterMediaChannel')?.value || "todos";
@@ -2621,7 +2246,7 @@
       for (const [c, val] of Object.entries(channels)) {
         if (val > max) { max = val; topC = `${c} (${val})`; }
       }
-      if (elTopChannel) elTopChannel.innerText = `Canal: ${topC}`;
+      if (elTopChannel) elTopChannel.innerText = `Top canal: ${topC}`;
 
       const tbody = document.getElementById('mediaTableBody');
       if (!tbody) return;
@@ -2677,9 +2302,6 @@
       });
 
       leads.forEach(l => {
-        const leadDate = l.contactDate || (l.stageChangedDate ? l.stageChangedDate.slice(0, 10) : null);
-        if (!isDateInFilterRange(leadDate)) return;
-
         if (!statsByUF[l.state]) statsByUF[l.state] = { total: 0, count: 0, leads: [] };
         statsByUF[l.state].leads.push(l);
         if (l.stage === "3" || l.stage === "4") {
@@ -2740,21 +2362,14 @@
       }
     }
 
-    // 5. RENDERIZAR RANKINGS E GRÁFICOS DE DESEMPENHO
+    // 5. RENDERIZAR RANKINGS
     function renderRankingsSection() {
-      const filteredLeadsForRankings = leads.filter(l => {
-        const refDate = l.contactDate || (l.stageChangedDate ? l.stageChangedDate.split(' ')[0] : null);
-        return isDateInFilterRange(refDate);
-      });
-
-      const filteredMediasForRankings = medias.filter(m => isDateInFilterRange(m.date));
-
-      // 1. Ranking Melhores Vendedores
+      // 1. Melhores Vendedores
       const sellerPerformance = {};
       sellers.forEach(s => sellerPerformance[s.id] = { id: s.id, name: s.name, total: 0, count: 0 });
       ambassadors.forEach(a => sellerPerformance[a.id] = { id: a.id, name: a.name, total: 0, count: 0 });
 
-      filteredLeadsForRankings.filter(l => l.stage === "3" || l.stage === "4").forEach(l => {
+      leads.filter(l => l.stage === "3" || l.stage === "4").forEach(l => {
         if (!sellerPerformance[l.sellerId]) {
           sellerPerformance[l.sellerId] = { id: l.sellerId, name: resolvePersonName(l.sellerId), total: 0, count: 0 };
         }
@@ -2790,11 +2405,11 @@
         }).join('');
       }
 
-      // 2. Ranking Melhores Embaixadores por Override
+      // 2. Melhores Embaixadores
       const ambPerformance = {};
       ambassadors.forEach(a => ambPerformance[a.uf] = { amb: a, totalEstado: 0, override: 0, count: 0 });
 
-      filteredLeadsForRankings.filter(l => l.stage === "3" || l.stage === "4").forEach(l => {
+      leads.filter(l => l.stage === "3" || l.stage === "4").forEach(l => {
         if (ambPerformance[l.state]) {
           ambPerformance[l.state].totalEstado += Number(l.value || 0);
           ambPerformance[l.state].override += (Number(l.value || 0) * 0.05);
@@ -2830,9 +2445,9 @@
         }).join('');
       }
 
-      // 3. Ranking de Visualizações em Redes e Mídias
+      // 3. Ranking de Visualizações
       const viewsPerformance = {};
-      filteredMediasForRankings.forEach(m => {
+      medias.forEach(m => {
         if (!viewsPerformance[m.sellerId]) {
           viewsPerformance[m.sellerId] = { id: m.sellerId, name: resolvePersonName(m.sellerId), views: 0, posts: 0, videos: 0 };
         }
@@ -2929,7 +2544,7 @@
       switchTab('pipeline');
     }
 
-    // RENDER EQUIPE, EMBAIXADORES, REDES SOCIAIS E EXCLUSÃO
+    // RENDER EQUIPE, EMBAIXADORES & REDES SOCIAIS
     function renderTeamSection() {
       const ambList = document.getElementById('ambassadorsList');
       const sellList = document.getElementById('sellersList');
@@ -2970,7 +2585,6 @@
               </div>
               <p class="text-[11px] text-slate-500 dark:text-slate-400">${amb.email} • ${amb.phone || 'Sem fone'}</p>
               
-              <!-- Links Sociais do Embaixador -->
               <div class="flex items-center gap-2 mt-1 text-[10px] flex-wrap">
                 ${amb.instagram ? `<span class="text-rose-600 dark:text-rose-400 font-semibold flex items-center gap-0.5"><i data-lucide="instagram" class="w-3 h-3"></i> ${escapeHtml(amb.instagram)}</span>` : ''}
                 ${amb.youtube ? `<span class="text-red-600 dark:text-red-400 font-semibold flex items-center gap-0.5"><i data-lucide="youtube" class="w-3 h-3"></i> ${escapeHtml(amb.youtube)}</span>` : ''}
@@ -3023,7 +2637,6 @@
               </div>
               <p class="text-[11px] text-slate-500 dark:text-slate-400">${sel.email} • ${sel.phone || 'Sem fone'}</p>
               
-              <!-- Links Sociais do Vendedor -->
               <div class="flex items-center gap-2 mt-1 text-[10px] flex-wrap">
                 ${sel.instagram ? `<span class="text-rose-600 dark:text-rose-400 font-semibold flex items-center gap-0.5"><i data-lucide="instagram" class="w-3 h-3"></i> ${escapeHtml(sel.instagram)}</span>` : ''}
                 ${sel.youtube ? `<span class="text-red-600 dark:text-red-400 font-semibold flex items-center gap-0.5"><i data-lucide="youtube" class="w-3 h-3"></i> ${escapeHtml(sel.youtube)}</span>` : ''}
@@ -3050,7 +2663,7 @@
       });
     }
 
-    // MODAL DE CADASTRO/EDIÇÃO DE MEMBRO (VENDEDOR OU EMBAIXADOR)
+    // MODAL DE MEMBRO
     function openMemberModal(roleType = 'seller') {
       document.getElementById('memberForm').reset();
       document.getElementById('memberId').value = "";
@@ -3058,7 +2671,6 @@
       
       toggleDocType('CPF');
       
-      // Permissões nativas desativadas por padrão
       document.getElementById('memberCanEdit').checked = false;
       document.getElementById('memberCanDelete').checked = false;
       
@@ -3106,7 +2718,6 @@
       document.getElementById('memberTiktok').value = member.tiktok || '';
       document.getElementById('memberLinkedin').value = member.linkedin || '';
 
-      // Carregar permissões concedidas pelo admin
       document.getElementById('memberCanEdit').checked = member.canEdit === true;
       document.getElementById('memberCanDelete').checked = member.canDelete === true;
 
@@ -3127,7 +2738,6 @@
       maskDoc(docInput);
     }
 
-    // MÁSCARA AUTOMÁTICA DE CPF OU CNPJ
     function maskDoc(input) {
       const selectedType = document.querySelector('input[name="memberDocType"]:checked')?.value || 'CPF';
       let v = input.value.replace(/\D/g, "");
@@ -3168,7 +2778,7 @@
         name: roleType === 'ambassador' ? `${name} (Embaixador ${uf})` : name,
         docType,
         doc,
-        cpf: doc, // compatibilidade
+        cpf: doc,
         uf,
         email,
         phone,
@@ -3184,7 +2794,7 @@
         if (id) {
           const idx = ambassadors.findIndex(a => a.id === id);
           if (idx !== -1) ambassadors[idx] = { ...ambassadors[idx], ...memberData };
-          showToast("Embaixador e permissões atualizados!");
+          showToast("Embaixador atualizado!");
         } else {
           const newId = `emb_${uf.toLowerCase()}_${Date.now()}`;
           ambassadors.push({ id: newId, ...memberData });
@@ -3199,7 +2809,7 @@
         if (id) {
           const idx = sellers.findIndex(s => s.id === id);
           if (idx !== -1) sellers[idx] = { ...sellers[idx], ...memberData };
-          showToast("Vendedor e permissões atualizados!");
+          showToast("Vendedor atualizado!");
         } else {
           const newId = `v_${Date.now()}`;
           sellers.push({ id: newId, ...memberData });
@@ -3213,7 +2823,6 @@
       renderApp();
     }
 
-    // EXCLUIR VENDEDOR OU EMBAIXADOR
     function deleteMember(id, roleType) {
       const name = resolvePersonName(id);
       if (confirm(`Deseja realmente excluir ${name}? Essa ação não poderá ser desfeita.`)) {
@@ -3234,17 +2843,7 @@
       }
     }
 
-    // MÁSCARA AUTOMÁTICA DE CPF
-    function maskCpf(input) {
-      let v = input.value.replace(/\D/g, "");
-      if (v.length > 11) v = v.slice(0, 11);
-      v = v.replace(/(\d{3})(\d)/, "$1.$2");
-      v = v.replace(/(\d{3})(\d)/, "$1.$2");
-      v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-      input.value = v;
-    }
-
-    // 6. FORMULÁRIO DE LEADS E TRANSIÇÕES
+    // FORMULÁRIO DE LEADS
     function handleProductChange(prod) {
       const teamBox = document.getElementById('teamInstructorsContainer');
       const instructorsInput = document.getElementById('leadTeamInstructors');
@@ -3383,7 +2982,7 @@
       }
     }
 
-    // 7. FORMULÁRIO DE MÍDIA COM FORMATO (VÍDEO OU IMAGEM)
+    // FORMULÁRIO DE MÍDIA
     function openMediaModal() {
       document.getElementById('mediaForm').reset();
       document.getElementById('mediaId').value = "";
