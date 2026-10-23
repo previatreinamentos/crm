@@ -797,40 +797,40 @@
             <p class="text-[11px] text-slate-400">Links exclusivos por embaixador para envio via WhatsApp</p>
           </div>
           <button onclick="openMemberModal('ambassador')" class="bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition">
-            <i data-lucide="plus" class="w-3.5 h-3.5 text-previa-orange"></i>
-            <span>+ Novo Embaixador / Estado</span>
-          </button>
-        </div>
-
-        <div id="ambassadorsList" class="grid grid-cols-1 gap-3">
-          <!-- Populado via JS -->
-        </div>
+          <i data-lucide="plus" class="w-3.5 h-3.5 text-previa-orange"></i>
+          <span>+ Novo Embaixador / Estado</span>
+        </button>
       </div>
 
-      <!-- Sessão 2: Vendedores Independentes -->
-      <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-5 shadow-sm space-y-4">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-previa-darkBorder">
-          <div>
-            <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-              <i data-lucide="users" class="w-4 h-4 text-blue-600"></i>
-              Vendedores Comerciais (Ganham 30% das vendas diretas)
-            </h3>
-            <p class="text-[11px] text-slate-400">Links individuais com cadastro detalhado e redes sociais</p>
-          </div>
-          <button onclick="openMemberModal('seller')" class="bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition">
-            <i data-lucide="plus" class="w-3.5 h-3.5 text-previa-orange"></i>
-            <span>+ Cadastrar Vendedor Completo</span>
-          </button>
-        </div>
+      <div id="ambassadorsList" class="grid grid-cols-1 gap-3">
+        <!-- Populado via JS -->
+      </div>
+    </div>
 
-        <div id="sellersList" class="grid grid-cols-1 gap-3">
-          <!-- Populado via JS -->
+    <!-- Sessão 2: Vendedores Independentes -->
+    <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-5 shadow-sm space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-previa-darkBorder">
+        <div>
+          <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
+            <i data-lucide="users" class="w-4 h-4 text-blue-600"></i>
+            Vendedores Comerciais (Ganham 30% das vendas diretas)
+          </h3>
+          <p class="text-[11px] text-slate-400">Links individuais com cadastro detalhado e redes sociais</p>
         </div>
+        <button onclick="openMemberModal('seller')" class="bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition">
+          <i data-lucide="plus" class="w-3.5 h-3.5 text-previa-orange"></i>
+          <span>+ Cadastrar Vendedor Completo</span>
+        </button>
       </div>
 
-    </section>
+      <div id="sellersList" class="grid grid-cols-1 gap-3">
+        <!-- Populado via JS -->
+      </div>
+    </div>
 
-  </main>
+  </section>
+
+</main>
 
   <!-- ================= MODAL: CADASTRAR / EDITAR VENDA ================= -->
   <div id="leadModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
@@ -974,14 +974,51 @@
       </div>
 
       <form id="memberForm" onsubmit="saveMember(event)" class="p-5 space-y-3 text-xs">
-        <input type="hidden" id="memberId">
-        <input type="hidden" id="memberRoleType" value="seller">
+      <input type="hidden" id="memberId">
+      <input type="hidden" id="memberRoleType" value="seller">
 
+      <div>
+        <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Nome Completo / Razão Social *</label>
+        <input type="text" id="memberName" required placeholder="Ex: Roberto Carlos da Silva ou Silva Treinamentos LTDA"
+          class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Nome Completo *</label>
-          <input type="text" id="memberName" required placeholder="Ex: Roberto Carlos da Silva"
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px]">Tipo de Documento *</label>
+            <div class="flex items-center gap-2">
+              <label class="inline-flex items-center gap-1 text-[10px] cursor-pointer font-bold text-slate-700 dark:text-slate-200">
+                <input type="radio" name="memberDocType" value="CPF" checked onchange="toggleDocType('CPF')" class="accent-previa-orange"> CPF
+              </label>
+              <label class="inline-flex items-center gap-1 text-[10px] cursor-pointer font-bold text-slate-700 dark:text-slate-200">
+                <input type="radio" name="memberDocType" value="CNPJ" onchange="toggleDocType('CNPJ')" class="accent-previa-orange"> CNPJ
+              </label>
+            </div>
+          </div>
+          <input type="text" id="memberDoc" required placeholder="000.000.000-00" oninput="maskDoc(this)" maxlength="18"
+            class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium font-mono">
+        </div>
+        <div>
+          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Estado de Atuação (UF) *</label>
+          <select id="memberUf" required class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
+            <!-- Populado dinamicamente -->
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">E-mail Corporativo *</label>
+          <input type="email" id="memberEmail" required placeholder="nome@previa.com.br"
             class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
         </div>
+        <div>
+          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Telefone / WhatsApp *</label>
+          <input type="text" id="memberPhone" required placeholder="(11) 98765-4321"
+            class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
+        </div>
+      </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
@@ -1177,6 +1214,8 @@
       { 
         id: "emb_sp", 
         name: "Carlos Eduardo", 
+        docType: "CPF",
+        doc: "123.456.789-00",
         cpf: "123.456.789-00",
         uf: "SP", 
         email: "carlos.sp@previa.com.br", 
@@ -1189,7 +1228,9 @@
       { 
         id: "emb_rj", 
         name: "Marcos Vinicius", 
-        cpf: "234.567.890-11",
+        docType: "CNPJ",
+        doc: "12.345.678/0001-90",
+        cpf: "12.345.678/0001-90",
         uf: "RJ", 
         email: "marcos.rj@previa.com.br", 
         phone: "(21) 98222-3344",
@@ -1201,6 +1242,8 @@
       { 
         id: "emb_mg", 
         name: "Ana Paula Silva", 
+        docType: "CPF",
+        doc: "345.678.901-22",
         cpf: "345.678.901-22",
         uf: "MG", 
         email: "ana.mg@previa.com.br", 
@@ -1213,6 +1256,8 @@
       { 
         id: "emb_pr", 
         name: "Roberto Dias", 
+        docType: "CPF",
+        doc: "456.789.012-33",
         cpf: "456.789.012-33",
         uf: "PR", 
         email: "roberto.pr@previa.com.br", 
@@ -1229,6 +1274,8 @@
       { 
         id: "v1", 
         name: "Mariana Santos", 
+        docType: "CPF",
+        doc: "567.890.123-44",
         cpf: "567.890.123-44",
         uf: "SP", 
         email: "mariana.vendas@previa.com.br", 
@@ -1241,7 +1288,9 @@
       { 
         id: "v2", 
         name: "Lucas Ribeiro", 
-        cpf: "678.901.234-55",
+        docType: "CNPJ",
+        doc: "98.765.432/0001-11",
+        cpf: "98.765.432/0001-11",
         uf: "SP", 
         email: "lucas.vendas@previa.com.br", 
         phone: "(11) 97222-0002",
@@ -1253,6 +1302,8 @@
       { 
         id: "v3", 
         name: "Juliana Mendes", 
+        docType: "CPF",
+        doc: "789.012.345-66",
         cpf: "789.012.345-66",
         uf: "RJ", 
         email: "juliana.vendas@previa.com.br", 
@@ -1481,8 +1532,8 @@
           lockedBadge.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-previa-orange/40 bg-orange-50 dark:bg-orange-950/40 text-previa-orange text-xs font-bold";
           lockedText.innerText = `Embaixador: ${foundEmb.name} (${foundEmb.uf})`;
           adminSimulator.classList.add('hidden');
-          tabTeam.classList.add('hidden');
-          tabMap.classList.add('hidden');
+          if (tabTeam) tabTeam.classList.add('hidden');
+          if (tabMap) tabMap.classList.add('hidden');
         }
       } else if (sellerParam) {
         const foundSeller = sellers.find(s => s.id.toLowerCase() === sellerParam.toLowerCase());
@@ -1492,36 +1543,44 @@
           lockedBadge.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-blue-200 dark:border-blue-900 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 text-xs font-bold";
           lockedText.innerText = `Vendedor: ${foundSeller.name}`;
           adminSimulator.classList.add('hidden');
-          tabTeam.classList.add('hidden');
-          tabMap.classList.add('hidden');
+          if (tabTeam) tabTeam.classList.add('hidden');
+          if (tabMap) tabMap.classList.add('hidden');
         }
       } else {
         currentRole = "admin";
         isRestrictedUrlMode = false;
         lockedBadge.classList.add('hidden');
         adminSimulator.classList.remove('hidden');
-        tabTeam.classList.remove('hidden');
-        tabMap.classList.remove('hidden');
+        if (tabTeam) tabTeam.classList.remove('hidden');
+        if (tabMap) tabMap.classList.remove('hidden');
       }
     }
 
     // ALTERNAR VISÃO SIMULADOR ADMIN
     function changeAdminView(val) {
       currentRole = val;
+      const tabTeam = document.getElementById('tab-team');
       const tabMap = document.getElementById('tab-map');
+      
       if (val !== 'admin') {
-        tabMap.classList.add('hidden');
-        if (currentTab === 'map') switchTab('pipeline');
+        // Se estiver simulando Vendedor ou Embaixador, oculta as abas de links e mapa
+        if (tabTeam) tabTeam.classList.add('hidden');
+        if (tabMap) tabMap.classList.add('hidden');
+        if (currentTab === 'map' || currentTab === 'team') {
+          switchTab('pipeline');
+        }
       } else {
-        tabMap.classList.remove('hidden');
+        if (tabTeam) tabTeam.classList.remove('hidden');
+        if (tabMap) tabMap.classList.remove('hidden');
       }
+      populateSelectOptions();
       renderApp();
       showToast(`Visualizando agora como: ${resolvePersonName(val)}`);
     }
 
     // ALTERNAR ABAS
     function switchTab(tab) {
-      if (tab === 'map' && currentRole !== 'admin') {
+      if ((tab === 'map' || tab === 'team') && currentRole !== 'admin') {
         tab = 'pipeline';
       }
 
@@ -1575,65 +1634,99 @@
     function populateSelectOptions() {
       // 1. Selector Admin
       const adminSelect = document.getElementById('adminViewSelector');
-      adminSelect.innerHTML = `<option value="admin" class="bg-previa-forest text-white">👑 Admin Geral (Todos)</option>`;
+      if (adminSelect) {
+        adminSelect.innerHTML = `<option value="admin" class="bg-previa-forest text-white">👑 Admin Geral (Todos)</option>`;
 
-      const optGroupEmb = document.createElement('optgroup');
-      optGroupEmb.label = "Embaixadores Estaduais";
-      ambassadors.forEach(a => {
-        optGroupEmb.innerHTML += `<option value="${a.id}" class="bg-previa-forest text-white">🎖️ ${a.name} (${a.uf})</option>`;
-      });
-      adminSelect.appendChild(optGroupEmb);
+        const optGroupEmb = document.createElement('optgroup');
+        optGroupEmb.label = "Embaixadores Estaduais";
+        ambassadors.forEach(a => {
+          optGroupEmb.innerHTML += `<option value="${a.id}" class="bg-previa-forest text-white">🎖️ ${a.name} (${a.uf})</option>`;
+        });
+        adminSelect.appendChild(optGroupEmb);
 
-      const optGroupSell = document.createElement('optgroup');
-      optGroupSell.label = "Vendedores Comerciais";
-      sellers.forEach(s => {
-        optGroupSell.innerHTML += `<option value="${s.id}" class="bg-previa-forest text-white">👤 ${s.name} (${s.uf || 'BR'})</option>`;
-      });
-      adminSelect.appendChild(optGroupSell);
-      adminSelect.value = currentRole;
+        const optGroupSell = document.createElement('optgroup');
+        optGroupSell.label = "Vendedores Comerciais";
+        sellers.forEach(s => {
+          optGroupSell.innerHTML += `<option value="${s.id}" class="bg-previa-forest text-white">👤 ${s.name} (${s.uf || 'BR'})</option>`;
+        });
+        adminSelect.appendChild(optGroupSell);
+        adminSelect.value = currentRole;
+      }
 
       // 2. Selects de Estados (UF)
       const modalStateSelect = document.getElementById('leadState');
       const filterStateSelect = document.getElementById('filterState');
       const memberUfSelect = document.getElementById('memberUf');
       
-      modalStateSelect.innerHTML = "";
-      filterStateSelect.innerHTML = `<option value="todos">Todos os Estados</option>`;
+      if (modalStateSelect) modalStateSelect.innerHTML = "";
+      if (filterStateSelect) filterStateSelect.innerHTML = `<option value="todos">Todos os Estados</option>`;
       if (memberUfSelect) memberUfSelect.innerHTML = "";
 
+      const currentEmb = ambassadors.find(a => a.id === currentRole);
+      const currentSeller = sellers.find(s => s.id === currentRole);
+
       states.forEach(st => {
-        modalStateSelect.innerHTML += `<option value="${st.uf}">${st.uf} - ${st.name}</option>`;
-        filterStateSelect.innerHTML += `<option value="${st.uf}">${st.uf} - ${st.name}</option>`;
+        if (modalStateSelect) modalStateSelect.innerHTML += `<option value="${st.uf}">${st.uf} - ${st.name}</option>`;
+        
+        // Se for Embaixador, ele só pode ver/filtrar o próprio estado
+        if (!currentEmb || currentEmb.uf === st.uf) {
+          if (filterStateSelect) filterStateSelect.innerHTML += `<option value="${st.uf}">${st.uf} - ${st.name}</option>`;
+        }
         if (memberUfSelect) memberUfSelect.innerHTML += `<option value="${st.uf}">${st.uf} - ${st.name}</option>`;
       });
 
-      // 3. Atualizar lista em cascata de vendedores respeitando estado selecionado
-      updateSellersFilterByState("todos");
+      if (currentEmb) {
+        if (filterStateSelect) {
+          filterStateSelect.value = currentEmb.uf;
+          filterStateSelect.disabled = true; // Trava no estado do embaixador
+        }
+      } else if (currentSeller) {
+        if (filterStateSelect) {
+          filterStateSelect.value = currentSeller.uf || "todos";
+          filterStateSelect.disabled = true; // Vendedor foca na carteira dele
+        }
+      } else {
+        if (filterStateSelect) filterStateSelect.disabled = false;
+      }
+
+      // 3. Atualizar lista em cascata de vendedores respeitando permissão e estado
+      updateSellersFilterByState(currentEmb ? currentEmb.uf : (filterStateSelect?.value || "todos"));
 
       // 4. Selects de Vendedores para Formulários de Leads e Mídia
       const leadSellerSelect = document.getElementById('leadSeller');
       const mediaSellerSelect = document.getElementById('mediaSeller');
       const filterMediaSellerSelect = document.getElementById('filterMediaSeller');
 
-      leadSellerSelect.innerHTML = "";
-      mediaSellerSelect.innerHTML = "";
+      if (leadSellerSelect) leadSellerSelect.innerHTML = "";
+      if (mediaSellerSelect) mediaSellerSelect.innerHTML = "";
       if (filterMediaSellerSelect) filterMediaSellerSelect.innerHTML = `<option value="todos">Todos os Criadores / Vendedores</option>`;
 
       const allMembers = [
-        ...sellers.map(s => ({ id: s.id, name: `${s.name} (Vendedor)`, type: 'Vendedor' })),
-        ...ambassadors.map(a => ({ id: a.id, name: `${a.name} (Embaixador ${a.uf})`, type: 'Embaixador' }))
+        ...sellers.map(s => ({ id: s.id, name: `${s.name} (Vendedor)`, type: 'Vendedor', uf: s.uf })),
+        ...ambassadors.map(a => ({ id: a.id, name: `${a.name} (Embaixador ${a.uf})`, type: 'Embaixador', uf: a.uf }))
       ];
 
       allMembers.forEach(p => {
-        leadSellerSelect.innerHTML += `<option value="${p.id}">${p.name}</option>`;
-        mediaSellerSelect.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+        if (leadSellerSelect) leadSellerSelect.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+        if (mediaSellerSelect) mediaSellerSelect.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+        
+        // No filtro de mídia: Embaixador e Vendedor só veem a si próprios
         if (filterMediaSellerSelect) {
-          filterMediaSellerSelect.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+          if (currentRole === 'admin' || currentRole === p.id) {
+            filterMediaSellerSelect.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+          }
         }
       });
+
+      if (filterMediaSellerSelect && currentRole !== 'admin') {
+        filterMediaSellerSelect.value = currentRole;
+        filterMediaSellerSelect.disabled = true;
+      } else if (filterMediaSellerSelect) {
+        filterMediaSellerSelect.disabled = false;
+      }
     }
 
-    // REGRA DE CASCATA: SELECIONOU ESTADO, SÓ APARECEM VENDEDORES E EMBAIXADORES DAQUELE ESTADO
+    // REGRA DE CASCATA E ISOLAMENTO DE ACESSO:
     function onStateFilterChange(selectedUF) {
       updateSellersFilterByState(selectedUF);
       renderApp();
@@ -1641,7 +1734,42 @@
 
     function updateSellersFilterByState(uf) {
       const filterSellerSelect = document.getElementById('filterSeller');
+      if (!filterSellerSelect) return;
+
       const previousValue = filterSellerSelect.value;
+      filterSellerSelect.innerHTML = "";
+
+      const currentEmb = ambassadors.find(a => a.id === currentRole);
+      const currentSeller = sellers.find(s => s.id === currentRole);
+
+      // CASO 1: Vendedor Comercial acessando -> Só existe ele mesmo no filtro
+      if (currentSeller) {
+        filterSellerSelect.innerHTML = `<option value="${currentSeller.id}">👤 ${currentSeller.name} (Eu)</option>`;
+        filterSellerSelect.value = currentSeller.id;
+        filterSellerSelect.disabled = true;
+        return;
+      }
+
+      // CASO 2: Embaixador Estadual acessando -> Só vê ele mesmo e os vendedores do seu Estado
+      if (currentEmb) {
+        filterSellerSelect.disabled = false;
+        filterSellerSelect.innerHTML = `<option value="todos">Todos do Estado (${currentEmb.uf})</option>`;
+        filterSellerSelect.innerHTML += `<option value="${currentEmb.id}">🎖️ Minhas Vendas Diretas (${currentEmb.name})</option>`;
+        
+        const stateSellers = sellers.filter(s => s.uf === currentEmb.uf);
+        if (stateSellers.length > 0) {
+          const optGroup = document.createElement('optgroup');
+          optGroup.label = `Vendedores de ${currentEmb.uf}`;
+          stateSellers.forEach(s => {
+            optGroup.innerHTML += `<option value="${s.id}">👤 ${s.name}</option>`;
+          });
+          filterSellerSelect.appendChild(optGroup);
+        }
+        return;
+      }
+
+      // CASO 3: Administrador Geral -> Vê tudo com suporte a cascata de estado
+      filterSellerSelect.disabled = false;
       filterSellerSelect.innerHTML = `<option value="todos">Todos os Vendedores/Embaixadores</option>`;
 
       let eligibleAmbassadors = ambassadors;
@@ -1687,16 +1815,18 @@
       } else {
         const isEmb = ambassadors.find(a => a.id === currentRole);
         if (isEmb) {
+          // Embaixador vê as vendas do seu Estado E as que ele vendeu pessoalmente
           list = list.filter(l => l.state === isEmb.uf || l.sellerId === isEmb.id);
         } else {
+          // Vendedor vê estritamente o que ele mesmo cadastrou/vendeu
           list = list.filter(l => l.sellerId === currentRole);
         }
       }
 
-      const search = document.getElementById('leadSearch').value.toLowerCase().trim();
-      const prodFilter = document.getElementById('filterProduct').value;
-      const stateFilter = document.getElementById('filterState').value;
-      const sellerFilter = document.getElementById('filterSeller').value;
+      const search = document.getElementById('leadSearch')?.value.toLowerCase().trim() || "";
+      const prodFilter = document.getElementById('filterProduct')?.value || "todos";
+      const stateFilter = document.getElementById('filterState')?.value || "todos";
+      const sellerFilter = document.getElementById('filterSeller')?.value || "todos";
 
       if (search) {
         list = list.filter(l => 
@@ -2429,6 +2559,8 @@
         const link = `${baseUrl}?embaixador=${amb.id}`;
         const card = document.createElement('div');
         card.className = "bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3";
+        const docLabel = amb.docType || (amb.doc && amb.doc.length > 14 ? 'CNPJ' : 'CPF');
+        const docVal = amb.doc || amb.cpf || 'Não inf.';
         card.innerHTML = `
           <div class="flex items-start sm:items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800 flex items-center justify-center font-black text-previa-orange text-sm flex-shrink-0">
@@ -2441,7 +2573,7 @@
                   <span class="text-[10px] px-1.5 py-0.2 rounded bg-orange-100 dark:bg-orange-950 text-previa-orange font-black">${amb.uf}</span>
                 </h4>
                 <span class="text-[10px] px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono font-semibold">
-                  CPF: ${amb.cpf || 'Não inf.'}
+                  ${docLabel}: ${docVal}
                 </span>
               </div>
               <p class="text-[11px] text-slate-500 dark:text-slate-400">${amb.email} • ${amb.phone || 'Sem fone'}</p>
@@ -2476,6 +2608,8 @@
         const link = `${baseUrl}?vendedor=${sel.id}`;
         const card = document.createElement('div');
         card.className = "bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3";
+        const docLabel = sel.docType || (sel.doc && sel.doc.length > 14 ? 'CNPJ' : 'CPF');
+        const docVal = sel.doc || sel.cpf || 'Não inf.';
         card.innerHTML = `
           <div class="flex items-start sm:items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center font-black text-blue-700 dark:text-blue-300 text-sm flex-shrink-0">
@@ -2485,7 +2619,7 @@
               <div class="flex items-center gap-2 flex-wrap">
                 <h4 class="text-xs font-bold text-slate-800 dark:text-white">${sel.name} <span class="text-[10px] text-slate-400 font-normal">(${sel.uf || 'BR'})</span></h4>
                 <span class="text-[10px] px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono font-semibold">
-                  CPF: ${sel.cpf || 'Não inf.'}
+                  ${docLabel}: ${docVal}
                 </span>
               </div>
               <p class="text-[11px] text-slate-500 dark:text-slate-400">${sel.email} • ${sel.phone || 'Sem fone'}</p>
@@ -2523,6 +2657,8 @@
       document.getElementById('memberId').value = "";
       document.getElementById('memberRoleType').value = roleType;
       
+      toggleDocType('CPF');
+      
       const title = document.getElementById('memberModalTitle');
       const iconBox = document.getElementById('memberModalIconBox');
       
@@ -2550,7 +2686,15 @@
       document.getElementById('memberId').value = member.id;
       document.getElementById('memberRoleType').value = roleType;
       document.getElementById('memberName').value = member.name.replace(/\s*\(Embaixador.*?\)/i, '');
-      document.getElementById('memberCpf').value = member.cpf || '';
+      
+      const docType = member.docType || (member.doc && member.doc.length > 14 ? 'CNPJ' : 'CPF');
+      const docVal = member.doc || member.cpf || '';
+      
+      toggleDocType(docType);
+      const radio = document.querySelector(`input[name="memberDocType"][value="${docType}"]`);
+      if (radio) radio.checked = true;
+      document.getElementById('memberDoc').value = docVal;
+
       document.getElementById('memberUf').value = member.uf || 'SP';
       document.getElementById('memberEmail').value = member.email || '';
       document.getElementById('memberPhone').value = member.phone || '';
@@ -2564,12 +2708,45 @@
       lucide.createIcons();
     }
 
+    function toggleDocType(type) {
+      const docInput = document.getElementById('memberDoc');
+      if (type === 'CNPJ') {
+        docInput.placeholder = "00.000.000/0000-00";
+        docInput.maxLength = 18;
+      } else {
+        docInput.placeholder = "000.000.000-00";
+        docInput.maxLength = 14;
+      }
+      maskDoc(docInput);
+    }
+
+    // MÁSCARA AUTOMÁTICA DE CPF OU CNPJ
+    function maskDoc(input) {
+      const selectedType = document.querySelector('input[name="memberDocType"]:checked')?.value || 'CPF';
+      let v = input.value.replace(/\D/g, "");
+      
+      if (selectedType === 'CNPJ') {
+        if (v.length > 14) v = v.slice(0, 14);
+        v = v.replace(/^(\d{2})(\d)/, "$1.$2");
+        v = v.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+        v = v.replace(/\.(\d{3})(\d)/, ".$1/$2");
+        v = v.replace(/(\d{4})(\d)/, "$1-$2");
+      } else {
+        if (v.length > 11) v = v.slice(0, 11);
+        v = v.replace(/(\d{3})(\d)/, "$1.$2");
+        v = v.replace(/(\d{3})(\d)/, "$1.$2");
+        v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+      }
+      input.value = v;
+    }
+
     function saveMember(e) {
       e.preventDefault();
       const id = document.getElementById('memberId').value;
       const roleType = document.getElementById('memberRoleType').value;
       const name = document.getElementById('memberName').value.trim();
-      const cpf = document.getElementById('memberCpf').value.trim();
+      const docType = document.querySelector('input[name="memberDocType"]:checked')?.value || 'CPF';
+      const doc = document.getElementById('memberDoc').value.trim();
       const uf = document.getElementById('memberUf').value;
       const email = document.getElementById('memberEmail').value.trim();
       const phone = document.getElementById('memberPhone').value.trim();
@@ -2580,7 +2757,9 @@
 
       const memberData = {
         name: roleType === 'ambassador' ? `${name} (Embaixador ${uf})` : name,
-        cpf,
+        docType,
+        doc,
+        cpf: doc, // compatibilidade
         uf,
         email,
         phone,
