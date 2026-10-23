@@ -181,17 +181,17 @@
         </div>
 
         <!-- Indicadores Financeiros de Comissão -->
-        <div id="financialCardsGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full lg:w-auto">
-          <!-- Populado via JS -->
-        </div>
+      <div id="financialCardsGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full lg:w-auto">
+        <!-- Populado via JS -->
       </div>
     </div>
+  </div>
 
-    <!-- ==================== ABA 1: FUNIL & VENDAS (KANBAN OU TABELA) ==================== -->
-    <section id="view-pipeline" class="space-y-5">
-      
-      <!-- Contadores de Etapas do Funil (Atualizado com 5 Etapas) -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+  <!-- ==================== ABA 1: FUNIL & VENDAS (KANBAN OU TABELA) ==================== -->
+  <section id="view-pipeline" class="space-y-5">
+    
+    <!-- Contadores de Etapas do Funil (Atualizado com 5 Etapas) -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 shadow-sm flex items-center justify-between">
           <div>
             <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">1. Contato Inicial</p>
@@ -238,62 +238,174 @@
 
         <!-- NOVA ETAPA 5: PAUSADO / INATIVO -->
         <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 shadow-sm flex items-center justify-between col-span-2 sm:col-span-1">
-          <div>
-            <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">5. Pausado / Inativo</p>
-            <h3 id="statCount-5" class="text-2xl font-black text-rose-600 dark:text-rose-400 mt-0.5">0</h3>
-            <span class="text-[10px] text-rose-600 dark:text-rose-400 font-semibold">Parou de Usar</span>
-          </div>
-          <div class="w-11 h-11 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 flex items-center justify-center text-rose-600 dark:text-rose-400">
-            <i data-lucide="user-x" class="w-5 h-5"></i>
-          </div>
+        <div>
+          <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">5. Pausado / Inativo</p>
+          <h3 id="statCount-5" class="text-2xl font-black text-rose-600 dark:text-rose-400 mt-0.5">0</h3>
+          <span class="text-[10px] text-rose-600 dark:text-rose-400 font-semibold">Parou de Usar</span>
+        </div>
+        <div class="w-11 h-11 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 flex items-center justify-center text-rose-600 dark:text-rose-400">
+          <i data-lucide="user-x" class="w-5 h-5"></i>
         </div>
       </div>
+    </div>
 
-      <!-- Barra de Filtros Hierárquica e Busca -->
-      <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 flex flex-col md:flex-row gap-3 items-center justify-between shadow-sm">
-        <div class="relative w-full md:w-72">
-          <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
-          <input type="text" id="leadSearch" placeholder="Buscar cliente, empresa ou instrutores..." oninput="renderApp()"
-            class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl pl-9 pr-3 py-2 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-previa-orange transition">
-        </div>
+    <!-- Barra de Filtros Unificada com Popover de Calendário Duplo -->
+    <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 flex flex-col md:flex-row gap-3 items-center justify-between shadow-sm relative">
+      <div class="relative w-full md:w-64">
+        <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
+        <input type="text" id="leadSearch" placeholder="Buscar cliente, empresa ou instrutores..." oninput="renderApp()"
+          class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl pl-9 pr-3 py-2 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-previa-orange transition">
+      </div>
 
-        <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto justify-end">
-          
-          <!-- Filtro de Estado (UF) com prioridade hierárquica -->
-          <div class="flex items-center gap-1.5">
-            <label class="text-[10px] font-bold text-slate-400 uppercase hidden sm:inline">Estado:</label>
-            <select id="filterState" onchange="onStateFilterChange(this.value)" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-3 py-2 focus:outline-none focus:border-previa-orange font-bold cursor-pointer">
-              <option value="todos">Todos os Estados</option>
-              <!-- Populado dinamicamente -->
-            </select>
-          </div>
-
-          <!-- Filtro de Vendedor / Embaixador (Cascata dependente do Estado selecionado) -->
-          <div class="flex items-center gap-1.5">
-            <label class="text-[10px] font-bold text-slate-400 uppercase hidden sm:inline">Membro:</label>
-            <select id="filterSeller" onchange="renderApp()" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-3 py-2 focus:outline-none focus:border-previa-orange font-semibold cursor-pointer max-w-[210px] truncate">
-              <option value="todos">Todos os Vendedores/Embaixadores</option>
-              <!-- Populado dinamicamente respeitando o filtro de estado -->
-            </select>
-          </div>
-
-          <!-- Filtro de Produto (Instrutor / Equipe) -->
-          <select id="filterProduct" onchange="renderApp()" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-3 py-2 focus:outline-none focus:border-previa-orange font-semibold cursor-pointer">
-            <option value="todos">Todos os Produtos (2)</option>
-            <option value="Instrutor">Produto: Instrutor</option>
-            <option value="Equipe">Produto: Equipe</option>
-          </select>
-
-          <!-- Botão Exportar CSV -->
-          <button onclick="exportToCSV()" class="bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-700 dark:text-slate-200 px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition font-bold">
-            <i data-lucide="download" class="w-3.5 h-3.5 text-previa-orange"></i>
-            <span>Exportar CSV</span>
+      <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
+        
+        <!-- ================= BOTÃO DISPARADOR DO CALENDÁRIO DUPLO (ESTILO IMAGEM) ================= -->
+        <div class="relative">
+          <button id="btnDatePickerToggle" onclick="toggleDatePopover(event)" type="button" class="bg-slate-50 dark:bg-previa-darkBg hover:bg-slate-100 dark:hover:bg-previa-forestDark border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-3 py-2 font-bold flex items-center gap-2 transition shadow-sm">
+            <i data-lucide="calendar" class="w-4 h-4 text-previa-orange"></i>
+            <span id="datePickerBtnLabel">Carregando...</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
           </button>
-        </div>
-      </div>
 
-      <!-- VISÃO 1: MODO KANBAN (5 Colunas Flexíveis) -->
-      <div id="kanbanContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3.5 items-start">
+          <!-- ================= POPOVER DE CALENDÁRIO DUPLO (DATA INÍCIO / DATA TÉRMINO) ================= -->
+          <div id="datePickerPopover" class="hidden absolute right-0 sm:right-auto sm:left-0 md:right-0 md:left-auto top-12 z-50 w-[95vw] max-w-[580px] bg-white dark:bg-previa-darkCard rounded-2xl shadow-2xl border border-slate-200 dark:border-previa-darkBorder overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            
+            <!-- Topo Laranja Previa com Dropdown de Período Automático (Conforme a imagem) -->
+            <div class="bg-previa-orange text-white p-3.5 flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="calendar-range" class="w-4 h-4"></i>
+                Selecione o Período
+              </span>
+
+              <!-- Dropdown Período Automático -->
+              <div class="relative">
+                <select id="popoverPresetSelect" onchange="onPopoverPresetChange(this.value)" class="bg-previa-orangeHover hover:bg-black/20 text-white font-bold text-xs rounded-xl px-3 py-1.5 border border-white/40 focus:outline-none cursor-pointer appearance-none pr-8">
+                  <option value="auto">Período automático</option>
+                  <option value="current_month" selected>Mês atual</option>
+                  <option value="last_month">Mês anterior</option>
+                  <option value="last_30_days">Últimos 30 dias</option>
+                  <option value="current_year">Ano atual</option>
+                  <option value="all">Todo o período</option>
+                  <option value="custom">Personalizado</option>
+                </select>
+                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-white absolute right-2.5 top-2.5 pointer-events-none"></i>
+              </div>
+            </div>
+
+            <!-- Corpo: 2 Calendários Lado a Lado (Data Início / Data Término) -->
+            <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 dark:divide-previa-darkBorder text-slate-800 dark:text-slate-100">
+              
+              <!-- Lado Esquerdo: Data de Início -->
+              <div class="space-y-2">
+                <div class="text-center">
+                  <span class="text-xs font-bold text-slate-600 dark:text-slate-300">Data de início</span>
+                  <div class="flex items-center justify-between mt-1 px-1">
+                    <span id="startCalHeader" class="text-xs font-black uppercase text-slate-800 dark:text-white">OUT. DE 2026</span>
+                    <div class="flex items-center gap-1">
+                      <button type="button" onclick="changeMonth('start', -1)" class="p-1 hover:bg-slate-100 dark:hover:bg-previa-forestDark rounded-lg transition text-slate-500">
+                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                      </button>
+                      <button type="button" onclick="changeMonth('start', 1)" class="p-1 hover:bg-slate-100 dark:hover:bg-previa-forestDark rounded-lg transition text-slate-500">
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Dias da Semana -->
+                <div class="grid grid-cols-7 text-center text-[10px] font-bold text-slate-400 py-1 border-b border-slate-100 dark:border-previa-darkBorder">
+                  <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
+                </div>
+
+                <!-- Grid de Dias (Lado Início) -->
+                <div id="startDaysGrid" class="grid grid-cols-7 gap-1 text-center text-xs py-1">
+                  <!-- JS -->
+                </div>
+              </div>
+
+              <!-- Lado Direito: Data de Término -->
+              <div class="space-y-2 sm:pl-4 pt-3 sm:pt-0">
+                <div class="text-center">
+                  <span class="text-xs font-bold text-slate-600 dark:text-slate-300">Data de término</span>
+                  <div class="flex items-center justify-between mt-1 px-1">
+                    <span id="endCalHeader" class="text-xs font-black uppercase text-slate-800 dark:text-white">OUT. DE 2026</span>
+                    <div class="flex items-center gap-1">
+                      <button type="button" onclick="changeMonth('end', -1)" class="p-1 hover:bg-slate-100 dark:hover:bg-previa-forestDark rounded-lg transition text-slate-500">
+                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                      </button>
+                      <button type="button" onclick="changeMonth('end', 1)" class="p-1 hover:bg-slate-100 dark:hover:bg-previa-forestDark rounded-lg transition text-slate-500">
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Dias da Semana -->
+                <div class="grid grid-cols-7 text-center text-[10px] font-bold text-slate-400 py-1 border-b border-slate-100 dark:border-previa-darkBorder">
+                  <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
+                </div>
+
+                <!-- Grid de Dias (Lado Término) -->
+                <div id="endDaysGrid" class="grid grid-cols-7 gap-1 text-center text-xs py-1">
+                  <!-- JS -->
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Rodapé do Popover com Botão "Aplicar" Laranja Previa -->
+            <div class="p-3 bg-slate-50 dark:bg-previa-darkBg border-t border-slate-100 dark:border-previa-darkBorder flex items-center justify-between">
+              <span id="popoverSelectedSummary" class="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate max-w-[320px]">
+                01/10/2026 até 31/10/2026
+              </span>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="closeDatePopover()" class="px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-previa-forestDark rounded-xl transition">
+                  Cancelar
+                </button>
+                <button type="button" onclick="applyDateRange()" class="px-5 py-1.5 bg-previa-orange hover:bg-previa-orangeHover text-white text-xs font-black rounded-xl transition shadow-md shadow-previa-orange/30">
+                  Aplicar
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Filtro de Estado (UF) -->
+        <div class="flex items-center gap-1.5">
+          <label class="text-[10px] font-bold text-slate-400 uppercase hidden sm:inline">Estado:</label>
+          <select id="filterState" onchange="onStateFilterChange(this.value)" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-2.5 py-2 focus:outline-none focus:border-previa-orange font-bold cursor-pointer">
+            <option value="todos">Todos os Estados</option>
+            <!-- Populado dinamicamente -->
+          </select>
+        </div>
+
+        <!-- Filtro de Vendedor / Embaixador -->
+        <div class="flex items-center gap-1.5">
+          <label class="text-[10px] font-bold text-slate-400 uppercase hidden sm:inline">Membro:</label>
+          <select id="filterSeller" onchange="renderApp()" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-2.5 py-2 focus:outline-none focus:border-previa-orange font-semibold cursor-pointer max-w-[190px] truncate">
+            <option value="todos">Todos os Vendedores/Embaixadores</option>
+            <!-- Populado dinamicamente -->
+          </select>
+        </div>
+
+        <!-- Filtro de Produto -->
+        <select id="filterProduct" onchange="renderApp()" class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-800 dark:text-slate-100 rounded-xl px-2.5 py-2 focus:outline-none focus:border-previa-orange font-semibold cursor-pointer">
+          <option value="todos">Todos os Produtos (2)</option>
+          <option value="Instrutor">Produto: Instrutor</option>
+          <option value="Equipe">Produto: Equipe</option>
+        </select>
+
+        <!-- Botão Exportar CSV -->
+        <button onclick="exportToCSV()" class="bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark border border-slate-200 dark:border-previa-darkBorder text-xs text-slate-700 dark:text-slate-200 px-3 py-2 rounded-xl flex items-center gap-1.5 transition font-bold">
+          <i data-lucide="download" class="w-3.5 h-3.5 text-previa-orange"></i>
+          <span>Exportar CSV</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- VISÃO 1: MODO KANBAN (5 Colunas Flexíveis) -->
+    <div id="kanbanContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3.5 items-start">
         
         <!-- Coluna 1: Contato Inicial -->
         <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl flex flex-col shadow-sm">
@@ -416,11 +528,11 @@
         <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 shadow-sm flex items-center justify-between">
           <div>
             <p class="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase">Total de Postagens</p>
-            <h3 id="statMediaPosts" class="text-2xl font-black text-slate-800 dark:text-white mt-0.5">0</h3>
+            <h3 id="statMediaPosts" class="text-2xl font-black text-blue-600 dark:text-blue-400 mt-0.5">0</h3>
             <span class="text-[10px] text-slate-400 font-semibold">Posts & Imagens</span>
           </div>
           <div class="w-11 h-11 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 flex items-center justify-center text-blue-600 dark:text-blue-400">
-            <i data-lucide="file-text" class="w-5 h-5"></i>
+            <i data-lucide="image" class="w-5 h-5"></i>
           </div>
         </div>
 
@@ -428,7 +540,7 @@
           <div>
             <p class="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase">Visualizações</p>
             <h3 id="statMediaViews" class="text-2xl font-black text-teal-600 dark:text-teal-400 mt-0.5">0</h3>
-            <span class="text-[10px] text-teal-600 dark:text-teal-400 font-semibold">Alcance acumulado</span>
+            <span class="text-[10px] text-slate-400 font-semibold">Alcance acumulado</span>
           </div>
           <div class="w-11 h-11 rounded-xl bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800 flex items-center justify-center text-teal-600 dark:text-teal-400">
             <i data-lucide="eye" class="w-5 h-5"></i>
@@ -437,12 +549,12 @@
 
         <div class="bg-white dark:bg-previa-darkCard border border-previa-cardBorder dark:border-previa-darkBorder rounded-2xl p-4 shadow-sm flex items-center justify-between">
           <div>
-            <p class="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase">Total de Ações</p>
-            <h3 id="statMediaTotal" class="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-0.5">0</h3>
-            <span id="statMediaTopChannel" class="text-[10px] text-emerald-700 dark:text-emerald-300 font-bold truncate block">Canal: -</span>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase">Total Produzido</p>
+            <h3 id="statMediaTotal" class="text-2xl font-black text-slate-900 dark:text-white mt-0.5">0</h3>
+            <span id="statMediaTopChannel" class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold truncate block">Top canal: -</span>
           </div>
           <div class="w-11 h-11 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-            <i data-lucide="globe" class="w-5 h-5"></i>
+            <i data-lucide="trending-up" class="w-5 h-5"></i>
           </div>
         </div>
       </div>
@@ -1051,96 +1163,33 @@
           </div>
         </div>
 
-        <div class="pt-3 flex justify-end gap-2 border-t border-slate-200 dark:border-previa-darkBorder">
-          <button type="button" onclick="closeModal('memberModal')" class="px-4 py-2 bg-slate-100 dark:bg-previa-darkBg hover:bg-slate-200 dark:hover:bg-previa-forestDark text-slate-600 dark:text-slate-300 font-bold rounded-xl transition">
-            Cancelar
-          </button>
-          <button type="submit" class="px-5 py-2 bg-previa-orange hover:bg-previa-orangeHover text-white font-black rounded-xl transition shadow-md shadow-previa-orange/30">
-            Salvar Membro
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ================= MODAL: LANÇAR / EDITAR PRODUÇÃO DE MÍDIA ================= -->
-  <div id="mediaModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
-    <div class="bg-white dark:bg-previa-darkCard border border-slate-200 dark:border-previa-darkBorder rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl my-8">
-      
-      <div class="p-4 border-b border-slate-200 dark:border-previa-darkBorder flex items-center justify-between bg-slate-50 dark:bg-previa-darkBg/60">
-        <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-orange-100 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800 flex items-center justify-center text-previa-orange">
-            <i data-lucide="video" class="w-5 h-5"></i>
+        <!-- PERMISSÕES ESPECIAIS (DEFINIDAS PELO ADMINISTRADOR - NATIVO DESATIVADO) -->
+        <div class="pt-3 border-t border-slate-200 dark:border-previa-darkBorder bg-slate-50 dark:bg-previa-darkBg/60 p-3 rounded-xl space-y-2">
+          <div class="flex items-center gap-1.5">
+            <i data-lucide="shield-alert" class="w-4 h-4 text-previa-orange"></i>
+            <span class="block text-slate-800 dark:text-slate-100 font-black text-[11px] uppercase tracking-wider">Permissões de Ação sobre Vendas (Admin):</span>
           </div>
-          <div>
-            <h4 id="mediaModalTitle" class="text-sm font-bold text-slate-800 dark:text-white">Lançar Mídia & Tráfego</h4>
-            <p class="text-[11px] text-slate-400">Contabilize vídeos, postagens e alcance de visualizações</p>
-          </div>
-        </div>
-        <button onclick="closeModal('mediaModal')" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
+          <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">
+            Defina se este membro terá visibilidade dos botões de <strong>Editar</strong> e <strong>Excluir</strong> clientes no seu painel. Vêm nativamente desativados por segurança.
+          </p>
 
-      <form id="mediaForm" onsubmit="saveMedia(event)" class="p-5 space-y-3.5 text-xs">
-        <input type="hidden" id="mediaId">
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Data da Publicação *</label>
-            <input type="date" id="mediaDate" required class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
-          </div>
-          <div>
-            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Canal de Mídia *</label>
-            <select id="mediaChannel" required class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
-              <option value="Instagram">Instagram (Reels / Feed)</option>
-              <option value="TikTok">TikTok</option>
-              <option value="YouTube">YouTube / Shorts</option>
-              <option value="LinkedIn">LinkedIn Corporativo</option>
-              <option value="Facebook">Facebook</option>
-              <option value="WhatsApp Status">WhatsApp Status</option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Criador / Responsável *</label>
-          <select id="mediaSeller" required class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
-            <!-- JS -->
-          </select>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div class="bg-slate-50 dark:bg-previa-darkBg p-3 rounded-xl border border-slate-200 dark:border-previa-darkBorder">
-            <label class="block text-slate-700 dark:text-slate-200 font-bold uppercase tracking-wider text-[10px] mb-1">
-              Formato de Conteúdo *
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <label class="flex items-center gap-2 p-2 rounded-lg border border-slate-200 dark:border-previa-darkBorder bg-white dark:bg-previa-darkCard cursor-pointer select-none">
+              <input type="checkbox" id="memberCanEdit" class="w-4 h-4 rounded text-previa-orange focus:ring-previa-orange accent-previa-orange">
+              <div>
+                <span class="text-xs font-bold text-slate-800 dark:text-slate-100 block">Permitir Editar</span>
+                <span class="text-[9px] text-slate-400">Exibe botão de edição (lápis)</span>
+              </div>
             </label>
-            <select id="mediaFormatType" required class="w-full bg-white dark:bg-previa-darkCard border border-slate-300 dark:border-previa-darkBorder rounded-lg px-2.5 py-2 text-slate-800 dark:text-slate-100 font-bold text-xs focus:border-previa-orange">
-              <option value="video">🎥 Vídeo (Reels / TikTok / Shorts)</option>
-              <option value="post">🖼️ Imagem / Postagem (Carrossel / Banner)</option>
-            </select>
-            <span class="text-[9px] text-slate-400 mt-1 block">Defina com clareza se é vídeo ou imagem.</span>
-          </div>
 
-          <div class="bg-slate-50 dark:bg-previa-darkBg p-3 rounded-xl border border-slate-200 dark:border-previa-darkBorder">
-            <label class="block text-teal-700 dark:text-teal-400 font-bold uppercase tracking-wider text-[10px] mb-1">
-              Qtd. de Visualizações Alcançadas *
+            <label class="flex items-center gap-2 p-2 rounded-lg border border-slate-200 dark:border-previa-darkBorder bg-white dark:bg-previa-darkCard cursor-pointer select-none">
+              <input type="checkbox" id="memberCanDelete" class="w-4 h-4 rounded text-red-600 focus:ring-red-500 accent-red-600">
+              <div>
+                <span class="text-xs font-bold text-slate-800 dark:text-slate-100 block">Permitir Excluir</span>
+                <span class="text-[9px] text-slate-400">Exibe botão de lixeira (apagar)</span>
+              </div>
             </label>
-            <input type="number" id="mediaViewsCount" min="0" value="500" required class="w-full bg-white dark:bg-previa-darkCard border border-slate-300 dark:border-previa-darkBorder rounded-lg px-2.5 py-2 text-slate-800 dark:text-slate-100 font-bold text-sm focus:border-teal-500">
-            <span class="text-[9px] text-slate-400 mt-1 block">Métrica de alcance para ranking de tráfego.</span>
           </div>
-        </div>
-
-        <div>
-          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Tema / Conteúdo Abordado *</label>
-          <input type="text" id="mediaTopic" required placeholder="Ex: Importância do treinamento de direção preventiva para frotas"
-            class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange">
-        </div>
-
-        <div>
-          <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Link da Postagem (Opcional)</label>
-          <input type="url" id="mediaUrl" placeholder="https://instagram.com/reel/..."
-            class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange">
         </div>
 
         <div class="pt-3 flex justify-end gap-2 border-t border-slate-200 dark:border-previa-darkBorder">
@@ -1196,7 +1245,9 @@
         instagram: "@carloseduardo.previa",
         youtube: "@previatreinamentos_sp",
         tiktok: "@carlostreinador",
-        linkedin: "carlos-eduardo-previa"
+        linkedin: "carlos-eduardo-previa",
+        canEdit: false,
+        canDelete: false
       },
       { 
         id: "emb_rj", 
@@ -1210,7 +1261,9 @@
         instagram: "@marcosvinicius.rj",
         youtube: "@marcosprevia",
         tiktok: "",
-        linkedin: "marcos-rj-previa"
+        linkedin: "marcos-rj-previa",
+        canEdit: false,
+        canDelete: false
       },
       { 
         id: "emb_mg", 
@@ -1224,7 +1277,9 @@
         instagram: "@anapaula.mg",
         youtube: "",
         tiktok: "@anapaula_transito",
-        linkedin: "anapaulasilva-mg"
+        linkedin: "anapaulasilva-mg",
+        canEdit: false,
+        canDelete: false
       },
       { 
         id: "emb_pr", 
@@ -1238,7 +1293,9 @@
         instagram: "@robertodias.pr",
         youtube: "@robertoprevia",
         tiktok: "",
-        linkedin: "roberto-dias-pr"
+        linkedin: "roberto-dias-pr",
+        canEdit: false,
+        canDelete: false
       }
     ];
 
@@ -1256,7 +1313,9 @@
         instagram: "@mariana_comercial",
         youtube: "@mari_previavendas",
         tiktok: "@marianavendas",
-        linkedin: "mariana-santos-vendas"
+        linkedin: "mariana-santos-vendas",
+        canEdit: false,
+        canDelete: false
       },
       { 
         id: "v2", 
@@ -1270,7 +1329,9 @@
         instagram: "@lucas.consultoria",
         youtube: "",
         tiktok: "@lucasconsultor",
-        linkedin: "lucas-ribeiro-comercial"
+        linkedin: "lucas-ribeiro-comercial",
+        canEdit: false,
+        canDelete: false
       },
       { 
         id: "v3", 
@@ -1284,7 +1345,9 @@
         instagram: "@juliana.comercialrj",
         youtube: "",
         tiktok: "",
-        linkedin: "juliana-mendes-rj"
+        linkedin: "juliana-mendes-rj",
+        canEdit: false,
+        canDelete: false
       }
     ];
 
@@ -1448,6 +1511,291 @@
     let currentTab = "pipeline";
     let selectedMapUF = "SP";
 
+    // ================= NOVO ESTADO DO FILTRO DE CALENDÁRIO DUPLO (ESTILO IMAGEM) =================
+    const MONTH_NAMES_SHORT = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
+    
+    // Estado do filtro ativo
+    const dateFilterState = {
+      preset: "current_month",
+      startDate: null,
+      endDate: null
+    };
+
+    // Estado dos calendários visuais dentro do popover (ano e mês visualizados)
+    let pickerCalState = {
+      startYear: 2026,
+      startMonth: 9, // 0-indexed: 9 = Outubro
+      endYear: 2026,
+      endMonth: 9,
+      tempStart: null,
+      tempEnd: null
+    };
+
+    function initDateFilter() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      
+      const start = new Date(year, month, 1);
+      const end = new Date(year, month + 1, 0);
+
+      dateFilterState.preset = "current_month";
+      dateFilterState.startDate = formatDateToYMD(start);
+      dateFilterState.endDate = formatDateToYMD(end);
+
+      pickerCalState.startYear = year;
+      pickerCalState.startMonth = month;
+      pickerCalState.endYear = year;
+      pickerCalState.endMonth = month;
+      pickerCalState.tempStart = dateFilterState.startDate;
+      pickerCalState.tempEnd = dateFilterState.endDate;
+
+      updateDatePickerButtonLabel();
+      renderDualCalendars();
+    }
+
+    function toggleDatePopover(e) {
+      if (e) e.stopPropagation();
+      const popover = document.getElementById('datePickerPopover');
+      if (!popover) return;
+      const isHidden = popover.classList.contains('hidden');
+      if (isHidden) {
+        // Sincroniza estado temporário ao abrir
+        pickerCalState.tempStart = dateFilterState.startDate;
+        pickerCalState.tempEnd = dateFilterState.endDate;
+        const s = dateFilterState.startDate ? new Date(dateFilterState.startDate + 'T00:00:00') : new Date();
+        const end = dateFilterState.endDate ? new Date(dateFilterState.endDate + 'T00:00:00') : new Date();
+        pickerCalState.startYear = s.getFullYear();
+        pickerCalState.startMonth = s.getMonth();
+        pickerCalState.endYear = end.getFullYear();
+        pickerCalState.endMonth = end.getMonth();
+
+        const presetSel = document.getElementById('popoverPresetSelect');
+        if (presetSel) presetSel.value = dateFilterState.preset || 'auto';
+
+        renderDualCalendars();
+        popover.classList.remove('hidden');
+        lucide.createIcons();
+      } else {
+        popover.classList.add('hidden');
+      }
+    }
+
+    function closeDatePopover() {
+      const popover = document.getElementById('datePickerPopover');
+      if (popover) popover.classList.add('hidden');
+    }
+
+    // Fechar popover ao clicar fora
+    document.addEventListener('click', (event) => {
+      const popover = document.getElementById('datePickerPopover');
+      const btn = document.getElementById('btnDatePickerToggle');
+      if (popover && !popover.classList.contains('hidden')) {
+        if (!popover.contains(event.target) && !btn.contains(event.target)) {
+          popover.classList.add('hidden');
+        }
+      }
+    });
+
+    function changeMonth(side, delta) {
+      if (side === 'start') {
+        pickerCalState.startMonth += delta;
+        if (pickerCalState.startMonth < 0) {
+          pickerCalState.startMonth = 11;
+          pickerCalState.startYear -= 1;
+        } else if (pickerCalState.startMonth > 11) {
+          pickerCalState.startMonth = 0;
+          pickerCalState.startYear += 1;
+        }
+      } else {
+        pickerCalState.endMonth += delta;
+        if (pickerCalState.endMonth < 0) {
+          pickerCalState.endMonth = 11;
+          pickerCalState.endYear -= 1;
+        } else if (pickerCalState.endMonth > 11) {
+          pickerCalState.endMonth = 0;
+          pickerCalState.endYear += 1;
+        }
+      }
+      renderDualCalendars();
+    }
+
+    function onPopoverPresetChange(preset) {
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth();
+
+      let s = null;
+      let e = null;
+
+      if (preset === 'current_month' || preset === 'auto') {
+        s = new Date(currentYear, currentMonth, 1);
+        e = new Date(currentYear, currentMonth + 1, 0);
+      } else if (preset === 'last_month') {
+        s = new Date(currentYear, currentMonth - 1, 1);
+        e = new Date(currentYear, currentMonth, 0);
+      } else if (preset === 'last_30_days') {
+        s = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
+        e = now;
+      } else if (preset === 'current_year') {
+        s = new Date(currentYear, 0, 1);
+        e = new Date(currentYear, 11, 31);
+      } else if (preset === 'all') {
+        s = null;
+        e = null;
+      }
+
+      if (s && e) {
+        pickerCalState.tempStart = formatDateToYMD(s);
+        pickerCalState.tempEnd = formatDateToYMD(e);
+        pickerCalState.startYear = s.getFullYear();
+        pickerCalState.startMonth = s.getMonth();
+        pickerCalState.endYear = e.getFullYear();
+        pickerCalState.endMonth = e.getMonth();
+      } else if (preset === 'all') {
+        pickerCalState.tempStart = null;
+        pickerCalState.tempEnd = null;
+      }
+
+      renderDualCalendars();
+    }
+
+    function selectCalendarDate(side, dateYMD) {
+      const presetSel = document.getElementById('popoverPresetSelect');
+      if (presetSel) presetSel.value = 'custom';
+
+      if (side === 'start') {
+        pickerCalState.tempStart = dateYMD;
+        // Se a data de início for maior que o término, ajusta o término
+        if (pickerCalState.tempEnd && pickerCalState.tempStart > pickerCalState.tempEnd) {
+          pickerCalState.tempEnd = pickerCalState.tempStart;
+        }
+      } else {
+        pickerCalState.tempEnd = dateYMD;
+        // Se a data de término for menor que o início, ajusta o início
+        if (pickerCalState.tempStart && pickerCalState.tempEnd < pickerCalState.tempStart) {
+          pickerCalState.tempStart = pickerCalState.tempEnd;
+        }
+      }
+
+      renderDualCalendars();
+    }
+
+    function renderDualCalendars() {
+      // 1. Cabeçalhos dos meses (ex: "OUT. DE 2026")
+      const startH = document.getElementById('startCalHeader');
+      const endH = document.getElementById('endCalHeader');
+      if (startH) startH.innerText = `${MONTH_NAMES_SHORT[pickerCalState.startMonth]}. DE ${pickerCalState.startYear}`;
+      if (endH) endH.innerText = `${MONTH_NAMES_SHORT[pickerCalState.endMonth]}. DE ${pickerCalState.endYear}`;
+
+      // 2. Grids de dias
+      renderCalendarDays('start', pickerCalState.startYear, pickerCalState.startMonth, 'startDaysGrid');
+      renderCalendarDays('end', pickerCalState.endYear, pickerCalState.endMonth, 'endDaysGrid');
+
+      // 3. Resumo textual abaixo
+      const summary = document.getElementById('popoverSelectedSummary');
+      if (summary) {
+        if (!pickerCalState.tempStart && !pickerCalState.tempEnd) {
+          summary.innerText = "Exibindo todos os registros sem restrição de data.";
+        } else {
+          summary.innerText = `Período: ${formatDateBr(pickerCalState.tempStart)} até ${formatDateBr(pickerCalState.tempEnd)}`;
+        }
+      }
+      lucide.createIcons();
+    }
+
+    function renderCalendarDays(side, year, month, gridId) {
+      const container = document.getElementById(gridId);
+      if (!container) return;
+      container.innerHTML = "";
+
+      const firstDayOfWeek = new Date(year, month, 1).getDay(); // 0 = Domingo
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      // Células vazias antes do dia 1
+      for (let i = 0; i < firstDayOfWeek; i++) {
+        const blank = document.createElement('div');
+        blank.className = "h-8 w-8";
+        container.appendChild(blank);
+      }
+
+      const todayYMD = formatDateToYMD(new Date());
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const d = new Date(year, month, day);
+        const ymd = formatDateToYMD(d);
+
+        const btn = document.createElement('button');
+        btn.type = "button";
+        btn.innerText = day;
+        btn.onclick = () => selectCalendarDate(side, ymd);
+
+        const isStart = pickerCalState.tempStart === ymd;
+        const isEnd = pickerCalState.tempEnd === ymd;
+        const isInRange = pickerCalState.tempStart && pickerCalState.tempEnd && (ymd > pickerCalState.tempStart && ymd < pickerCalState.tempEnd);
+        const isToday = ymd === todayYMD;
+
+        let cls = "h-8 w-8 mx-auto rounded-full text-xs font-semibold flex items-center justify-center transition ";
+
+        if (isStart || isEnd) {
+          cls += "bg-previa-orange text-white font-black shadow-md shadow-previa-orange/40 ";
+        } else if (isInRange) {
+          cls += "bg-orange-100 dark:bg-orange-950/50 text-previa-orange font-bold ";
+        } else if (isToday) {
+          cls += "border-2 border-slate-700 dark:border-slate-300 font-bold hover:bg-slate-100 dark:hover:bg-previa-forestDark ";
+        } else {
+          cls += "hover:bg-slate-100 dark:hover:bg-previa-forestDark text-slate-700 dark:text-slate-200 ";
+        }
+
+        btn.className = cls;
+        container.appendChild(btn);
+      }
+    }
+
+    function applyDateRange() {
+      dateFilterState.startDate = pickerCalState.tempStart;
+      dateFilterState.endDate = pickerCalState.tempEnd;
+      dateFilterState.preset = document.getElementById('popoverPresetSelect')?.value || 'custom';
+
+      updateDatePickerButtonLabel();
+      closeDatePopover();
+      renderApp();
+      showToast(`Filtro de data aplicado: ${formatDateBr(dateFilterState.startDate)} - ${formatDateBr(dateFilterState.endDate)}`);
+    }
+
+    function updateDatePickerButtonLabel() {
+      const label = document.getElementById('datePickerBtnLabel');
+      if (!label) return;
+
+      if (!dateFilterState.startDate && !dateFilterState.endDate) {
+        label.innerText = "Todos os Períodos";
+        return;
+      }
+
+      if (dateFilterState.preset === 'current_month') {
+        const now = new Date();
+        label.innerText = `Mês Atual (${MONTH_NAMES_SHORT[now.getMonth()]}/${now.getFullYear()})`;
+      } else {
+        label.innerText = `${formatDateBr(dateFilterState.startDate)} - ${formatDateBr(dateFilterState.endDate)}`;
+      }
+    }
+
+    function isDateInFilterRange(dateStr) {
+      if (!dateFilterState.startDate && !dateFilterState.endDate) return true;
+      if (!dateStr) return true;
+      const target = dateStr.split(' ')[0];
+      if (dateFilterState.startDate && target < dateFilterState.startDate) return false;
+      if (dateFilterState.endDate && target > dateFilterState.endDate) return false;
+      return true;
+    }
+
+    function formatDateToYMD(d) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
     // GERENCIAMENTO DARK MODE
     function initTheme() {
       const savedTheme = localStorage.getItem('previa_theme') || 'light';
@@ -1478,6 +1826,7 @@
     // INICIALIZAÇÃO
     window.addEventListener('DOMContentLoaded', () => {
       initTheme();
+      initDateFilter();
       checkUrlAccessParameters();
       populateSelectOptions();
       switchTab(currentTab);
@@ -1790,7 +2139,7 @@
       }
     }
 
-    // FILTRAR LEADS CONFORME PERMISSAO E FILTROS DA INTERFACE
+    // FILTRAR LEADS CONFORME PERMISSAO, FILTROS DA INTERFACE E NOVO FILTRO DE DATA
     function getFilteredLeads() {
       let list = [...leads];
 
@@ -1806,6 +2155,12 @@
           list = list.filter(l => l.sellerId === currentRole);
         }
       }
+
+      // Filtro de Período/Data do Calendário Duplo
+      list = list.filter(l => {
+        const leadDate = l.contactDate || (l.stageChangedDate ? l.stageChangedDate.slice(0, 10) : null);
+        return isDateInFilterRange(leadDate);
+      });
 
       const search = document.getElementById('leadSearch')?.value.toLowerCase().trim() || "";
       const prodFilter = document.getElementById('filterProduct')?.value || "todos";
@@ -1908,46 +2263,67 @@
           <div class="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 p-3.5 rounded-xl">
             <span class="text-[10px] font-bold text-blue-700 dark:text-blue-300 uppercase">Comissão Direta (30%)</span>
             <h4 class="text-lg font-black text-slate-900 dark:text-white mt-0.5">R$ ${comissaoDireta30.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h4>
-            <span class="text-[10px] text-slate-500">${minhasVendasFechadas.length} vendas próprias</span>
           </div>
           <div class="bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900/50 p-3.5 rounded-xl">
-            <span class="text-[10px] font-bold text-previa-orange uppercase">Override Estadual (5%)</span>
+            <span class="text-[10px] font-bold text-previa-orange uppercase">Override Estado (${isEmb.uf} - 5%)</span>
             <h4 class="text-lg font-black text-previa-orange mt-0.5">R$ ${overrideEstadual5.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h4>
-            <span class="text-[10px] text-slate-500">Sobre R$ ${totalEstado.toLocaleString('pt-BR')} do ${isEmb.uf}</span>
           </div>
           <div class="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 p-3.5 rounded-xl col-span-2 sm:col-span-1">
             <span class="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 uppercase">Total a Receber</span>
-            <h4 class="text-xl font-black text-emerald-700 dark:text-emerald-300 mt-0.5">R$ ${totalGeralReceber.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h4>
-            <span class="text-[10px] text-emerald-800 dark:text-emerald-400">30% direto + 5% estado</span>
+            <h4 class="text-lg font-black text-emerald-700 dark:text-emerald-300 mt-0.5">R$ ${totalGeralReceber.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h4>
           </div>
         `;
       } else if (isSeller) {
         roleTag.className = "px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-blue-600 text-white";
         roleTag.innerText = "VENDEDOR COMERCIAL";
         headerTitle.innerText = `Painel Pessoal: ${isSeller.name}`;
-        headerSubtitle.innerText = `Visualização exclusiva de suas vendas dos produtos Instrutor e Equipe. Sua comissão é de 30% sobre os negócios fechados.`;
+        headerSubtitle.innerText = "Visualização exclusiva de suas vendas dos produtos Instrutor e Equipe. Sua comissão é de 30% sobre os negócios fechados.";
 
-        const totalMinhasVendas = closedLeads.reduce((acc, l) => acc + Number(l.value || 0), 0);
-        const comissao30 = totalMinhasVendas * 0.30;
+        const minhasVendas = closedLeads.filter(l => l.sellerId === isSeller.id);
+        const faturamentoMinhasVendas = minhasVendas.reduce((acc, l) => acc + Number(l.value || 0), 0);
+        const comissao30 = faturamentoMinhasVendas * 0.30;
 
         financialGrid.innerHTML = `
           <div class="bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder p-3.5 rounded-xl">
             <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase">Vendas Efetivadas</span>
-            <h4 class="text-lg font-black text-slate-900 dark:text-white mt-0.5">R$ ${totalMinhasVendas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h4>
-            <span class="text-[10px] text-slate-500">${closedLeads.length} contratos</span>
+            <h4 class="text-lg font-black text-slate-900 dark:text-white mt-0.5">R$ ${faturamentoMinhasVendas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h4>
+            <span class="text-[10px] text-slate-400 font-medium">${minhasVendas.length} contratos</span>
           </div>
-          <div class="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 p-3.5 rounded-xl col-span-2">
+          <div class="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 p-3.5 rounded-xl col-span-2 sm:col-span-1">
             <span class="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 uppercase">Minha Comissão a Receber (30%)</span>
-            <h4 class="text-2xl font-black text-emerald-700 dark:text-emerald-300 mt-0.5">R$ ${comissao30.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h4>
-            <span class="text-[10px] text-emerald-800 dark:text-emerald-400">30% líquido creditado sobre etapas 3 e 4</span>
+            <h4 class="text-lg font-black text-emerald-700 dark:text-emerald-300 mt-0.5">R$ ${comissao30.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h4>
+            <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">30% líquido creditado sobre etapas 3 e 4</span>
           </div>
         `;
       }
     }
 
+    // VERIFICADOR DE PERMISSÕES DO USUÁRIO ATUAL
+    function getCurrentUserPermissions() {
+      if (currentRole === "admin") {
+        return { canEdit: true, canDelete: true };
+      }
+      const amb = ambassadors.find(a => a.id === currentRole);
+      if (amb) {
+        return { 
+          canEdit: amb.canEdit === true, 
+          canDelete: amb.canDelete === true 
+        };
+      }
+      const seller = sellers.find(s => s.id === currentRole);
+      if (seller) {
+        return { 
+          canEdit: seller.canEdit === true, 
+          canDelete: seller.canDelete === true 
+        };
+      }
+      return { canEdit: false, canDelete: false };
+    }
+
     // 1. RENDERIZAR KANBAN (SUPORTA ETAPA 1 A 5)
     function renderKanbanView() {
       const list = getFilteredLeads();
+      const perms = getCurrentUserPermissions();
       const stages = { '1': [], '2': [], '3': [], '4': [], '5': [] };
       list.forEach(l => {
         if (stages[l.stage]) stages[l.stage].push(l);
@@ -2059,13 +2435,18 @@
                   `).join('')}
                 </div>
 
+                <!-- AÇÕES CONDICIONADAS À PERMISSÃO DO ADMINISTRADOR -->
                 <div class="flex items-center gap-1">
-                  <button onclick="editLead('${lead.id}')" title="Editar" class="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200">
-                    <i data-lucide="edit" class="w-3.5 h-3.5"></i>
-                  </button>
-                  <button onclick="deleteLead('${lead.id}')" title="Excluir" class="p-1 text-red-400 hover:text-red-600">
-                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                  </button>
+                  ${perms.canEdit ? `
+                    <button onclick="editLead('${lead.id}')" title="Editar Venda" class="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition">
+                      <i data-lucide="edit" class="w-3.5 h-3.5"></i>
+                    </button>
+                  ` : ''}
+                  ${perms.canDelete ? `
+                    <button onclick="deleteLead('${lead.id}')" title="Excluir Venda" class="p-1 text-red-400 hover:text-red-600 transition">
+                      <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    </button>
+                  ` : ''}
                 </div>
               </div>
 
@@ -2098,9 +2479,10 @@
       }
     }
 
-    // 2. RENDERIZAR TABELA (SUPORTA ETAPA 1 A 5)
+    // 2. RENDERIZAR TABELA (SUPORTA ETAPA 1 A 5 E PERMISSÕES DE AÇÕES)
     function renderTableView() {
       const list = getFilteredLeads();
+      const perms = getCurrentUserPermissions();
       const tbody = document.getElementById('salesTableBody');
       const empty = document.getElementById('tableEmptyState');
 
@@ -2172,26 +2554,34 @@
             ${isClosed ? `R$ ${comissaoEmbaixador5.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : '<span class="text-slate-400 font-normal">Aguardando</span>'}
           </td>
           <td class="px-3 py-3.5 text-center">
-            <div class="inline-flex items-center gap-1">
-              <button onclick="editLead('${lead.id}')" title="Editar" class="p-1.5 hover:bg-slate-100 dark:hover:bg-previa-darkBg rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200">
-                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-              </button>
-              <button onclick="deleteLead('${lead.id}')" title="Excluir" class="p-1.5 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-lg text-red-500">
-                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-              </button>
-            </div>
+            ${(perms.canEdit || perms.canDelete) ? `
+              <div class="inline-flex items-center gap-1">
+                ${perms.canEdit ? `
+                  <button onclick="editLead('${lead.id}')" title="Editar Venda" class="p-1.5 hover:bg-slate-100 dark:hover:bg-previa-darkBg rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition">
+                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                  </button>
+                ` : ''}
+                ${perms.canDelete ? `
+                  <button onclick="deleteLead('${lead.id}')" title="Excluir Venda" class="p-1.5 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-lg text-red-500 transition">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  </button>
+                ` : ''}
+              </div>
+            ` : `
+              <span class="text-slate-400 text-[11px] italic select-none" title="Ações restritas pelo Administrador">-</span>
+            `}
           </td>
         `;
         tbody.appendChild(tr);
-      });
-    }
-
-    // 3. RENDERIZAR MÍDIAS COM FILTROS ESPECÍFICOS
+    // 3. RENDERIZAR MÍDIAS COM FILTROS ESPECÍFICOS E DATA
     function renderMediaSection() {
       let list = [...medias];
       if (currentRole !== "admin") {
         list = list.filter(m => m.sellerId === currentRole);
       }
+
+      // Aplica o filtro de data ativo do calendário duplo
+      list = list.filter(m => isDateInFilterRange(m.date));
 
       const filterSeller = document.getElementById('filterMediaSeller')?.value || "todos";
       const filterChannel = document.getElementById('filterMediaChannel')?.value || "todos";
@@ -2287,6 +2677,9 @@
       });
 
       leads.forEach(l => {
+        const leadDate = l.contactDate || (l.stageChangedDate ? l.stageChangedDate.slice(0, 10) : null);
+        if (!isDateInFilterRange(leadDate)) return;
+
         if (!statsByUF[l.state]) statsByUF[l.state] = { total: 0, count: 0, leads: [] };
         statsByUF[l.state].leads.push(l);
         if (l.stage === "3" || l.stage === "4") {
@@ -2349,12 +2742,19 @@
 
     // 5. RENDERIZAR RANKINGS E GRÁFICOS DE DESEMPENHO
     function renderRankingsSection() {
+      const filteredLeadsForRankings = leads.filter(l => {
+        const refDate = l.contactDate || (l.stageChangedDate ? l.stageChangedDate.split(' ')[0] : null);
+        return isDateInFilterRange(refDate);
+      });
+
+      const filteredMediasForRankings = medias.filter(m => isDateInFilterRange(m.date));
+
       // 1. Ranking Melhores Vendedores
       const sellerPerformance = {};
       sellers.forEach(s => sellerPerformance[s.id] = { id: s.id, name: s.name, total: 0, count: 0 });
       ambassadors.forEach(a => sellerPerformance[a.id] = { id: a.id, name: a.name, total: 0, count: 0 });
 
-      leads.filter(l => l.stage === "3" || l.stage === "4").forEach(l => {
+      filteredLeadsForRankings.filter(l => l.stage === "3" || l.stage === "4").forEach(l => {
         if (!sellerPerformance[l.sellerId]) {
           sellerPerformance[l.sellerId] = { id: l.sellerId, name: resolvePersonName(l.sellerId), total: 0, count: 0 };
         }
@@ -2394,7 +2794,7 @@
       const ambPerformance = {};
       ambassadors.forEach(a => ambPerformance[a.uf] = { amb: a, totalEstado: 0, override: 0, count: 0 });
 
-      leads.filter(l => l.stage === "3" || l.stage === "4").forEach(l => {
+      filteredLeadsForRankings.filter(l => l.stage === "3" || l.stage === "4").forEach(l => {
         if (ambPerformance[l.state]) {
           ambPerformance[l.state].totalEstado += Number(l.value || 0);
           ambPerformance[l.state].override += (Number(l.value || 0) * 0.05);
@@ -2432,7 +2832,7 @@
 
       // 3. Ranking de Visualizações em Redes e Mídias
       const viewsPerformance = {};
-      medias.forEach(m => {
+      filteredMediasForRankings.forEach(m => {
         if (!viewsPerformance[m.sellerId]) {
           viewsPerformance[m.sellerId] = { id: m.sellerId, name: resolvePersonName(m.sellerId), views: 0, posts: 0, videos: 0 };
         }
@@ -2546,6 +2946,9 @@
         card.className = "bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3";
         const docLabel = amb.docType || (amb.doc && amb.doc.length > 14 ? 'CNPJ' : 'CPF');
         const docVal = amb.doc || amb.cpf || 'Não inf.';
+        const editBadge = amb.canEdit ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold">Edição: Sim</span>' : '<span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-500 font-semibold">Edição: Não</span>';
+        const deleteBadge = amb.canDelete ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-300 font-bold">Exclusão: Sim</span>' : '<span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-500 font-semibold">Exclusão: Não</span>';
+
         card.innerHTML = `
           <div class="flex items-start sm:items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800 flex items-center justify-center font-black text-previa-orange text-sm flex-shrink-0">
@@ -2560,6 +2963,10 @@
                 <span class="text-[10px] px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono font-semibold">
                   ${docLabel}: ${docVal}
                 </span>
+                <div class="flex items-center gap-1">
+                  ${editBadge}
+                  ${deleteBadge}
+                </div>
               </div>
               <p class="text-[11px] text-slate-500 dark:text-slate-400">${amb.email} • ${amb.phone || 'Sem fone'}</p>
               
@@ -2578,7 +2985,7 @@
             <button onclick="copyLink('${link}')" class="bg-previa-orange hover:bg-previa-orangeHover text-white px-3 py-1.5 rounded-lg text-xs font-black flex items-center gap-1 shadow transition">
               <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copiar
             </button>
-            <button onclick="editMember('${amb.id}', 'ambassador')" title="Editar Embaixador" class="p-1.5 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded-lg text-slate-700 dark:text-slate-200 transition">
+            <button onclick="editMember('${amb.id}', 'ambassador')" title="Editar Embaixador e Permissões" class="p-1.5 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded-lg text-slate-700 dark:text-slate-200 transition">
               <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
             </button>
             <button onclick="deleteMember('${amb.id}', 'ambassador')" title="Excluir Embaixador" class="p-1.5 bg-rose-100 dark:bg-rose-950/60 hover:bg-rose-200 dark:hover:bg-rose-900 rounded-lg text-rose-600 transition">
@@ -2595,6 +3002,9 @@
         card.className = "bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3";
         const docLabel = sel.docType || (sel.doc && sel.doc.length > 14 ? 'CNPJ' : 'CPF');
         const docVal = sel.doc || sel.cpf || 'Não inf.';
+        const editBadge = sel.canEdit ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold">Edição: Sim</span>' : '<span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-500 font-semibold">Edição: Não</span>';
+        const deleteBadge = sel.canDelete ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-300 font-bold">Exclusão: Sim</span>' : '<span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-500 font-semibold">Exclusão: Não</span>';
+
         card.innerHTML = `
           <div class="flex items-start sm:items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center font-black text-blue-700 dark:text-blue-300 text-sm flex-shrink-0">
@@ -2606,6 +3016,10 @@
                 <span class="text-[10px] px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono font-semibold">
                   ${docLabel}: ${docVal}
                 </span>
+                <div class="flex items-center gap-1">
+                  ${editBadge}
+                  ${deleteBadge}
+                </div>
               </div>
               <p class="text-[11px] text-slate-500 dark:text-slate-400">${sel.email} • ${sel.phone || 'Sem fone'}</p>
               
@@ -2624,7 +3038,7 @@
             <button onclick="copyLink('${link}')" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 shadow transition">
               <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copiar
             </button>
-            <button onclick="editMember('${sel.id}', 'seller')" title="Editar Vendedor" class="p-1.5 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded-lg text-slate-700 dark:text-slate-200 transition">
+            <button onclick="editMember('${sel.id}', 'seller')" title="Editar Vendedor e Permissões" class="p-1.5 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded-lg text-slate-700 dark:text-slate-200 transition">
               <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
             </button>
             <button onclick="deleteMember('${sel.id}', 'seller')" title="Excluir Vendedor" class="p-1.5 bg-rose-100 dark:bg-rose-950/60 hover:bg-rose-200 dark:hover:bg-rose-900 rounded-lg text-rose-600 transition">
@@ -2643,6 +3057,10 @@
       document.getElementById('memberRoleType').value = roleType;
       
       toggleDocType('CPF');
+      
+      // Permissões nativas desativadas por padrão
+      document.getElementById('memberCanEdit').checked = false;
+      document.getElementById('memberCanDelete').checked = false;
       
       const title = document.getElementById('memberModalTitle');
       const iconBox = document.getElementById('memberModalIconBox');
@@ -2687,6 +3105,10 @@
       document.getElementById('memberYoutube').value = member.youtube || '';
       document.getElementById('memberTiktok').value = member.tiktok || '';
       document.getElementById('memberLinkedin').value = member.linkedin || '';
+
+      // Carregar permissões concedidas pelo admin
+      document.getElementById('memberCanEdit').checked = member.canEdit === true;
+      document.getElementById('memberCanDelete').checked = member.canDelete === true;
 
       document.getElementById('memberModalTitle').innerText = roleType === 'ambassador' ? "Editar Embaixador" : "Editar Vendedor";
       document.getElementById('memberModal').classList.remove('hidden');
@@ -2739,6 +3161,8 @@
       const youtube = document.getElementById('memberYoutube').value.trim();
       const tiktok = document.getElementById('memberTiktok').value.trim();
       const linkedin = document.getElementById('memberLinkedin').value.trim();
+      const canEdit = document.getElementById('memberCanEdit').checked;
+      const canDelete = document.getElementById('memberCanDelete').checked;
 
       const memberData = {
         name: roleType === 'ambassador' ? `${name} (Embaixador ${uf})` : name,
@@ -2751,14 +3175,16 @@
         instagram,
         youtube,
         tiktok,
-        linkedin
+        linkedin,
+        canEdit,
+        canDelete
       };
 
       if (roleType === 'ambassador') {
         if (id) {
           const idx = ambassadors.findIndex(a => a.id === id);
           if (idx !== -1) ambassadors[idx] = { ...ambassadors[idx], ...memberData };
-          showToast("Embaixador atualizado com sucesso!");
+          showToast("Embaixador e permissões atualizados!");
         } else {
           const newId = `emb_${uf.toLowerCase()}_${Date.now()}`;
           ambassadors.push({ id: newId, ...memberData });
@@ -2773,7 +3199,7 @@
         if (id) {
           const idx = sellers.findIndex(s => s.id === id);
           if (idx !== -1) sellers[idx] = { ...sellers[idx], ...memberData };
-          showToast("Vendedor atualizado com sucesso!");
+          showToast("Vendedor e permissões atualizados!");
         } else {
           const newId = `v_${Date.now()}`;
           sellers.push({ id: newId, ...memberData });
