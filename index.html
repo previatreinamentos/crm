@@ -1020,33 +1020,6 @@
         </div>
       </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">CPF *</label>
-            <input type="text" id="memberCpf" required placeholder="000.000.000-00" oninput="maskCpf(this)" maxlength="14"
-              class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
-          </div>
-          <div>
-            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Estado de Atuação (UF) *</label>
-            <select id="memberUf" required class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-bold">
-              <!-- Populado dinamicamente -->
-            </select>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">E-mail Corporativo *</label>
-            <input type="email" id="memberEmail" required placeholder="nome@previa.com.br"
-              class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
-          </div>
-          <div>
-            <label class="block text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] mb-1">Telefone / WhatsApp *</label>
-            <input type="text" id="memberPhone" required placeholder="(11) 98765-4321"
-              class="w-full bg-slate-50 dark:bg-previa-darkBg border border-slate-200 dark:border-previa-darkBorder rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-previa-orange font-medium">
-          </div>
-        </div>
-
         <!-- REDES SOCIAIS E CANAIS DE MÍDIA -->
         <div class="pt-2 border-t border-slate-200 dark:border-previa-darkBorder space-y-2">
           <span class="block text-slate-700 dark:text-slate-200 font-bold text-[10px] uppercase tracking-wider">Canais & Redes Sociais do Membro:</span>
@@ -1559,23 +1532,28 @@
     // ALTERNAR VISÃO SIMULADOR ADMIN
     function changeAdminView(val) {
       currentRole = val;
-      const tabTeam = document.getElementById('tab-team');
-      const tabMap = document.getElementById('tab-map');
-      
-      if (val !== 'admin') {
-        // Se estiver simulando Vendedor ou Embaixador, oculta as abas de links e mapa
-        if (tabTeam) tabTeam.classList.add('hidden');
-        if (tabMap) tabMap.classList.add('hidden');
-        if (currentTab === 'map' || currentTab === 'team') {
-          switchTab('pipeline');
-        }
-      } else {
-        if (tabTeam) tabTeam.classList.remove('hidden');
-        if (tabMap) tabMap.classList.remove('hidden');
+      if (val !== 'admin' && (currentTab === 'map' || currentTab === 'team')) {
+        currentTab = 'pipeline';
       }
+      updateNavigationTabsVisibility();
       populateSelectOptions();
       renderApp();
       showToast(`Visualizando agora como: ${resolvePersonName(val)}`);
+    }
+
+    // CONTROLE RIGOROSO DE VISIBILIDADE DAS ABAS (ADMIN vs VENDEDOR / EMBAIXADOR)
+    function updateNavigationTabsVisibility() {
+      const tabTeam = document.getElementById('tab-team');
+      const tabMap = document.getElementById('tab-map');
+
+      if (currentRole === 'admin') {
+        if (tabTeam) tabTeam.style.display = "";
+        if (tabMap) tabMap.style.display = "";
+      } else {
+        // Se for Vendedor ou Embaixador, oculta totalmente para não saberem que existem
+        if (tabTeam) tabTeam.style.display = "none";
+        if (tabMap) tabMap.style.display = "none";
+      }
     }
 
     // ALTERNAR ABAS
@@ -1589,14 +1567,20 @@
         const el = document.getElementById(`view-${t}`);
         if (el) el.classList.add('hidden');
         const b = document.getElementById(`tab-${t}`);
-        if (b) b.className = "py-3 border-b-2 border-transparent text-emerald-200/70 hover:text-white flex items-center gap-2 transition whitespace-nowrap";
+        if (b) {
+          b.className = "py-3 border-b-2 border-transparent text-emerald-200/70 hover:text-white flex items-center gap-2 transition whitespace-nowrap";
+        }
       });
 
       const currentViewEl = document.getElementById(`view-${tab}`);
       if (currentViewEl) currentViewEl.classList.remove('hidden');
 
       const activeBtn = document.getElementById(`tab-${tab}`);
-      if (activeBtn) activeBtn.className = "py-3 border-b-2 border-previa-orange text-white flex items-center gap-2 transition whitespace-nowrap font-bold";
+      if (activeBtn) {
+        activeBtn.className = "py-3 border-b-2 border-previa-orange text-white flex items-center gap-2 transition whitespace-nowrap font-bold";
+      }
+
+      updateNavigationTabsVisibility();
 
       const toggleGroup = document.getElementById('viewModeToggleGroup');
       if (tab === 'pipeline') {
@@ -1854,6 +1838,7 @@
 
     // RENDER GERAL
     function renderApp() {
+      updateNavigationTabsVisibility();
       updateRoleHeaderAndCards();
       renderKanbanView();
       renderTableView();
